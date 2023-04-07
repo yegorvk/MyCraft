@@ -4,9 +4,9 @@ project(ShitCraft VERSION 0.0.1 LANGUAGES C CXX)
 set(CMAKE_CXX_STANDARD 17)
 
 if (${CMAKE_BUILD_TYPE} STREQUAL Debug)
-    set(BUILD_TYPE_DEBUG 1)
+    set(DEBUG ON)
 else ()
-    set(BUILD_TYPE_DEBUG 0)
+    set(DEBUG OFF)
 endif ()
 
 # Check python installation with required modules
@@ -43,7 +43,12 @@ set(CACHE SDL2_DISABLE_INSTALL ON)
 FetchContent_MakeAvailable(SDL2 GLM spdlog glad cmrc)
 
 add_subdirectory(${glad_SOURCE_DIR}/cmake ${glad_BINARY_DIR})
-glad_add_library(glad_gl_core_33 REPRODUCIBLE API gl:core=3.3)
+
+if (DEBUG)
+    glad_add_library(glad_gl_core_33 REPRODUCIBLE DEBUG API gl:core=3.3)
+else()
+    glad_add_library(glad_gl_core_33 REPRODUCIBLE API gl:core=3.3)
+endif()
 
 # Build resources
 

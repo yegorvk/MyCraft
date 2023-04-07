@@ -31,6 +31,15 @@ private:
 
     void handleEvent(const SDL_Event &event);
 
+    static void processGlDebugMessage(
+            GLenum source,
+            GLenum type,
+            GLuint id,
+            GLenum severity,
+            GLsizei length,
+            const GLchar *message,
+            const void *userParam);
+
     // Helpers
 
     [[noreturn]]

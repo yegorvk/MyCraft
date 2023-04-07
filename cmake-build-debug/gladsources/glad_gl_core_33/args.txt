@@ -1,1 +1,1 @@
---out-path C:/Users/egorv/CLionProjects/ShitCraft/cmake-build-debug/gladsources/glad_gl_core_33 --api gl:core=3.3 --reproducible c 
+--out-path C:/Users/egorv/CLionProjects/ShitCraft/cmake-build-debug/gladsources/glad_gl_core_33 --api gl:core=3.3 --reproducible c --debug 

@@ -4,7 +4,6 @@
 
 #include "Shader.h"
 #include "glad/gl.h"
-#include "spdlog/spdlog.h"
 
 Shader Shader::compile(const char *vertShaderSrc, const char *fragShaderSrc) {
     ShaderBuilder builder;
@@ -60,20 +59,9 @@ bool ShaderBuilder::setStage(ShaderType type, const char *src) {
     int compileStatus = GL_FALSE;
     glGetShaderiv(shader, GL_COMPILE_STATUS, &compileStatus);
 
-    if (!compileStatus) {
-        int infoLogLen;
-        glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &infoLogLen);
-
-        char *infoLog = new char[infoLogLen];
-        glGetShaderInfoLog(shader, infoLogLen, nullptr, infoLog);
-
-        spdlog::error("{} shader compilation failed.\nCompiler output:\n{}", shaderTypeStr[stage],
-                      const_cast<const char *>(infoLog));
-
-        delete[] infoLog;
-
+    if (!compileStatus)
         return false;
-    } else
+    else
         stages[stage] = shader;
 
     return true;
@@ -95,19 +83,8 @@ Shader ShaderBuilder::link() {
     int linkStatus = GL_FALSE;
     glGetProgramiv(program, GL_LINK_STATUS, &linkStatus);
 
-    if (!linkStatus) {
-        int infoLogLen;
-        glGetProgramiv(program, GL_INFO_LOG_LENGTH, &infoLogLen);
-
-        char *infoLog = new char[infoLogLen];
-        glGetProgramInfoLog(program, infoLogLen, nullptr, infoLog);
-
-        spdlog::error("Program linking failed. Linker output: \n{}", const_cast<const char *>(infoLog));
-
-        delete[] infoLog;
-
+    if (!linkStatus)
         return Shader(0);
-    }
 
     return Shader(program);
 }
