@@ -1,0 +1,3 @@
+C:/Users/egorv/CLionProjects/ShitCraft/cmake-build-debug/_deps/glad-subbuild/CMakeFiles/glad-populate.dir
+C:/Users/egorv/CLionProjects/ShitCraft/cmake-build-debug/_deps/glad-subbuild/CMakeFiles/edit_cache.dir
+C:/Users/egorv/CLionProjects/ShitCraft/cmake-build-debug/_deps/glad-subbuild/CMakeFiles/rebuild_cache.dir

@@ -1,0 +1,12 @@
+# This is a generated file and its contents are an internal implementation detail.
+# The download step will be re-executed if anything in this file changes.
+# No other meaning or use of this file is supported.
+
+method=url
+command=C:/Users/egorv/AppData/Local/JetBrains/Toolbox/apps/CLion/ch-0/223.8617.54/bin/cmake/win/x64/bin/cmake.exe;-P;C:/Users/egorv/CLionProjects/ShitCraft/cmake-build-debug/_deps/spdlog-subbuild/spdlog-populate-prefix/src/spdlog-populate-stamp/download-spdlog-populate.cmake;COMMAND;C:/Users/egorv/AppData/Local/JetBrains/Toolbox/apps/CLion/ch-0/223.8617.54/bin/cmake/win/x64/bin/cmake.exe;-P;C:/Users/egorv/CLionProjects/ShitCraft/cmake-build-debug/_deps/spdlog-subbuild/spdlog-populate-prefix/src/spdlog-populate-stamp/verify-spdlog-populate.cmake;COMMAND;C:/Users/egorv/AppData/Local/JetBrains/Toolbox/apps/CLion/ch-0/223.8617.54/bin/cmake/win/x64/bin/cmake.exe;-P;C:/Users/egorv/CLionProjects/ShitCraft/cmake-build-debug/_deps/spdlog-subbuild/spdlog-populate-prefix/src/spdlog-populate-stamp/extract-spdlog-populate.cmake
+source_dir=C:/Users/egorv/CLionProjects/ShitCraft/cmake-build-debug/_deps/spdlog-src
+work_dir=C:/Users/egorv/CLionProjects/ShitCraft/cmake-build-debug/_deps
+url(s)=https://github.com/gabime/spdlog/archive/refs/tags/v1.11.0.tar.gz
+hash=
+no_extract=
+

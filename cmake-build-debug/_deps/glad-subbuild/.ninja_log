@@ -1,0 +1,21 @@
+# ninja log v5
+0	41	7025110107212165	glad-populate-prefix/src/glad-populate-stamp/glad-populate-mkdir	5f4bc8c96a2d173a
+1465	1505	7025110121851861	C:/Users/egorv/CLionProjects/ShitCraft/cmake-build-debug/_deps/glad-subbuild/glad-populate-prefix/src/glad-populate-stamp/glad-populate-patch	5f2f6c9e9137f5a4
+0	41	7025110107212165	C:/Users/egorv/CLionProjects/ShitCraft/cmake-build-debug/_deps/glad-subbuild/glad-populate-prefix/src/glad-populate-stamp/glad-populate-mkdir	5f4bc8c96a2d173a
+42	1425	7025110121048260	glad-populate-prefix/src/glad-populate-stamp/glad-populate-download	73786d57d149ca30
+42	1425	7025110121048260	C:/Users/egorv/CLionProjects/ShitCraft/cmake-build-debug/_deps/glad-subbuild/glad-populate-prefix/src/glad-populate-stamp/glad-populate-download	73786d57d149ca30
+1425	1465	7025110121449384	glad-populate-prefix/src/glad-populate-stamp/glad-populate-update	4989c48e443c228
+1625	1664	7025110123439930	C:/Users/egorv/CLionProjects/ShitCraft/cmake-build-debug/_deps/glad-subbuild/glad-populate-prefix/src/glad-populate-stamp/glad-populate-test	28f7abf5c29d2faf
+1425	1465	7025110121449384	C:/Users/egorv/CLionProjects/ShitCraft/cmake-build-debug/_deps/glad-subbuild/glad-populate-prefix/src/glad-populate-stamp/glad-populate-update	4989c48e443c228
+1465	1505	7025110121851861	glad-populate-prefix/src/glad-populate-stamp/glad-populate-patch	5f2f6c9e9137f5a4
+1505	1545	7025110122246172	glad-populate-prefix/src/glad-populate-stamp/glad-populate-configure	1ac7cba5fc6b6a8d
+1505	1545	7025110122246172	C:/Users/egorv/CLionProjects/ShitCraft/cmake-build-debug/_deps/glad-subbuild/glad-populate-prefix/src/glad-populate-stamp/glad-populate-configure	1ac7cba5fc6b6a8d
+1545	1585	7025110122650697	glad-populate-prefix/src/glad-populate-stamp/glad-populate-build	62f1c0094ba56833
+1545	1585	7025110122650697	C:/Users/egorv/CLionProjects/ShitCraft/cmake-build-debug/_deps/glad-subbuild/glad-populate-prefix/src/glad-populate-stamp/glad-populate-build	62f1c0094ba56833
+1585	1625	7025110123056800	glad-populate-prefix/src/glad-populate-stamp/glad-populate-install	a4834783ea7697bb
+1585	1625	7025110123056800	C:/Users/egorv/CLionProjects/ShitCraft/cmake-build-debug/_deps/glad-subbuild/glad-populate-prefix/src/glad-populate-stamp/glad-populate-install	a4834783ea7697bb
+1625	1664	7025110123439930	glad-populate-prefix/src/glad-populate-stamp/glad-populate-test	28f7abf5c29d2faf
+1664	1718	7025110123982223	CMakeFiles/glad-populate-complete	ae2699bdd644d2bb
+1664	1718	7025110123982223	glad-populate-prefix/src/glad-populate-stamp/glad-populate-done	ae2699bdd644d2bb
+1664	1718	7025110123982223	C:/Users/egorv/CLionProjects/ShitCraft/cmake-build-debug/_deps/glad-subbuild/CMakeFiles/glad-populate-complete	ae2699bdd644d2bb
+1664	1718	7025110123982223	C:/Users/egorv/CLionProjects/ShitCraft/cmake-build-debug/_deps/glad-subbuild/glad-populate-prefix/src/glad-populate-stamp/glad-populate-done	ae2699bdd644d2bb

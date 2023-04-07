@@ -1,0 +1,12 @@
+# This is a generated file and its contents are an internal implementation detail.
+# The download step will be re-executed if anything in this file changes.
+# No other meaning or use of this file is supported.
+
+method=url
+command=C:/Users/egorv/AppData/Local/JetBrains/Toolbox/apps/CLion/ch-0/223.8617.54/bin/cmake/win/x64/bin/cmake.exe;-P;C:/Users/egorv/CLionProjects/ShitCraft/cmake-build-debug/_deps/glad-subbuild/glad-populate-prefix/src/glad-populate-stamp/download-glad-populate.cmake;COMMAND;C:/Users/egorv/AppData/Local/JetBrains/Toolbox/apps/CLion/ch-0/223.8617.54/bin/cmake/win/x64/bin/cmake.exe;-P;C:/Users/egorv/CLionProjects/ShitCraft/cmake-build-debug/_deps/glad-subbuild/glad-populate-prefix/src/glad-populate-stamp/verify-glad-populate.cmake;COMMAND;C:/Users/egorv/AppData/Local/JetBrains/Toolbox/apps/CLion/ch-0/223.8617.54/bin/cmake/win/x64/bin/cmake.exe;-P;C:/Users/egorv/CLionProjects/ShitCraft/cmake-build-debug/_deps/glad-subbuild/glad-populate-prefix/src/glad-populate-stamp/extract-glad-populate.cmake
+source_dir=C:/Users/egorv/CLionProjects/ShitCraft/cmake-build-debug/_deps/glad-src
+work_dir=C:/Users/egorv/CLionProjects/ShitCraft/cmake-build-debug/_deps
+url(s)=https://github.com/Dav1dde/glad/archive/refs/tags/v2.0.4.tar.gz
+hash=
+no_extract=
+

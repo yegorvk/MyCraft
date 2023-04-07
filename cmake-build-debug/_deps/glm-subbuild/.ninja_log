@@ -1,0 +1,21 @@
+# ninja log v5
+1	45	7025109863583795	glm-populate-prefix/src/glm-populate-stamp/glm-populate-mkdir	8835a7c51e448a05
+45	2650	7025109889636011	C:/Users/egorv/CLionProjects/ShitCraft/cmake-build-debug/_deps/glm-subbuild/glm-populate-prefix/src/glm-populate-stamp/glm-populate-download	738b4cec2e770957
+2650	2696	7025109890099273	glm-populate-prefix/src/glm-populate-stamp/glm-populate-update	6ef21e9d48c4e539
+1	45	7025109863583795	C:/Users/egorv/CLionProjects/ShitCraft/cmake-build-debug/_deps/glm-subbuild/glm-populate-prefix/src/glm-populate-stamp/glm-populate-mkdir	8835a7c51e448a05
+2775	2817	7025109891285298	glm-populate-prefix/src/glm-populate-stamp/glm-populate-build	56a1b570a92d5e69
+2698	2736	7025109890504406	glm-populate-prefix/src/glm-populate-stamp/glm-populate-patch	d881f097fed0c535
+45	2650	7025109889636011	glm-populate-prefix/src/glm-populate-stamp/glm-populate-download	738b4cec2e770957
+2650	2696	7025109890099273	C:/Users/egorv/CLionProjects/ShitCraft/cmake-build-debug/_deps/glm-subbuild/glm-populate-prefix/src/glm-populate-stamp/glm-populate-update	6ef21e9d48c4e539
+2698	2736	7025109890504406	C:/Users/egorv/CLionProjects/ShitCraft/cmake-build-debug/_deps/glm-subbuild/glm-populate-prefix/src/glm-populate-stamp/glm-populate-patch	d881f097fed0c535
+2896	2949	7025109892627501	glm-populate-prefix/src/glm-populate-stamp/glm-populate-done	81edd4b8e894f29e
+2737	2775	7025109890894400	glm-populate-prefix/src/glm-populate-stamp/glm-populate-configure	fcaf81ba3559bd8a
+2737	2775	7025109890894400	C:/Users/egorv/CLionProjects/ShitCraft/cmake-build-debug/_deps/glm-subbuild/glm-populate-prefix/src/glm-populate-stamp/glm-populate-configure	fcaf81ba3559bd8a
+2775	2817	7025109891285298	C:/Users/egorv/CLionProjects/ShitCraft/cmake-build-debug/_deps/glm-subbuild/glm-populate-prefix/src/glm-populate-stamp/glm-populate-build	56a1b570a92d5e69
+2817	2857	7025109891714802	glm-populate-prefix/src/glm-populate-stamp/glm-populate-install	8e3dc2e6a3267306
+2817	2857	7025109891714802	C:/Users/egorv/CLionProjects/ShitCraft/cmake-build-debug/_deps/glm-subbuild/glm-populate-prefix/src/glm-populate-stamp/glm-populate-install	8e3dc2e6a3267306
+2857	2895	7025109892098083	glm-populate-prefix/src/glm-populate-stamp/glm-populate-test	c99f041d09768808
+2857	2895	7025109892098083	C:/Users/egorv/CLionProjects/ShitCraft/cmake-build-debug/_deps/glm-subbuild/glm-populate-prefix/src/glm-populate-stamp/glm-populate-test	c99f041d09768808
+2896	2949	7025109892627501	CMakeFiles/glm-populate-complete	81edd4b8e894f29e
+2896	2949	7025109892627501	C:/Users/egorv/CLionProjects/ShitCraft/cmake-build-debug/_deps/glm-subbuild/CMakeFiles/glm-populate-complete	81edd4b8e894f29e
+2896	2949	7025109892627501	C:/Users/egorv/CLionProjects/ShitCraft/cmake-build-debug/_deps/glm-subbuild/glm-populate-prefix/src/glm-populate-stamp/glm-populate-done	81edd4b8e894f29e
