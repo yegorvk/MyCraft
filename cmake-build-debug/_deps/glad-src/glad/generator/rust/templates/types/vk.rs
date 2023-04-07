@@ -1,6 +1,6 @@
 #![allow(dead_code, non_camel_case_types, non_snake_case)]
 
-{% import 'template_utils.rs' as template_utils with context %}
+{% import 'template_utils.res' as template_utils with context %}
 
 use std;
 use std::os::raw::*;

@@ -14,7 +14,7 @@ dist/
 /khrplatform.h
 /eglplatform.h
 /vk_platform.h
-/glad-rs/
+/glad-res/
 /rust/
 target/
 Cargo.lock

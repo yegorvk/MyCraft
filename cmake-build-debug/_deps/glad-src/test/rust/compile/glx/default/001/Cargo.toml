@@ -3,7 +3,7 @@ name = "compile-glx-default-001"
 version = "0.1.0"
 
 [[bin]]
-path = "test.rs"
+path = "test.res"
 name = "test"
 
 [dependencies]

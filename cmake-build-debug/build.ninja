@@ -73,19 +73,65 @@ build libglad_gl_core_33.a: C_STATIC_LIBRARY_LINKER__glad_gl_core_33_Debug CMake
   TARGET_PDB = glad_gl_core_33.a.dbg
 
 # =============================================================================
+# Object build statements for STATIC_LIBRARY target res
+
+
+#############################################
+# Order-only phony target for res
+
+build cmake_object_order_depends_target_res: phony || __cmrc_res/intermediate/res/glsl/basic.frag.cpp __cmrc_res/intermediate/res/glsl/basic.vert.cpp __cmrc_res/lib.cpp
+
+build CMakeFiles/res.dir/__cmrc_res/lib.cpp.obj: CXX_COMPILER__res_Debug C$:/Users/egorv/CLionProjects/ShitCraft/cmake-build-debug/__cmrc_res/lib.cpp || cmake_object_order_depends_target_res
+  DEP_FILE = CMakeFiles\res.dir\__cmrc_res\lib.cpp.obj.d
+  FLAGS = -g -fdiagnostics-color=always
+  INCLUDES = -IC:/Users/egorv/CLionProjects/ShitCraft/cmake-build-debug/_cmrc/include
+  OBJECT_DIR = CMakeFiles\res.dir
+  OBJECT_FILE_DIR = CMakeFiles\res.dir\__cmrc_res
+
+build CMakeFiles/res.dir/__cmrc_res/intermediate/res/glsl/basic.vert.cpp.obj: CXX_COMPILER__res_Debug C$:/Users/egorv/CLionProjects/ShitCraft/cmake-build-debug/__cmrc_res/intermediate/res/glsl/basic.vert.cpp || cmake_object_order_depends_target_res
+  DEP_FILE = CMakeFiles\res.dir\__cmrc_res\intermediate\res\glsl\basic.vert.cpp.obj.d
+  FLAGS = -g -fdiagnostics-color=always
+  INCLUDES = -IC:/Users/egorv/CLionProjects/ShitCraft/cmake-build-debug/_cmrc/include
+  OBJECT_DIR = CMakeFiles\res.dir
+  OBJECT_FILE_DIR = CMakeFiles\res.dir\__cmrc_res\intermediate\res\glsl
+
+build CMakeFiles/res.dir/__cmrc_res/intermediate/res/glsl/basic.frag.cpp.obj: CXX_COMPILER__res_Debug C$:/Users/egorv/CLionProjects/ShitCraft/cmake-build-debug/__cmrc_res/intermediate/res/glsl/basic.frag.cpp || cmake_object_order_depends_target_res
+  DEP_FILE = CMakeFiles\res.dir\__cmrc_res\intermediate\res\glsl\basic.frag.cpp.obj.d
+  FLAGS = -g -fdiagnostics-color=always
+  INCLUDES = -IC:/Users/egorv/CLionProjects/ShitCraft/cmake-build-debug/_cmrc/include
+  OBJECT_DIR = CMakeFiles\res.dir
+  OBJECT_FILE_DIR = CMakeFiles\res.dir\__cmrc_res\intermediate\res\glsl
+
+
+# =============================================================================
+# Link build statements for STATIC_LIBRARY target res
+
+
+#############################################
+# Link the static library libres.a
+
+build libres.a: CXX_STATIC_LIBRARY_LINKER__res_Debug CMakeFiles/res.dir/__cmrc_res/lib.cpp.obj CMakeFiles/res.dir/__cmrc_res/intermediate/res/glsl/basic.vert.cpp.obj CMakeFiles/res.dir/__cmrc_res/intermediate/res/glsl/basic.frag.cpp.obj
+  LANGUAGE_COMPILE_FLAGS = -g
+  OBJECT_DIR = CMakeFiles\res.dir
+  POST_BUILD = cd .
+  PRE_LINK = cd .
+  TARGET_FILE = libres.a
+  TARGET_PDB = res.a.dbg
+
+# =============================================================================
 # Object build statements for EXECUTABLE target ShitCraft
 
 
 #############################################
 # Order-only phony target for ShitCraft
 
-build cmake_object_order_depends_target_ShitCraft: phony || cmake_object_order_depends_target_SDL2-static cmake_object_order_depends_target_SDL2main cmake_object_order_depends_target_glad_gl_core_33 cmake_object_order_depends_target_spdlog
+build cmake_object_order_depends_target_ShitCraft: phony || cmake_object_order_depends_target_SDL2-static cmake_object_order_depends_target_SDL2main cmake_object_order_depends_target_glad_gl_core_33 cmake_object_order_depends_target_res cmake_object_order_depends_target_spdlog
 
 build CMakeFiles/ShitCraft.dir/src/main.cpp.obj: CXX_COMPILER__ShitCraft_Debug C$:/Users/egorv/CLionProjects/ShitCraft/src/main.cpp || cmake_object_order_depends_target_ShitCraft
   DEFINES = -DSPDLOG_COMPILED_LIB
   DEP_FILE = CMakeFiles\ShitCraft.dir\src\main.cpp.obj.d
   FLAGS = -g -fdiagnostics-color=always
-  INCLUDES = -IC:/Users/egorv/CLionProjects/ShitCraft/cmake-build-debug/src -IC:/Users/egorv/CLionProjects/ShitCraft/src -IC:/Users/egorv/CLionProjects/ShitCraft/cmake-build-debug/_deps/sdl2-build/include -IC:/Users/egorv/CLionProjects/ShitCraft/cmake-build-debug/_deps/sdl2-build/include-config-debug -IC:/Users/egorv/CLionProjects/ShitCraft/cmake-build-debug/gladsources/glad_gl_core_33/include -IC:/Users/egorv/CLionProjects/ShitCraft/cmake-build-debug/_deps/glm-src/glm/.. -IC:/Users/egorv/CLionProjects/ShitCraft/cmake-build-debug/_deps/spdlog-src/include
+  INCLUDES = -IC:/Users/egorv/CLionProjects/ShitCraft/cmake-build-debug/src -IC:/Users/egorv/CLionProjects/ShitCraft/src -IC:/Users/egorv/CLionProjects/ShitCraft/cmake-build-debug/_cmrc/include -IC:/Users/egorv/CLionProjects/ShitCraft/cmake-build-debug/_deps/sdl2-build/include -IC:/Users/egorv/CLionProjects/ShitCraft/cmake-build-debug/_deps/sdl2-build/include-config-debug -IC:/Users/egorv/CLionProjects/ShitCraft/cmake-build-debug/gladsources/glad_gl_core_33/include -IC:/Users/egorv/CLionProjects/ShitCraft/cmake-build-debug/_deps/glm-src/glm/.. -IC:/Users/egorv/CLionProjects/ShitCraft/cmake-build-debug/_deps/spdlog-src/include
   OBJECT_DIR = CMakeFiles\ShitCraft.dir
   OBJECT_FILE_DIR = CMakeFiles\ShitCraft.dir\src
 
@@ -93,7 +139,7 @@ build CMakeFiles/ShitCraft.dir/src/Game/Game.cpp.obj: CXX_COMPILER__ShitCraft_De
   DEFINES = -DSPDLOG_COMPILED_LIB
   DEP_FILE = CMakeFiles\ShitCraft.dir\src\Game\Game.cpp.obj.d
   FLAGS = -g -fdiagnostics-color=always
-  INCLUDES = -IC:/Users/egorv/CLionProjects/ShitCraft/cmake-build-debug/src -IC:/Users/egorv/CLionProjects/ShitCraft/src -IC:/Users/egorv/CLionProjects/ShitCraft/cmake-build-debug/_deps/sdl2-build/include -IC:/Users/egorv/CLionProjects/ShitCraft/cmake-build-debug/_deps/sdl2-build/include-config-debug -IC:/Users/egorv/CLionProjects/ShitCraft/cmake-build-debug/gladsources/glad_gl_core_33/include -IC:/Users/egorv/CLionProjects/ShitCraft/cmake-build-debug/_deps/glm-src/glm/.. -IC:/Users/egorv/CLionProjects/ShitCraft/cmake-build-debug/_deps/spdlog-src/include
+  INCLUDES = -IC:/Users/egorv/CLionProjects/ShitCraft/cmake-build-debug/src -IC:/Users/egorv/CLionProjects/ShitCraft/src -IC:/Users/egorv/CLionProjects/ShitCraft/cmake-build-debug/_cmrc/include -IC:/Users/egorv/CLionProjects/ShitCraft/cmake-build-debug/_deps/sdl2-build/include -IC:/Users/egorv/CLionProjects/ShitCraft/cmake-build-debug/_deps/sdl2-build/include-config-debug -IC:/Users/egorv/CLionProjects/ShitCraft/cmake-build-debug/gladsources/glad_gl_core_33/include -IC:/Users/egorv/CLionProjects/ShitCraft/cmake-build-debug/_deps/glm-src/glm/.. -IC:/Users/egorv/CLionProjects/ShitCraft/cmake-build-debug/_deps/spdlog-src/include
   OBJECT_DIR = CMakeFiles\ShitCraft.dir
   OBJECT_FILE_DIR = CMakeFiles\ShitCraft.dir\src\Game
 
@@ -101,15 +147,15 @@ build CMakeFiles/ShitCraft.dir/src/Shader/Shader.cpp.obj: CXX_COMPILER__ShitCraf
   DEFINES = -DSPDLOG_COMPILED_LIB
   DEP_FILE = CMakeFiles\ShitCraft.dir\src\Shader\Shader.cpp.obj.d
   FLAGS = -g -fdiagnostics-color=always
-  INCLUDES = -IC:/Users/egorv/CLionProjects/ShitCraft/cmake-build-debug/src -IC:/Users/egorv/CLionProjects/ShitCraft/src -IC:/Users/egorv/CLionProjects/ShitCraft/cmake-build-debug/_deps/sdl2-build/include -IC:/Users/egorv/CLionProjects/ShitCraft/cmake-build-debug/_deps/sdl2-build/include-config-debug -IC:/Users/egorv/CLionProjects/ShitCraft/cmake-build-debug/gladsources/glad_gl_core_33/include -IC:/Users/egorv/CLionProjects/ShitCraft/cmake-build-debug/_deps/glm-src/glm/.. -IC:/Users/egorv/CLionProjects/ShitCraft/cmake-build-debug/_deps/spdlog-src/include
+  INCLUDES = -IC:/Users/egorv/CLionProjects/ShitCraft/cmake-build-debug/src -IC:/Users/egorv/CLionProjects/ShitCraft/src -IC:/Users/egorv/CLionProjects/ShitCraft/cmake-build-debug/_cmrc/include -IC:/Users/egorv/CLionProjects/ShitCraft/cmake-build-debug/_deps/sdl2-build/include -IC:/Users/egorv/CLionProjects/ShitCraft/cmake-build-debug/_deps/sdl2-build/include-config-debug -IC:/Users/egorv/CLionProjects/ShitCraft/cmake-build-debug/gladsources/glad_gl_core_33/include -IC:/Users/egorv/CLionProjects/ShitCraft/cmake-build-debug/_deps/glm-src/glm/.. -IC:/Users/egorv/CLionProjects/ShitCraft/cmake-build-debug/_deps/spdlog-src/include
   OBJECT_DIR = CMakeFiles\ShitCraft.dir
   OBJECT_FILE_DIR = CMakeFiles\ShitCraft.dir\src\Shader
 
-build CMakeFiles/ShitCraft.dir/src/resources.cpp.obj: CXX_COMPILER__ShitCraft_Debug C$:/Users/egorv/CLionProjects/ShitCraft/src/resources.cpp || cmake_object_order_depends_target_ShitCraft
+build CMakeFiles/ShitCraft.dir/src/res.cpp.obj: CXX_COMPILER__ShitCraft_Debug C$:/Users/egorv/CLionProjects/ShitCraft/src/res.cpp || cmake_object_order_depends_target_ShitCraft
   DEFINES = -DSPDLOG_COMPILED_LIB
-  DEP_FILE = CMakeFiles\ShitCraft.dir\src\resources.cpp.obj.d
+  DEP_FILE = CMakeFiles\ShitCraft.dir\src\res.cpp.obj.d
   FLAGS = -g -fdiagnostics-color=always
-  INCLUDES = -IC:/Users/egorv/CLionProjects/ShitCraft/cmake-build-debug/src -IC:/Users/egorv/CLionProjects/ShitCraft/src -IC:/Users/egorv/CLionProjects/ShitCraft/cmake-build-debug/_deps/sdl2-build/include -IC:/Users/egorv/CLionProjects/ShitCraft/cmake-build-debug/_deps/sdl2-build/include-config-debug -IC:/Users/egorv/CLionProjects/ShitCraft/cmake-build-debug/gladsources/glad_gl_core_33/include -IC:/Users/egorv/CLionProjects/ShitCraft/cmake-build-debug/_deps/glm-src/glm/.. -IC:/Users/egorv/CLionProjects/ShitCraft/cmake-build-debug/_deps/spdlog-src/include
+  INCLUDES = -IC:/Users/egorv/CLionProjects/ShitCraft/cmake-build-debug/src -IC:/Users/egorv/CLionProjects/ShitCraft/src -IC:/Users/egorv/CLionProjects/ShitCraft/cmake-build-debug/_cmrc/include -IC:/Users/egorv/CLionProjects/ShitCraft/cmake-build-debug/_deps/sdl2-build/include -IC:/Users/egorv/CLionProjects/ShitCraft/cmake-build-debug/_deps/sdl2-build/include-config-debug -IC:/Users/egorv/CLionProjects/ShitCraft/cmake-build-debug/gladsources/glad_gl_core_33/include -IC:/Users/egorv/CLionProjects/ShitCraft/cmake-build-debug/_deps/glm-src/glm/.. -IC:/Users/egorv/CLionProjects/ShitCraft/cmake-build-debug/_deps/spdlog-src/include
   OBJECT_DIR = CMakeFiles\ShitCraft.dir
   OBJECT_FILE_DIR = CMakeFiles\ShitCraft.dir\src
 
@@ -121,9 +167,9 @@ build CMakeFiles/ShitCraft.dir/src/resources.cpp.obj: CXX_COMPILER__ShitCraft_De
 #############################################
 # Link the executable ShitCraft.exe
 
-build ShitCraft.exe: CXX_EXECUTABLE_LINKER__ShitCraft_Debug CMakeFiles/ShitCraft.dir/src/main.cpp.obj CMakeFiles/ShitCraft.dir/src/Game/Game.cpp.obj CMakeFiles/ShitCraft.dir/src/Shader/Shader.cpp.obj CMakeFiles/ShitCraft.dir/src/resources.cpp.obj | _deps/sdl2-build/libSDL2maind.a _deps/sdl2-build/libSDL2d.a libglad_gl_core_33.a _deps/spdlog-build/libspdlogd.a || _deps/sdl2-build/libSDL2d.a _deps/sdl2-build/libSDL2maind.a _deps/spdlog-build/libspdlogd.a libglad_gl_core_33.a
+build ShitCraft.exe: CXX_EXECUTABLE_LINKER__ShitCraft_Debug CMakeFiles/ShitCraft.dir/src/main.cpp.obj CMakeFiles/ShitCraft.dir/src/Game/Game.cpp.obj CMakeFiles/ShitCraft.dir/src/Shader/Shader.cpp.obj CMakeFiles/ShitCraft.dir/src/res.cpp.obj | libres.a _deps/sdl2-build/libSDL2maind.a _deps/sdl2-build/libSDL2d.a libglad_gl_core_33.a _deps/spdlog-build/libspdlogd.a || _deps/sdl2-build/libSDL2d.a _deps/sdl2-build/libSDL2maind.a _deps/spdlog-build/libspdlogd.a libglad_gl_core_33.a libres.a
   FLAGS = -g
-  LINK_LIBRARIES = _deps/sdl2-build/libSDL2maind.a  _deps/sdl2-build/libSDL2d.a  libglad_gl_core_33.a  _deps/spdlog-build/libspdlogd.a  -Wl,--undefined=WinMain  -lm  -luser32  -lgdi32  -lwinmm  -limm32  -lole32  -loleaut32  -lversion  -luuid  -ladvapi32  -lsetupapi  -lshell32  -ldinput8  -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
+  LINK_LIBRARIES = libres.a  _deps/sdl2-build/libSDL2maind.a  _deps/sdl2-build/libSDL2d.a  libglad_gl_core_33.a  _deps/spdlog-build/libspdlogd.a  -Wl,--undefined=WinMain  -lm  -luser32  -lgdi32  -lwinmm  -limm32  -lole32  -loleaut32  -lversion  -luuid  -ladvapi32  -lsetupapi  -lshell32  -ldinput8  -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
   OBJECT_DIR = CMakeFiles\ShitCraft.dir
   POST_BUILD = cd .
   PRE_LINK = cd .
@@ -162,6 +208,33 @@ build gladsources/glad_gl_core_33/include/KHR/khrplatform.h gladsources/glad_gl_
   COMMAND = cmd.exe /C "cd /D C:\Users\egorv\CLionProjects\ShitCraft\cmake-build-debug\_deps\glad-src && echo Cleaning C:/Users/egorv/CLionProjects/ShitCraft/cmake-build-debug/gladsources/glad_gl_core_33 && C:\Users\egorv\AppData\Local\JetBrains\Toolbox\apps\CLion\ch-0\223.8617.54\bin\cmake\win\x64\bin\cmake.exe -E remove_directory C:/Users/egorv/CLionProjects/ShitCraft/cmake-build-debug/gladsources/glad_gl_core_33 && C:\Users\egorv\AppData\Local\JetBrains\Toolbox\apps\CLion\ch-0\223.8617.54\bin\cmake\win\x64\bin\cmake.exe -E make_directory C:/Users/egorv/CLionProjects/ShitCraft/cmake-build-debug/gladsources/glad_gl_core_33 && echo Generating with args --out-path C:/Users/egorv/CLionProjects/ShitCraft/cmake-build-debug/gladsources/glad_gl_core_33 --api gl:core=3.3 --reproducible c && C:\Python27\python.exe -m glad --out-path C:/Users/egorv/CLionProjects/ShitCraft/cmake-build-debug/gladsources/glad_gl_core_33 --api gl:core=3.3 --reproducible c && echo Writing C:/Users/egorv/CLionProjects/ShitCraft/cmake-build-debug/gladsources/glad_gl_core_33/args.txt && echo --out-path C:/Users/egorv/CLionProjects/ShitCraft/cmake-build-debug/gladsources/glad_gl_core_33 --api gl:core=3.3 --reproducible c > C:/Users/egorv/CLionProjects/ShitCraft/cmake-build-debug/gladsources/glad_gl_core_33/args.txt"
   DESC = glad_gl_core_33-generate
   pool = console
+  restat = 1
+
+
+#############################################
+# Custom command for __cmrc_res\lib.cpp
+
+build __cmrc_res/lib.cpp | ${cmake_ninja_workdir}__cmrc_res/lib.cpp: CUSTOM_COMMAND __cmrc_res/lib_.cpp _cmrc/include/cmrc/cmrc.hpp
+  COMMAND = cmd.exe /C "cd /D C:\Users\egorv\CLionProjects\ShitCraft\cmake-build-debug && C:\Users\egorv\AppData\Local\JetBrains\Toolbox\apps\CLion\ch-0\223.8617.54\bin\cmake\win\x64\bin\cmake.exe -E copy_if_different C:/Users/egorv/CLionProjects/ShitCraft/cmake-build-debug/__cmrc_res/lib_.cpp C:/Users/egorv/CLionProjects/ShitCraft/cmake-build-debug/__cmrc_res/lib.cpp"
+  DESC = Generating res resource loader
+  restat = 1
+
+
+#############################################
+# Custom command for __cmrc_res\intermediate\res\glsl\basic.vert.cpp
+
+build __cmrc_res/intermediate/res/glsl/basic.vert.cpp | ${cmake_ninja_workdir}__cmrc_res/intermediate/res/glsl/basic.vert.cpp: CUSTOM_COMMAND C$:/Users/egorv/CLionProjects/ShitCraft/res/glsl/basic.vert _deps/cmrc-src/CMakeRC.cmake
+  COMMAND = cmd.exe /C "cd /D C:\Users\egorv\CLionProjects\ShitCraft\cmake-build-debug && C:\Users\egorv\AppData\Local\JetBrains\Toolbox\apps\CLion\ch-0\223.8617.54\bin\cmake\win\x64\bin\cmake.exe -D_CMRC_GENERATE_MODE=TRUE -DNAMESPACE=res -DSYMBOL=f_d254_res_glsl_basic_vert -DINPUT_FILE=C:/Users/egorv/CLionProjects/ShitCraft/res/glsl/basic.vert -DOUTPUT_FILE=C:/Users/egorv/CLionProjects/ShitCraft/cmake-build-debug/__cmrc_res/intermediate/res/glsl/basic.vert.cpp -P C:/Users/egorv/CLionProjects/ShitCraft/cmake-build-debug/_deps/cmrc-src/CMakeRC.cmake"
+  DESC = Generating intermediate file for C:/Users/egorv/CLionProjects/ShitCraft/res/glsl/basic.vert
+  restat = 1
+
+
+#############################################
+# Custom command for __cmrc_res\intermediate\res\glsl\basic.frag.cpp
+
+build __cmrc_res/intermediate/res/glsl/basic.frag.cpp | ${cmake_ninja_workdir}__cmrc_res/intermediate/res/glsl/basic.frag.cpp: CUSTOM_COMMAND C$:/Users/egorv/CLionProjects/ShitCraft/res/glsl/basic.frag _deps/cmrc-src/CMakeRC.cmake
+  COMMAND = cmd.exe /C "cd /D C:\Users\egorv\CLionProjects\ShitCraft\cmake-build-debug && C:\Users\egorv\AppData\Local\JetBrains\Toolbox\apps\CLion\ch-0\223.8617.54\bin\cmake\win\x64\bin\cmake.exe -D_CMRC_GENERATE_MODE=TRUE -DNAMESPACE=res -DSYMBOL=f_5601_res_glsl_basic_frag -DINPUT_FILE=C:/Users/egorv/CLionProjects/ShitCraft/res/glsl/basic.frag -DOUTPUT_FILE=C:/Users/egorv/CLionProjects/ShitCraft/cmake-build-debug/__cmrc_res/intermediate/res/glsl/basic.frag.cpp -P C:/Users/egorv/CLionProjects/ShitCraft/cmake-build-debug/_deps/cmrc-src/CMakeRC.cmake"
+  DESC = Generating intermediate file for C:/Users/egorv/CLionProjects/ShitCraft/res/glsl/basic.frag
   restat = 1
 
 # =============================================================================
@@ -4460,6 +4533,8 @@ build libSDL2maind.a: phony _deps/sdl2-build/libSDL2maind.a
 
 build libspdlogd.a: phony _deps/spdlog-build/libspdlogd.a
 
+build res: phony libres.a
+
 build sdl_headers_copy: phony _deps/sdl2-build/sdl_headers_copy
 
 build spdlog: phony _deps/spdlog-build/libspdlogd.a
@@ -4474,7 +4549,7 @@ build uninstall: phony _deps/sdl2-build/uninstall
 #############################################
 # Folder: C:/Users/egorv/CLionProjects/ShitCraft/cmake-build-debug
 
-build all: phony libglad_gl_core_33.a ShitCraft.exe _deps/sdl2-build/all _deps/glm-build/all _deps/spdlog-build/all _deps/cmrc-build/all _deps/glad-build/all
+build all: phony libglad_gl_core_33.a libres.a ShitCraft.exe _deps/sdl2-build/all _deps/glm-build/all _deps/spdlog-build/all _deps/cmrc-build/all _deps/glad-build/all
 
 # =============================================================================
 

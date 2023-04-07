@@ -45,14 +45,19 @@ FetchContent_MakeAvailable(SDL2 GLM spdlog glad cmrc)
 add_subdirectory(${glad_SOURCE_DIR}/cmake ${glad_BINARY_DIR})
 glad_add_library(glad_gl_core_33 REPRODUCIBLE API gl:core=3.3)
 
+# Build resources
+
+set(RES_FILES res/glsl/basic.vert res/glsl/basic.frag)
+cmrc_add_resource_library(res ${RES_FILES})
+
 # Build project
 
 set(EXECUTABLE_TARGET_NAME ShitCraft)
 
 configure_file(src/config.h.in ${CMAKE_BINARY_DIR}/src/config.h)
 
-set(SRC ${CMAKE_BINARY_DIR}/src/config.h src/main.cpp src/Game/Game.cpp src/Game/Game.h src/config.h.in  src/Shader/Shader.cpp src/Shader/Shader.h src/types.h src/resources.h src/resources.cpp)
+set(SRC ${CMAKE_BINARY_DIR}/src/config.h src/main.cpp src/Game/Game.cpp src/Game/Game.h src/config.h.in  src/Shader/Shader.cpp src/Shader/Shader.h src/types.h src/res.h src/res.cpp)
 
 add_executable(${EXECUTABLE_TARGET_NAME} ${SRC})
-target_link_libraries(${EXECUTABLE_TARGET_NAME} PRIVATE SDL2::SDL2main SDL2::SDL2-static glad_gl_core_33 glm::glm spdlog::spdlog)
+target_link_libraries(${EXECUTABLE_TARGET_NAME} PRIVATE res SDL2::SDL2main SDL2::SDL2-static glad_gl_core_33 glm::glm spdlog::spdlog)
 target_include_directories(${EXECUTABLE_TARGET_NAME} PRIVATE ${CMAKE_BINARY_DIR}/src src)

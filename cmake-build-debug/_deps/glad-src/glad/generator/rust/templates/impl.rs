@@ -1,4 +1,4 @@
-{% import 'template_utils.rs' as template_utils with context %}
+{% import 'template_utils.res' as template_utils with context %}
 pub use self::types::*;
 pub use self::enumerations::*;
 pub use self::functions::*;
@@ -41,7 +41,7 @@ unsafe impl Sync for FnPtr {}
 unsafe impl Send for FnPtr {}
 
 pub mod types {
-    {% include 'types/' + spec.name + '.rs' ignore missing with context %}
+    {% include 'types/' + spec.name + '.res' ignore missing with context %}
 }
 
 pub mod enumerations {

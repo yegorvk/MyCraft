@@ -5,6 +5,7 @@
 #include "Game.h"
 #include "spdlog/spdlog.h"
 #include "Shader/Shader.h"
+#include "res.h"
 
 #define glGetStr(prop) reinterpret_cast<const char*>(glGetString(prop))
 
@@ -33,6 +34,11 @@ void Game::run() {
     int winWidth, winHeight;
     SDL_GetWindowSize(window, &winWidth, &winHeight);
     glViewport(0, 0, winWidth, winHeight);
+
+    auto vertShaderSrc = res::getString("res/glsl/basic.vert");
+    auto fragShaderSrc = res::getString("res/glsl/basic.frag");
+
+    auto shader = Shader::compile(vertShaderSrc.c_str(), fragShaderSrc.c_str());
 
     glClearColor(1.f, 1.f, 1.f, 1.f);
 

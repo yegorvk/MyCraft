@@ -1,5 +1,5 @@
 #![allow(dead_code, non_camel_case_types, non_snake_case)]
-{% include 'types/khrplatform.rs' %}
+{% include 'types/khrplatform.res' %}
 
 pub type EGLint = khronos_int32_t;
 

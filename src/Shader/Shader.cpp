@@ -67,7 +67,7 @@ bool ShaderBuilder::setStage(ShaderType type, const char *src) {
         char *infoLog = new char[infoLogLen];
         glGetShaderInfoLog(shader, infoLogLen, nullptr, infoLog);
 
-        spdlog::error("{} shader compilation failed. Compiler output: \n{}", shaderTypeStr[stage],
+        spdlog::error("{} shader compilation failed.\nCompiler output:\n{}", shaderTypeStr[stage],
                       const_cast<const char *>(infoLog));
 
         delete[] infoLog;
