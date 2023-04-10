@@ -1,0 +1,17 @@
+//
+// Created by egorv on 4/8/2023.
+//
+
+#ifndef SHITCRAFT_SIMPLECUBESCENE_H
+#define SHITCRAFT_SIMPLECUBESCENE_H
+
+#include "Node/Node.h"
+#include "SimpleCube/SimpleCube.h"
+
+struct SimpleCubeScene : public Node {
+    inline SimpleCubeScene() : Node() {
+        addDrawable(std::make_shared<SimpleCube>());
+    }
+};
+
+#endif //SHITCRAFT_SIMPLECUBESCENE_H

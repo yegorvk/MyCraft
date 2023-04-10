@@ -7,6 +7,8 @@
 
 #include "SDL.h"
 #include "glad/gl.h"
+#include "Node/Node.h"
+#include "Camera.h"
 
 class Game {
 public:
@@ -27,9 +29,9 @@ private:
 
     void createGlContext();
 
-    // Callbacks
+    void onWindowGlContextReady();
 
-    void handleEvent(const SDL_Event &event);
+    // Callbacks
 
     static void processGlDebugMessage(
             GLenum source,
@@ -46,6 +48,10 @@ private:
     static void die(const char *msg);
 
     // Data
+
+    std::unique_ptr<Node> rootNode;
+
+    Camera camera;
 
     SDL_Window *window = nullptr;
     SDL_GLContext glContext = nullptr;

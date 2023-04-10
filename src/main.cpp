@@ -6,7 +6,7 @@ constexpr int WINDOW_WIDTH = 640;
 constexpr int WINDOW_HEIGHT = 480;
 
 int main(int argv, char **args) {
-#ifdef BUILD_TYPE_DEBUG
+#ifdef DEBUG
     spdlog::set_level(spdlog::level::debug);
 #else
     spdlog::set_level(spdlog::level::info);

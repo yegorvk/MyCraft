@@ -3,7 +3,6 @@
 //
 
 #include "Shader.h"
-#include "glad/gl.h"
 
 Shader Shader::compile(const char *vertShaderSrc, const char *fragShaderSrc) {
     ShaderBuilder builder;
@@ -15,14 +14,6 @@ Shader Shader::compile(const char *vertShaderSrc, const char *fragShaderSrc) {
         return Shader(0);
 
     return builder.link();
-}
-
-void Shader::bind() {
-    glUseProgram(handle);
-}
-
-void Shader::unbind() {
-    glUseProgram(0);
 }
 
 Shader::~Shader() {

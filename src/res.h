@@ -8,7 +8,7 @@
 #include <string>
 
 namespace res {
-    std::string getString(const char* path);
+    std::string loadString(const char* path);
 }
 
 #endif //SHITCRAFT_RES_H

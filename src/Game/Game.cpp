@@ -2,22 +2,35 @@
 // Created by egorv on 4/5/2023.
 //
 
+#define GLM_FORCE_RADIANCE
+
 #include "Game.h"
 #include "spdlog/spdlog.h"
 #include "Shader/Shader.h"
 #include "res.h"
 #include "config.h"
+#include "SDL.h"
+#include "CameraControls/CameraControls.h"
+
+#include "SimpleCubeScene.h"
 
 #define glGetStr(prop) reinterpret_cast<const char*>(glGetString(prop))
+
+constexpr float P_FOV_RAD = glm::pi<float>() / 3.f;
+constexpr float P_NEAR = 0.001f;
+constexpr float P_FAR = 1000.f;
 
 Game::Game(const char *winTitle, int winWidth, int winHeight, bool fullscreen) {
     initSDL();
     setGlContextSettings();
     createWindow(winTitle, winWidth, winHeight, fullscreen);
     createGlContext();
+    onWindowGlContextReady();
 }
 
 Game::~Game() {
+    rootNode.reset();
+
     if (glContext) {
         SDL_GL_DeleteContext(glContext);
         glContext = nullptr;
@@ -32,69 +45,57 @@ Game::~Game() {
 }
 
 void Game::run() {
-    int winWidth, winHeight;
-    SDL_GetWindowSize(window, &winWidth, &winHeight);
-    glViewport(0, 0, winWidth, winHeight);
-
-#ifdef DEBUG
-    glEnable(GL_DEBUG_OUTPUT);
-    glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
-    glDebugMessageCallback(Game::processGlDebugMessage, nullptr);
-#endif
-
-    auto vertShaderSrc = res::getString("res/glsl/basic.vert");
-    auto fragShaderSrc = res::getString("res/glsl/basic.frag");
-
-    auto shader = Shader::compile(vertShaderSrc.c_str(), fragShaderSrc.c_str());
-
-    float vertices[] = {
-            -0.5f, -0.5f,
-            0.f, 0.5f,
-            0.5f, -0.5f
-    };
-
-    uint vbo = 0;
-    glGenBuffers(1, &vbo);
-
-    glBindBuffer(GL_ARRAY_BUFFER, vbo);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
-    uint vao = 0;
-    glGenVertexArrays(1, &vao);
-
-    glBindVertexArray(vao);
-
-    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
-    glEnableVertexAttribArray(0);
-
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-    glBindVertexArray(0);
-
     glClearColor(1.f, 1.f, 1.f, 1.f);
 
     bool quit = false;
     SDL_Event event;
 
+    int winWidth, winHeight;
+    SDL_GetWindowSize(window, &winWidth, &winHeight);
+
+    float aspect = static_cast<float>(winWidth) / static_cast<float>(winHeight);
+    glm::mat4 projMat = glm::perspective(P_FOV_RAD, aspect, P_NEAR, P_FAR);
+
+    auto lastFrameTimestamp = SDL_GetTicks64();
+
+    SDL_SetRelativeMouseMode(SDL_TRUE);
+
     while (!quit) {
+        auto curFrameTime = SDL_GetTicks();
+        auto delta = curFrameTime - lastFrameTimestamp;
+        lastFrameTimestamp = curFrameTime;
+
         SDL_GL_SwapWindow(window);
+        SDL_GetWindowSize(window, &winWidth, &winHeight);
 
         while (SDL_PollEvent(&event)) {
-            if (event.type == SDL_QUIT)
+            if (event.type == SDL_QUIT || (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_ESCAPE))
                 quit = true;
-            else
-                handleEvent(event);
+
+            if (event.type == SDL_WINDOWEVENT && event.window.event == SDL_WINDOWEVENT_SIZE_CHANGED) {
+                winWidth = event.window.data1, winHeight = event.window.data2;
+
+                aspect = static_cast<float>(winWidth) / static_cast<float>(winHeight);
+                projMat = glm::perspective(P_FOV_RAD, aspect, P_NEAR, P_FAR);
+
+                glViewport(0, 0, event.window.data1, event.window.data2);
+            }
+
+            if (rootNode)
+                rootNode->handleEvent(event);
         }
 
-        glClear(GL_COLOR_BUFFER_BIT);
+        rootNode->update(delta);
 
-        shader.bind();
-        glBindVertexArray(vao);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        glDrawArrays(GL_TRIANGLES, 0, 3);
+        Transform transform = {.transform = projMat * camera.getViewMatrix()};
 
-        glBindVertexArray(0);
-        Shader::unbind();
+        if (rootNode)
+            rootNode->draw(transform);
     }
+
+    SDL_SetRelativeMouseMode(SDL_FALSE);
 }
 
 void Game::initSDL() {
@@ -113,7 +114,7 @@ void Game::setGlContextSettings() {
     SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
 
     SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 1);
-    SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES,8);
+    SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, 8);
 
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 }
@@ -147,9 +148,30 @@ void Game::createGlContext() {
     SDL_GL_SetSwapInterval(1);
 }
 
-void Game::handleEvent(const SDL_Event &event) {
-    if (event.type == SDL_WINDOWEVENT && event.window.event == SDL_WINDOWEVENT_SIZE_CHANGED)
-        glViewport(0, 0, event.window.data1, event.window.data2);
+void Game::onWindowGlContextReady() {
+    int winWidth, winHeight;
+    SDL_GetWindowSize(window, &winWidth, &winHeight);
+    glViewport(0, 0, winWidth, winHeight);
+
+#ifdef DEBUG
+    glEnable(GL_DEBUG_OUTPUT);
+    glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
+    glDebugMessageCallback(Game::processGlDebugMessage, nullptr);
+#endif
+
+    glEnable(GL_DEPTH_TEST);
+    //glEnable(GL_CULL_FACE);
+
+    //glFrontFace(GL_CW);
+
+    rootNode = std::make_unique<SimpleCubeScene>();
+
+    camera.moveAbsolute(glm::vec3(0.f, 0.f, 3.f));
+
+    auto camControls = std::make_shared<CameraControls>(camera);
+
+    rootNode->scheduleForUpdates(camControls);
+    rootNode->addEventConsumer(camControls);
 }
 
 [[noreturn]]
@@ -179,7 +201,7 @@ void Game::processGlDebugMessage(GLenum source, GLenum type, GLuint id, GLenum s
             logLevel = spdlog::level::debug;
     }
 
-    const char* sourceStr;
+    const char *sourceStr;
 
     switch (source) {
         case GL_DEBUG_SOURCE_API:
@@ -204,7 +226,7 @@ void Game::processGlDebugMessage(GLenum source, GLenum type, GLuint id, GLenum s
             sourceStr = "UNKNOWN";
     }
 
-    const char* typeStr;
+    const char *typeStr;
 
     switch (type) {
         case GL_DEBUG_TYPE_ERROR:
