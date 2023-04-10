@@ -16,7 +16,7 @@ struct CameraControlBindings {
     SDL_Scancode rollLeft = SDL_SCANCODE_Q, rollRight = SDL_SCANCODE_E;
 };
 
-constexpr float DEFAULT_CAMERA_SENSITIVITY = 0.3f;
+constexpr float DEFAULT_CAMERA_SENSITIVITY = 0.0005f;
 constexpr float DEFAULT_CAMERA_SENSITIVITY_KEYBOARD_COEFFICIENT = 0.01f;
 constexpr float DEFAULT_CAMERA_SPEED = 0.001f;
 

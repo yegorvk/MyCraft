@@ -8,14 +8,7 @@
 bool CameraControls::handleEvent(const SDL_Event &event) {
     if (event.type == SDL_MOUSEMOTION) {
         int xRel = event.motion.xrel, yRel = event.motion.yrel;
-
-        int winWidth, winHeight;
-        SDL_GetWindowSize(SDL_GL_GetCurrentWindow(), &winWidth, &winHeight);
-
-        float xRelFrac = static_cast<float>(xRel) / static_cast<float>(winWidth);
-        float yRelFrac = static_cast<float>(yRel) / static_cast<float>(winHeight);
-
-        camera.rotate(sensitivity * glm::vec3(yRelFrac, xRelFrac, 0.f));
+        camera.rotate(sensitivity * glm::vec3(static_cast<float>(yRel), static_cast<float>(xRel), 0.f));
     } else if (event.type == SDL_KEYUP || event.type == SDL_KEYDOWN) {
         bool down = event.type == SDL_KEYDOWN;
         SDL_Scancode scancode = event.key.keysym.scancode;
