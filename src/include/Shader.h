@@ -16,7 +16,10 @@ public:
 
     inline explicit Shader(uint handle): handle(handle) {};
 
-    ~Shader();
+    inline ~Shader() {
+        if (handle != 0)
+            glDeleteProgram(handle);
+    }
 
     inline void bind() const {
         glUseProgram(handle);

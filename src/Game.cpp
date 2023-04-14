@@ -6,11 +6,11 @@
 
 #include "Game.h"
 #include "spdlog/spdlog.h"
-#include "Shader/Shader.h"
-#include "res.h"
+#include "Shader.h"
 #include "config.h"
 #include "SDL.h"
-#include "CameraControls/CameraControls.h"
+#include "CameraControls.h"
+#include "Context.h"
 
 #include "SimpleCubeScene.h"
 
@@ -30,6 +30,8 @@ Game::Game(const char *winTitle, int winWidth, int winHeight, bool fullscreen) {
 
 Game::~Game() {
     rootNode.reset();
+
+    Context::destroyGlobal();
 
     if (glContext) {
         SDL_GL_DeleteContext(glContext);
@@ -149,6 +151,8 @@ void Game::createGlContext() {
 }
 
 void Game::onWindowGlContextReady() {
+    Context::setGlobal(new Context());
+
     int winWidth, winHeight;
     SDL_GetWindowSize(window, &winWidth, &winHeight);
     glViewport(0, 0, winWidth, winHeight);
@@ -160,9 +164,7 @@ void Game::onWindowGlContextReady() {
 #endif
 
     glEnable(GL_DEPTH_TEST);
-    //glEnable(GL_CULL_FACE);
-
-    //glFrontFace(GL_CW);
+    glEnable(GL_CULL_FACE);
 
     rootNode = std::make_unique<SimpleCubeScene>();
 

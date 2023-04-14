@@ -7,7 +7,7 @@
 
 #include "SDL.h"
 #include "glad/gl.h"
-#include "Node/Node.h"
+#include "Node.h"
 #include "Camera.h"
 
 class Game {

@@ -1,4 +1,4 @@
-#include "Game/Game.h"
+#include "Game.h"
 #include "config.h"
 #include "spdlog/spdlog.h"
 

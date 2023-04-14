@@ -6,7 +6,7 @@
 #define SHITCRAFT_CAMERA_H
 
 #include "glm/glm.hpp"
-#include <glm/gtx/quaternion.hpp>
+#include "glm/gtx/quaternion.hpp"
 
 #include "spdlog/spdlog.h"
 

@@ -6,7 +6,7 @@
 #define SHITCRAFT_SIMPLECUBE_H
 
 #include "Drawable.h"
-#include "Shader/Shader.h"
+#include "Shader.h"
 
 class SimpleCube : public Drawable {
 public:
@@ -18,8 +18,8 @@ public:
 
 private:
     Shader shader;
-    uint vbo = 0, ebo = 0, vao = 0;
-};
 
+    uint vbo = 0, vao = 0;
+};
 
 #endif //SHITCRAFT_SIMPLECUBE_H

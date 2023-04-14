@@ -17,7 +17,7 @@ struct CameraControlBindings {
 };
 
 constexpr float DEFAULT_CAMERA_SENSITIVITY = 0.0005f;
-constexpr float DEFAULT_CAMERA_SENSITIVITY_KEYBOARD_COEFFICIENT = 0.01f;
+constexpr float DEFAULT_CAMERA_SENSITIVITY_KEYBOARD_COEFFICIENT = 1.f;
 constexpr float DEFAULT_CAMERA_SPEED = 0.001f;
 
 struct PressedControlKeys {

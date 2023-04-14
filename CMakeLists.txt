@@ -50,25 +50,29 @@ else ()
     glad_add_library(glad_gl_core_33 REPRODUCIBLE API gl:core=3.3)
 endif ()
 
+if (NOT EXISTS ${CMAKE_BINARY_DIR}/stb_image.h)
+    file(DOWNLOAD https://raw.githubusercontent.com/nothings/stb/master/stb_image.h ${CMAKE_BINARY_DIR}/stb/stb_image.h)
+endif()
+
 # Build project
 
 set(EXECUTABLE_TARGET_NAME ShitCraft)
 
-set(SRC ${CMAKE_BINARY_DIR}/src/config.h src/main.cpp src/Game/Game.cpp src/Game/Game.h src/config.h.in src/Shader/Shader.cpp src/Shader/Shader.h src/types.h src/res.h src/res.cpp src/Drawable.h src/EventConsumer.h src/EventConsumer.h src/Node/Node.cpp src/Node/Node.h src/NodeHost/NodeHost.h src/Node/Node.h src/NodeHost/NodeHost.cpp src/Node/Node.cpp src/Transform.h src/SimpleCube/SimpleCube.cpp src/SimpleCube/SimpleCube.h src/SimpleCubeScene.h src/Camera.h src/CameraControls/CameraControls.h src/CameraControls/CameraControls.cpp src/UpdateDelegate.h src/INode.h)
+set(SRC ${CMAKE_BINARY_DIR}/src/config.h src/main.cpp src/Game.cpp src/include/Game.h src/include/config.h.in src/Shader.cpp src/include/Shader.h src/include/types.h src/include/Drawable.h src/include/EventConsumer.h src/include/EventConsumer.h src/Node.cpp src/include/Node.h src/include/NodeHost.h src/include/Node.h src/NodeHost.cpp src/Node.cpp src/include/Transform.h src/SimpleCube.cpp src/include/SimpleCube.h src/include/SimpleCubeScene.h src/include/Camera.h src/include/CameraControls.h src/CameraControls.cpp src/include/UpdateDelegate.h src/include/INode.h src/external/stb_image.cpp src/include/Texture.h src/Texture.cpp src/include/AssetManager.h src/AssetManager.cpp src/utils.cpp src/include/utils.h src/include/Context.h src/Context.cpp src/include/Vertex.h)
 set(LIBS SDL2::SDL2main SDL2::SDL2-static glad_gl_core_33 glm::glm spdlog::spdlog)
 
 if (DEBUG)
-    set(RESOURCES_DIR ${PROJECT_SOURCE_DIR}/res/)
+    set(RESOURCES_DIR ${PROJECT_SOURCE_DIR}/assets/)
 else ()
-    set(RES_FILES res/glsl/basic.vert res/glsl/basic.frag)
-    set(RESOURCES_PREFIX res/)
-    set(LIBS res ${LIBS})
-    cmrc_add_resource_library(res ${RES_FILES})
+    set(RES_FILES assets/glsl/basic.vert assets/glsl/basic.frag)
+    set(RESOURCES_PREFIX assets/)
+    set(LIBS assets ${LIBS})
+    cmrc_add_resource_library(assets ${RES_FILES})
 endif ()
 
-configure_file(src/config.h.in ${CMAKE_BINARY_DIR}/src/config.h)
+configure_file(src/include/config.h.in ${CMAKE_BINARY_DIR}/src/config.h)
 
 add_executable(${EXECUTABLE_TARGET_NAME} ${SRC})
 
 target_link_libraries(${EXECUTABLE_TARGET_NAME} PRIVATE ${LIBS})
-target_include_directories(${EXECUTABLE_TARGET_NAME} PRIVATE ${CMAKE_BINARY_DIR}/src src)
+target_include_directories(${EXECUTABLE_TARGET_NAME} PRIVATE ${CMAKE_BINARY_DIR}/src ${CMAKE_BINARY_DIR}/stb src/include)
