@@ -11,8 +11,10 @@
 #include "SDL.h"
 #include "CameraControls.h"
 #include "Context.h"
+#include "config.h"
 
 #include "SimpleCubeScene.h"
+#include "arch.h"
 
 #define glGetStr(prop) reinterpret_cast<const char*>(glGetString(prop))
 
@@ -91,7 +93,7 @@ void Game::run() {
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        Transform transform = {.transform = projMat * camera.getViewMatrix()};
+        Transform transform(projMat * camera.getViewMatrix());
 
         if (rootNode)
             rootNode->draw(transform);
@@ -182,7 +184,7 @@ void Game::die(const char *msg) {
     exit(EXIT_FAILURE);
 }
 
-void Game::processGlDebugMessage(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length,
+void STDCALL Game::processGlDebugMessage(GLuint source, GLuint type, GLuint id, GLuint severity, GLsizei length,
                                  const GLchar *message, const void *userParam) {
     spdlog::level::level_enum logLevel;
 

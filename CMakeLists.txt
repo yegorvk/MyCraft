@@ -3,6 +3,10 @@ project(ShitCraft VERSION 0.0.1 LANGUAGES C CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 
+set(BUILD_SHARED_LIBS OFF)
+
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -static -static-libgcc -static-libstdc++")
+
 if (${CMAKE_BUILD_TYPE} STREQUAL Debug)
     set(DEBUG ON)
 else ()
@@ -58,7 +62,7 @@ endif()
 
 set(EXECUTABLE_TARGET_NAME ShitCraft)
 
-set(SRC ${CMAKE_BINARY_DIR}/src/config.h src/main.cpp src/Game.cpp src/include/Game.h src/include/config.h.in src/Shader.cpp src/include/Shader.h src/include/types.h src/include/Drawable.h src/include/EventConsumer.h src/include/EventConsumer.h src/Node.cpp src/include/Node.h src/include/NodeHost.h src/include/Node.h src/NodeHost.cpp src/Node.cpp src/include/Transform.h src/SimpleCube.cpp src/include/SimpleCube.h src/include/SimpleCubeScene.h src/include/Camera.h src/include/CameraControls.h src/CameraControls.cpp src/include/UpdateDelegate.h src/include/INode.h src/external/stb_image.cpp src/include/Texture.h src/Texture.cpp src/include/AssetManager.h src/AssetManager.cpp src/utils.cpp src/include/utils.h src/include/Context.h src/Context.cpp src/include/Vertex.h)
+set(SRC ${CMAKE_BINARY_DIR}/src/config.h src/main.cpp src/Game.cpp src/include/Game.h src/include/config.h.in src/Shader.cpp src/include/Shader.h src/include/types.h src/include/Drawable.h src/include/EventConsumer.h src/include/EventConsumer.h src/Node.cpp src/include/Node.h src/include/NodeHost.h src/include/Node.h src/NodeHost.cpp src/Node.cpp src/include/Transform.h src/SimpleCube.cpp src/include/SimpleCube.h src/include/SimpleCubeScene.h src/include/Camera.h src/include/CameraControls.h src/CameraControls.cpp src/include/UpdateDelegate.h src/include/INode.h src/external/stb_image.cpp src/include/Texture.h src/Texture.cpp src/include/AssetManager.h src/AssetManager.cpp src/utils.cpp src/include/utils.h src/include/Context.h src/Context.cpp src/include/Vertex.h src/include/arch.h)
 set(LIBS SDL2::SDL2main SDL2::SDL2-static glad_gl_core_33 glm::glm spdlog::spdlog)
 
 if (DEBUG)

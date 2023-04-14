@@ -8,6 +8,8 @@
 #include "glm/glm.hpp"
 
 struct Transform {
+    inline explicit Transform(glm::mat4 transform) : transform(transform) {}
+
     glm::mat4 transform;
 };
 

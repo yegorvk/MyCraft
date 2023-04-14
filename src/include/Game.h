@@ -9,6 +9,7 @@
 #include "glad/gl.h"
 #include "Node.h"
 #include "Camera.h"
+#include "arch.h"
 
 class Game {
 public:
@@ -33,11 +34,11 @@ private:
 
     // Callbacks
 
-    static void processGlDebugMessage(
-            GLenum source,
-            GLenum type,
+    static void STDCALL processGlDebugMessage(
+            GLuint source,
+            GLuint type,
             GLuint id,
-            GLenum severity,
+            GLuint severity,
             GLsizei length,
             const GLchar *message,
             const void *userParam);
