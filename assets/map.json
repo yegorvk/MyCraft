@@ -1,0 +1,12 @@
+{
+    "name": "root",
+    "type": "group",
+    "assets": [
+        {
+            "include": "shaders"
+        },
+        {
+            "include": "textures"
+        }
+    ]
+}

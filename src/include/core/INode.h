@@ -5,9 +5,9 @@
 #ifndef SHITCRAFT_INODE_H
 #define SHITCRAFT_INODE_H
 
-#include "Drawable.h"
+#include "core/Drawable.h"
 #include "UpdateDelegate.h"
-#include "EventConsumer.h"
+#include "core/EventConsumer.h"
 
 class INode : public Drawable, public UpdateDelegate, public EventConsumer {};
 

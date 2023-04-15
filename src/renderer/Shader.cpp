@@ -2,7 +2,7 @@
 // Created by egorv on 4/6/2023.
 //
 
-#include "Shader.h"
+#include "renderer/Shader.h"
 
 Shader Shader::compile(const char *vertShaderSrc, const char *fragShaderSrc) {
     ShaderBuilder builder;

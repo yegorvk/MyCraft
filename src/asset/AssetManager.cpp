@@ -2,7 +2,7 @@
 // Created by egorv on 4/12/2023.
 //
 
-#include "AssetManager.h"
+#include "asset/AssetManager.h"
 #include "utils.h"
 #include "stb_image.h"
 #include "spdlog/spdlog.h"

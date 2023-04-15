@@ -41,6 +41,7 @@ FetchContent_Declare(cmrc URL https://github.com/vector-of-bool/cmrc/archive/ref
 FetchContent_Declare(SDL2 URL https://github.com/libsdl-org/SDL/archive/refs/tags/release-2.26.5.tar.gz)
 FetchContent_Declare(GLM URL https://github.com/g-truc/glm/archive/refs/tags/0.9.9.8.tar.gz)
 FetchContent_Declare(spdlog URL https://github.com/gabime/spdlog/archive/refs/tags/v1.11.0.tar.gz)
+#FetchContent_Declare(jsoncpp URL https://github.com/open-source-parsers/jsoncpp/archive/refs/tags/1.9.5.zip)
 
 set(CACHE SDL2_DISABLE_INSTALL ON)
 
@@ -62,16 +63,16 @@ endif()
 
 set(EXECUTABLE_TARGET_NAME ShitCraft)
 
-set(SRC ${CMAKE_BINARY_DIR}/src/config.h src/main.cpp src/Game.cpp src/include/Game.h src/include/config.h.in src/Shader.cpp src/include/Shader.h src/include/types.h src/include/Drawable.h src/include/EventConsumer.h src/include/EventConsumer.h src/Node.cpp src/include/Node.h src/include/NodeHost.h src/include/Node.h src/NodeHost.cpp src/Node.cpp src/include/Transform.h src/SimpleCube.cpp src/include/SimpleCube.h src/include/SimpleCubeScene.h src/include/Camera.h src/include/CameraControls.h src/CameraControls.cpp src/include/UpdateDelegate.h src/include/INode.h src/external/stb_image.cpp src/include/Texture.h src/Texture.cpp src/include/AssetManager.h src/AssetManager.cpp src/utils.cpp src/include/utils.h src/include/Context.h src/Context.cpp src/include/Vertex.h src/include/arch.h)
+set(SRC ${CMAKE_BINARY_DIR}/src/config.h src/main.cpp src/Game.cpp src/include/Game.h src/include/config.h.in src/renderer/Shader.cpp src/include/renderer/Shader.h src/include/types.h src/include/core/Drawable.h src/include/core/EventConsumer.h src/include/core/EventConsumer.h src/core/Node.cpp src/include/core/Node.h src/include/core/NodeHost.h src/include/core/Node.h src/core/NodeHost.cpp src/core/Node.cpp src/include/renderer/Transform.h src/SimpleCube.cpp src/include/SimpleCube.h src/include/SimpleCubeScene.h src/include/camera/Camera.h src/include/camera/CameraControls.h src/camera/CameraControls.cpp src/include/core/UpdateDelegate.h src/include/core/INode.h src/external/stb_image.cpp src/include/renderer/Texture.h src/renderer/Texture.cpp src/include/asset/AssetManager.h src/asset/AssetManager.cpp src/utils.cpp src/include/utils.h src/include/Context.h src/Context.cpp src/include/renderer/Vertex.h src/include/arch.h src/ChunkMesh.cpp src/include/ChunkMesh.h src/include/Chunk.h src/include/Block.h)
 set(LIBS SDL2::SDL2main SDL2::SDL2-static glad_gl_core_33 glm::glm spdlog::spdlog)
 
 if (DEBUG)
-    set(RESOURCES_DIR ${PROJECT_SOURCE_DIR}/assets/)
+    set(ASSETS_DIR ${PROJECT_SOURCE_DIR}/assets/)
 else ()
-    set(RES_FILES assets/glsl/basic.vert assets/glsl/basic.frag)
-    set(RESOURCES_PREFIX assets/)
+    set(ASSETS assets/shaders/basic.vert assets/shaders/basic.frag)
+    set(ASSETS_PREFIX assets/)
     set(LIBS assets ${LIBS})
-    cmrc_add_resource_library(assets ${RES_FILES})
+    cmrc_add_resource_library(assets ${ASSETS})
 endif ()
 
 configure_file(src/include/config.h.in ${CMAKE_BINARY_DIR}/src/config.h)

@@ -5,7 +5,7 @@
 #ifndef SHITCRAFT_NODEHOST_H
 #define SHITCRAFT_NODEHOST_H
 
-#include "INode.h"
+#include "core/INode.h"
 #include <memory>
 
 class NodeHost : public INode {

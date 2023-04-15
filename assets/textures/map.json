@@ -1,0 +1,11 @@
+{
+    "name": "tex",
+    "type": "group",
+    "assets": [
+        {
+            "name": "box",
+            "type": "texture",
+            "path": "box.png"
+        }
+    ]
+}

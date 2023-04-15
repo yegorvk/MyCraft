@@ -5,9 +5,9 @@
 #ifndef SHITCRAFT_CAMERACONTROLS_H
 #define SHITCRAFT_CAMERACONTROLS_H
 
-#include "Camera.h"
-#include "EventConsumer.h"
-#include "UpdateDelegate.h"
+#include "camera/Camera.h"
+#include "core/EventConsumer.h"
+#include "core/UpdateDelegate.h"
 
 struct CameraControlBindings {
     SDL_Scancode forward = SDL_SCANCODE_W, back = SDL_SCANCODE_S;

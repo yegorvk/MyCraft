@@ -5,7 +5,7 @@
 #ifndef SHITCRAFT_SIMPLECUBESCENE_H
 #define SHITCRAFT_SIMPLECUBESCENE_H
 
-#include "Node.h"
+#include "core/Node.h"
 #include "SimpleCube.h"
 
 struct SimpleCubeScene : public Node {

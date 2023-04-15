@@ -1,0 +1,187 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "title": "asset",
+    "oneOf": [
+        {
+            "$ref": "#/$defs/group"
+        },
+        {
+            "$ref": "#/$defs/include"
+        },
+        {
+            "$ref": "#/$defs/text"
+        },
+        {
+            "$ref": "#/$defs/texture"
+        },
+        {
+            "$ref": "#/$defs/shader"
+        },
+        {
+            "$ref": "#/$defs/block"
+        }
+    ],
+    "$defs": {
+        "assetName": {
+            "type": "string"
+        },
+        "assetGroupRelPath": {
+            "type": "string"
+        },
+        "assetRelPath": {
+            "type": "string"
+        },
+        "include": {
+            "type": "object",
+            "properties": {
+                "include": {
+                    "$ref": "#/$defs/assetGroupRelPath"
+                }
+            },
+            "required": ["include"]
+        },
+        "group": {
+            "type": "object",
+            "properties": {
+                "type": {
+                    "const": "group"
+                },
+                "name": {
+                    "$ref": "#/$defs/assetName"
+                },
+                "assets": {
+                    "type": "array",
+                    "uniqueItems": true,
+                    "items": {
+                        "$ref": "#"
+                    }
+                }
+            },
+            "required": ["type", "name", "assets"]
+        },
+        "text": {
+            "type": "object",
+            "properties": {
+                "type": {
+                    "const": "text"
+                },
+                "name": {
+                    "$ref": "#/$defs/assetName"
+                },
+                "path": {
+                    "$ref": "#/$defs/assetRelPath"
+                }
+            },
+            "required": ["type", "name", "path"]
+        },
+        "textOrRef": {
+            "oneOf": [
+                {
+                    "$ref": "#/$defs/include"
+                },
+                {
+                    "$ref": "#/$defs/text"
+                }
+            ]
+        },
+        "texture": {
+            "type": "object",
+            "properties": {
+                "type": {
+                    "const": "texture"
+                },
+                "name": {
+                    "$ref": "#/$defs/assetName"
+                },
+                "path": {
+                    "$ref": "#/$defs/assetRelPath"
+                }
+            },
+            "required": ["type", "name", "path"]
+        },
+        "textureOrRef": {
+            "oneOf": [
+                {
+                    "$ref": "#/$defs/include"
+                },
+                {
+                    "$ref": "#/$defs/texture"
+                }
+            ]
+        },
+        "shader": {
+            "type": "object",
+            "properties": {
+                "type": {
+                    "const": "shader"
+                },
+                "name": {
+                    "$ref": "#/$defs/assetName"
+                },
+                "stages": {
+                    "type": "object",
+                    "properties": {
+                        "vertex": {
+                            "$ref": "#/$defs/textOrRef"
+                        },
+                        "fragment": {
+                            "$ref": "#/$defs/textOrRef"
+                        }
+                    }
+                }
+            },
+            "required": ["type", "name"]
+        },
+        "blockFace": {
+            "type": "object",
+            "properties": {
+                "texture": {
+                    "$ref": "#/$defs/textOrRef"
+                }
+            }
+        },
+        "block": {
+            "type": "object",
+            "properties": {
+                "type": {
+                    "const": "block"
+                },
+                "name": {
+                    "$ref": "#/$defs/assetName"
+                },
+                "translucent": {
+                    "type": "boolean"
+                },
+                "faces": {
+                    "type": "object",
+                    "properties": {
+                        "faces": {
+                            "type": "object",
+                            "properties": {
+                                "front": {
+                                    "$ref": "#/$defs/blockFace"
+                                },
+                                "back": {
+                                    "$ref": "#/$defs/blockFace"
+                                },
+                                "left": {
+                                    "$ref": "#/$defs/blockFace"
+                                },
+                                "right": {
+                                    "$ref": "#/$defs/blockFace"
+                                },
+                                "top": {
+                                    "$ref": "#/$defs/blockFace"
+                                },
+                                "bottom": {
+                                    "$ref": "#/$defs/blockFace"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "required": ["type", "name"]
+        }
+    }
+}

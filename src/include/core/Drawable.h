@@ -5,7 +5,7 @@
 #ifndef SHITCRAFT_DRAWABLE_H
 #define SHITCRAFT_DRAWABLE_H
 
-#include "Transform.h"
+#include "renderer/Transform.h"
 
 struct Drawable {
     virtual void draw(const Transform &transform) const = 0;

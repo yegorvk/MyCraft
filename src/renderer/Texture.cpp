@@ -3,7 +3,7 @@
 //
 
 #include <utility>
-#include "Texture.h"
+#include "renderer/Texture.h"
 
 Texture2D Texture2D::loadFromMemory(int width,
                                     int height,

@@ -6,7 +6,7 @@
 #define SHITCRAFT_CONTEXT_H
 
 #include <memory>
-#include "AssetManager.h"
+#include "asset/AssetManager.h"
 
 class Context {
 public:

@@ -5,8 +5,8 @@
 #ifndef SHITCRAFT_SIMPLECUBE_H
 #define SHITCRAFT_SIMPLECUBE_H
 
-#include "Drawable.h"
-#include "Shader.h"
+#include "core/Drawable.h"
+#include "renderer/Shader.h"
 
 class SimpleCube : public Drawable {
 public:

@@ -7,7 +7,7 @@
 
 #include <string>
 #include <unordered_map>
-#include "Texture.h"
+#include "renderer/Texture.h"
 #include "config.h"
 
 class AssetProvider {
@@ -55,7 +55,7 @@ public:
     inline explicit LocalFsAssetLoader(std::string &&rootDir) : rootDir(rootDir) {}
 
 #ifdef DEBUG
-    inline LocalFsAssetLoader() : rootDir(RESOURCES_DIR) {}
+    inline LocalFsAssetLoader() : rootDir(ASSETS_DIR) {}
 #endif
 
     std::string loadStr(const char *path) final;

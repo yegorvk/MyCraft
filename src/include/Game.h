@@ -7,8 +7,8 @@
 
 #include "SDL.h"
 #include "glad/gl.h"
-#include "Node.h"
-#include "Camera.h"
+#include "core/Node.h"
+#include "camera/Camera.h"
 #include "arch.h"
 
 class Game {

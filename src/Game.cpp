@@ -6,10 +6,10 @@
 
 #include "Game.h"
 #include "spdlog/spdlog.h"
-#include "Shader.h"
+#include "renderer/Shader.h"
 #include "config.h"
 #include "SDL.h"
-#include "CameraControls.h"
+#include "camera/CameraControls.h"
 #include "Context.h"
 #include "config.h"
 

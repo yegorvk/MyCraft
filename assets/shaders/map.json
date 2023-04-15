@@ -1,0 +1,22 @@
+{
+    "name": "glsl",
+    "type": "group",
+    "assets": [
+        {
+            "name": "basic",
+            "type": "shader",
+            "stages": {
+                "vertex": {
+                    "type": "text",
+                    "name": "basic-vert",
+                    "path": "basic.vert"
+                },
+                "fragment": {
+                    "type": "text",
+                    "name": "basic-frag",
+                    "path": "basic.frag"
+                }
+            }
+        }
+    ]
+}

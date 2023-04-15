@@ -5,7 +5,7 @@
 #include "SimpleCube.h"
 #include "Context.h"
 
-#include "Vertex.h"
+#include "renderer/Vertex.h"
 
 #define VERTEX(x, y, z, u, v) Vertex(glm::vec3(x, y, z), glm::vec2(u, v))
 
@@ -66,8 +66,8 @@ static Vertex vertices[] = {
 };
 
 SimpleCube::SimpleCube() :
-        shader(Shader::compile(Context::global().getAssets().getStr("glsl/basic.vert").c_str(),
-                               Context::global().getAssets().getStr("glsl/basic.frag").c_str())) {
+        shader(Shader::compile(Context::global().getAssets().getStr("shaders/basic.vert").c_str(),
+                               Context::global().getAssets().getStr("shaders/basic.frag").c_str())) {
     glGenBuffers(1, &vbo);
 
     glGenVertexArrays(1, &vao);
@@ -94,7 +94,7 @@ SimpleCube::SimpleCube() :
 }
 
 void SimpleCube::draw(const Transform &transform) const {
-    const auto &tex = Context::global().getAssets().getTex2D("tex/box.png");
+    const auto &tex = Context::global().getAssets().getTex2D("textures/box.png");
 
     glActiveTexture(GL_TEXTURE0);
     tex.bind();
