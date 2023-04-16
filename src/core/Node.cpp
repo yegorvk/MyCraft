@@ -2,7 +2,7 @@
 // Created by egorv on 4/8/2023.
 //
 
-#include "core/Node.h"
+#include "Node.h"
 #include <algorithm>
 
 void Node::draw(const Transform &transform) const {

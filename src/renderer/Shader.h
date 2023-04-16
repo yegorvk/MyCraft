@@ -5,7 +5,7 @@
 #ifndef SHITCRAFT_SHADER_H
 #define SHITCRAFT_SHADER_H
 
-#include "types.h"
+#include "../types.h"
 #include "glm/glm.hpp"
 #include "glm/gtc/type_ptr.hpp"
 #include "glad/gl.h"

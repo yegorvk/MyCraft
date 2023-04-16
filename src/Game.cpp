@@ -13,7 +13,7 @@
 #include "Context.h"
 #include "config.h"
 
-#include "SimpleCubeScene.h"
+#include "scene/SimpleCubeScene.h"
 #include "arch.h"
 
 #define glGetStr(prop) reinterpret_cast<const char*>(glGetString(prop))

@@ -2,7 +2,7 @@
 // Created by egorv on 4/9/2023.
 //
 
-#include "camera/CameraControls.h"
+#include "CameraControls.h"
 #include "spdlog/spdlog.h"
 
 bool CameraControls::handleEvent(const SDL_Event &event) {

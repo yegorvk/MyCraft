@@ -2,7 +2,7 @@
 // Created by egorv on 4/8/2023.
 //
 
-#include "core/NodeHost.h"
+#include "NodeHost.h"
 
 void NodeHost::draw(const Transform &transform) const {
     if (currentNode)

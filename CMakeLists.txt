@@ -41,11 +41,13 @@ FetchContent_Declare(cmrc URL https://github.com/vector-of-bool/cmrc/archive/ref
 FetchContent_Declare(SDL2 URL https://github.com/libsdl-org/SDL/archive/refs/tags/release-2.26.5.tar.gz)
 FetchContent_Declare(GLM URL https://github.com/g-truc/glm/archive/refs/tags/0.9.9.8.tar.gz)
 FetchContent_Declare(spdlog URL https://github.com/gabime/spdlog/archive/refs/tags/v1.11.0.tar.gz)
-#FetchContent_Declare(jsoncpp URL https://github.com/open-source-parsers/jsoncpp/archive/refs/tags/1.9.5.zip)
+FetchContent_Declare(json URL https://github.com/nlohmann/json/archive/refs/tags/v3.11.2.tar.gz)
+FetchContent_Declare(json-schema-validator URL https://github.com/pboettch/json-schema-validator/archive/refs/tags/2.2.0.zip)
 
 set(CACHE SDL2_DISABLE_INSTALL ON)
+set(JSON_VALIDATOR_INSTALL OFF)
 
-FetchContent_MakeAvailable(SDL2 GLM spdlog glad cmrc)
+FetchContent_MakeAvailable(SDL2 GLM spdlog glad cmrc json json-schema-validator)
 
 add_subdirectory(${glad_SOURCE_DIR}/cmake ${glad_BINARY_DIR})
 
@@ -55,7 +57,7 @@ else ()
     glad_add_library(glad_gl_core_33 REPRODUCIBLE API gl:core=3.3)
 endif ()
 
-if (NOT EXISTS ${CMAKE_BINARY_DIR}/stb_image.h)
+if (NOT EXISTS ${CMAKE_BINARY_DIR}/stb/stb_image.h)
     file(DOWNLOAD https://raw.githubusercontent.com/nothings/stb/master/stb_image.h ${CMAKE_BINARY_DIR}/stb/stb_image.h)
 endif()
 
@@ -63,21 +65,20 @@ endif()
 
 set(EXECUTABLE_TARGET_NAME ShitCraft)
 
-set(SRC ${CMAKE_BINARY_DIR}/src/config.h src/main.cpp src/Game.cpp src/include/Game.h src/include/config.h.in src/renderer/Shader.cpp src/include/renderer/Shader.h src/include/types.h src/include/core/Drawable.h src/include/core/EventConsumer.h src/include/core/EventConsumer.h src/core/Node.cpp src/include/core/Node.h src/include/core/NodeHost.h src/include/core/Node.h src/core/NodeHost.cpp src/core/Node.cpp src/include/renderer/Transform.h src/SimpleCube.cpp src/include/SimpleCube.h src/include/SimpleCubeScene.h src/include/camera/Camera.h src/include/camera/CameraControls.h src/camera/CameraControls.cpp src/include/core/UpdateDelegate.h src/include/core/INode.h src/external/stb_image.cpp src/include/renderer/Texture.h src/renderer/Texture.cpp src/include/asset/AssetManager.h src/asset/AssetManager.cpp src/utils.cpp src/include/utils.h src/include/Context.h src/Context.cpp src/include/renderer/Vertex.h src/include/arch.h src/ChunkMesh.cpp src/include/ChunkMesh.h src/include/Chunk.h src/include/Block.h)
+set(SRC ${CMAKE_BINARY_DIR}/src/config.h src/main.cpp src/Game.cpp src/Game.h src/config.h.in src/renderer/Shader.cpp src/renderer/Shader.h src/types.h src/core/Drawable.h src/core/EventConsumer.h src/core/EventConsumer.h src/core/Node.cpp src/core/Node.h src/core/NodeHost.h src/core/Node.h src/core/NodeHost.cpp src/core/Node.cpp src/renderer/Transform.h src/SimpleCube.cpp src/SimpleCube.h src/scene/SimpleCubeScene.h src/camera/Camera.h src/camera/CameraControls.h src/camera/CameraControls.cpp src/core/UpdateDelegate.h src/core/INode.h src/external/stb_image.cpp src/renderer/Texture.h src/renderer/Texture.cpp src/asset/AssetManager.h src/asset/AssetManager.cpp src/utils.cpp src/utils.h src/Context.h src/Context.cpp src/renderer/Vertex.h src/arch.h src/ChunkMesh.cpp src/ChunkMesh.h src/Chunk.h src/Block.h src/asset/Asset.cpp src/asset/Asset.h src/asset/AssetCache.cpp src/asset/AssetCache.h src/asset/AssetRegistry.cpp src/asset/AssetRegistry.h src/asset/AssetReader.h)
 set(LIBS SDL2::SDL2main SDL2::SDL2-static glad_gl_core_33 glm::glm spdlog::spdlog)
 
 if (DEBUG)
     set(ASSETS_DIR ${PROJECT_SOURCE_DIR}/assets/)
 else ()
-    set(ASSETS assets/shaders/basic.vert assets/shaders/basic.frag)
     set(ASSETS_PREFIX assets/)
+    cmrc_add_resource_library(assets assets)
     set(LIBS assets ${LIBS})
-    cmrc_add_resource_library(assets ${ASSETS})
 endif ()
 
-configure_file(src/include/config.h.in ${CMAKE_BINARY_DIR}/src/config.h)
+configure_file(src/config.h.in ${CMAKE_BINARY_DIR}/src/config.h)
 
 add_executable(${EXECUTABLE_TARGET_NAME} ${SRC})
 
 target_link_libraries(${EXECUTABLE_TARGET_NAME} PRIVATE ${LIBS})
-target_include_directories(${EXECUTABLE_TARGET_NAME} PRIVATE ${CMAKE_BINARY_DIR}/src ${CMAKE_BINARY_DIR}/stb src/include)
+target_include_directories(${EXECUTABLE_TARGET_NAME} PRIVATE ${CMAKE_BINARY_DIR}/src ${CMAKE_BINARY_DIR}/stb ${CMAKE_BINARY_DIR}/json src/include)

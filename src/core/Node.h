@@ -5,7 +5,7 @@
 #ifndef SHITCRAFT_NODE_H
 #define SHITCRAFT_NODE_H
 
-#include "core/INode.h"
+#include "INode.h"
 #include <set>
 #include <memory>
 

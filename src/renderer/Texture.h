@@ -6,7 +6,7 @@
 #define SHITCRAFT_TEXTURE_H
 
 #include <cstddef>
-#include "types.h"
+#include "../types.h"
 #include "glad/gl.h"
 
 enum class TexWrapping : GLenum {
