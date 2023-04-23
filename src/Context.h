@@ -6,7 +6,8 @@
 #define SHITCRAFT_CONTEXT_H
 
 #include <memory>
-#include "asset/AssetManager.h"
+#include "asset/Manager.h"
+#include "asset/LocalFileReader.h"
 
 class Context {
 public:
@@ -16,14 +17,14 @@ public:
 
     static void destroyGlobal();
 
-    inline Context() : assetLoader(std::make_unique<DefaultAssetLoader>()), assetManager(*assetLoader) {}
+    inline Context() : assetManager(asset::Manager::createDefault(std::make_unique<asset::LocalFileReader>())) {}
 
-    inline AssetProvider &getAssets() {
+    inline asset::Provider &getAssets() {
         return assetManager;
     }
+
 private:
-    std::unique_ptr<AssetLoader> assetLoader;
-    AssetManager assetManager;
+    asset::Manager assetManager;
 };
 
 #endif //SHITCRAFT_CONTEXT_H

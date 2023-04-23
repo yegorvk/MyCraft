@@ -6,8 +6,9 @@
 #define SHITCRAFT_TEXTURE_H
 
 #include <cstddef>
-#include "../types.h"
+
 #include "glad/gl.h"
+#include "types.h"
 
 enum class TexWrapping : GLenum {
     Repeat = GL_REPEAT,
@@ -26,10 +27,11 @@ enum class TexFiltering : GLenum {
 };
 
 enum class TexType : GLenum {
+    Invalid = 0,
     Tex2D = GL_TEXTURE_2D,
 };
 
-struct TexSamplerOptions {
+struct TexOptions {
     TexWrapping wrapping = TexWrapping::Repeat;
     TexFiltering minFilter = TexFiltering::NearestMipmapNearest;
     TexFiltering magFilter = TexFiltering::Nearest;
@@ -41,7 +43,6 @@ enum PixelFormat : GLenum {
     Rgba = GL_RGBA
 };
 
-template<TexType type>
 class Texture {
 public:
     Texture() = default;
@@ -49,13 +50,22 @@ public:
     Texture(const Texture &other) = delete;
 
     inline Texture(Texture &&other) noexcept {
+        type = other.type;
         handle = other.handle;
         other.handle = 0;
     }
 
-    inline Texture<type> &operator=(Texture<type> &&other) noexcept = default;
+    static Texture loadTex2dFromBytes(const unsigned char *bytes, std::size_t size, TexOptions options = {});
 
-    inline explicit Texture(uint handle) : handle(handle) {}
+    static Texture loadTex2dFromMemory(int width,
+                                       int height,
+                                       PixelFormat format,
+                                       const uint8_t *pixels,
+                                       TexOptions options = TexOptions());
+
+    inline Texture &operator=(Texture &&other) noexcept = default;
+
+    inline explicit Texture(uint handle, TexType type) : handle(handle), type(type) {}
 
     inline ~Texture() {
         if (handle != 0)
@@ -67,18 +77,8 @@ public:
     }
 
 private:
+    TexType type = TexType::Invalid;
     uint handle = 0;
-};
-
-class Texture2D : public Texture<TexType::Tex2D> {
-public:
-    using Texture::Texture;
-
-    static Texture2D loadFromMemory(int width,
-                                    int height,
-                                    PixelFormat format,
-                                    const uint8_t *pixels,
-                                    TexSamplerOptions options = TexSamplerOptions());
 };
 
 #endif //SHITCRAFT_TEXTURE_H

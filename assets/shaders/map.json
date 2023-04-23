@@ -1,5 +1,5 @@
 {
-    "name": "glsl",
+    "name": "shaders",
     "type": "group",
     "assets": [
         {

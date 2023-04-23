@@ -19,10 +19,10 @@
                     <option name="path" value="assets/map.json" />
                   </Item>
                   <Item>
-                    <option name="path" value="assets/textures/map.json" />
+                    <option name="path" value="assets/shaders/map.json" />
                   </Item>
                   <Item>
-                    <option name="path" value="assets/shaders/map.json" />
+                    <option name="path" value="assets/textures/map.json" />
                   </Item>
                 </list>
               </option>

@@ -7,16 +7,16 @@
 Shader Shader::compile(const char *vertShaderSrc, const char *fragShaderSrc) {
     ShaderBuilder builder;
 
-    if (!builder.setStage(ShaderType::VERTEX, vertShaderSrc))
+    if (!builder.setStage(ShaderType::Vertex, vertShaderSrc))
         return Shader(0);
 
-    if (!builder.setStage(ShaderType::FRAGMENT, fragShaderSrc))
+    if (!builder.setStage(ShaderType::Fragment, fragShaderSrc))
         return Shader(0);
 
     return builder.link();
 }
 
-static const char *shaderTypeStr[SHADER_STAGE_COUNT] = {"VERTEX", "FRAGMENT"};
+static const char *shaderTypeStr[SHADER_STAGE_COUNT] = {"Vertex", "Fragment"};
 constexpr int glShaderType[SHADER_STAGE_COUNT] = {GL_VERTEX_SHADER, GL_FRAGMENT_SHADER};
 
 ShaderBuilder::~ShaderBuilder() {

@@ -15,10 +15,8 @@ public:
     ~SimpleCube();
 
     void draw(const Transform &transform) const final;
-
 private:
-    Shader shader;
-
+    const Shader &shader;
     uint vbo = 0, vao = 0;
 };
 

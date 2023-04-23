@@ -3,6 +3,7 @@
 //
 
 #include "Context.h"
+#include "asset/Parser.h"
 
 Context *GLOBAL_CONTEXT = nullptr;
 

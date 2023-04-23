@@ -66,8 +66,7 @@ static Vertex vertices[] = {
 };
 
 SimpleCube::SimpleCube() :
-        shader(Shader::compile(Context::global().getAssets().getStr("shaders/basic.vert").c_str(),
-                               Context::global().getAssets().getStr("shaders/basic.frag").c_str())) {
+        shader(Context::global().getAssets().getShader("@shaders/basic")) {
     glGenBuffers(1, &vbo);
 
     glGenVertexArrays(1, &vao);
@@ -78,13 +77,14 @@ SimpleCube::SimpleCube() :
 
     shader.bind();
 
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex),
-                          reinterpret_cast<void *>(offsetof(Vertex, position)));
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex),
-                          reinterpret_cast<void *>(offsetof(Vertex, texCoord)));
-
     glEnableVertexAttribArray(0);
     glEnableVertexAttribArray(1);
+
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex),
+                          reinterpret_cast<void *>(offsetof(Vertex, position)));
+
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex),
+                          reinterpret_cast<void *>(offsetof(Vertex, texCoord)));
 
     Shader::unbind();
 
@@ -94,7 +94,7 @@ SimpleCube::SimpleCube() :
 }
 
 void SimpleCube::draw(const Transform &transform) const {
-    const auto &tex = Context::global().getAssets().getTex2D("textures/box.png");
+    const auto &tex = Context::global().getAssets().getTexture("@textures/box");
 
     glActiveTexture(GL_TEXTURE0);
     tex.bind();

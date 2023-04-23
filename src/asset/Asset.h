@@ -1,5 +1,5 @@
 //
-// Created by egorv on 4/16/2023.
+// Created by egorv on 4/22/2023.
 //
 
 #ifndef SHITCRAFT_ASSET_H
@@ -7,68 +7,49 @@
 
 #include <string>
 #include <variant>
+#include <array>
+#include <optional>
 
-struct TextAsset {
-    std::string path;
-};
+#include "renderer/ShaderType.h"
 
-struct TextureAsset {
-    std::string path;
-};
+namespace asset {
 
-struct ShaderAsset {
-    TextAsset vertex, fragment;
-};
+    struct TextAsset {
+        inline explicit TextAsset(std::string &&path) : path(std::move(path)) {}
 
-struct BlockFace {
-    TextureAsset texture;
-    bool translucent = false;
-};
+        std::string path;
+    };
 
-struct BlockAsset {
-    BlockFace front, back, left, right, top, bottom;
-};
+    struct TextureAsset {
+        inline explicit TextureAsset(std::string &&path) : path(std::move(path)) {}
 
-// No group type, because it is handled during parsing
-enum class AssetType {
-    Text = 0,
-    Texture = 1,
-    Shader = 2,
-    Block = 3
-};
+        std::string path;
+    };
 
-class Asset {
-public:
-    explicit Asset(TextAsset &&asset) : asset(asset) {}
+    class ShaderAsset {
+    public:
+        ShaderAsset() = default;
 
-    explicit Asset(TextureAsset &&asset) : asset(asset) {}
+        [[nodiscard]] inline bool contains(ShaderType type) const {
+            return stagesRefs[getStageIndex(type)].has_value();
+        }
 
-    explicit Asset(ShaderAsset &&asset) : asset(asset) {}
+        inline void set(ShaderType type, std::string &&sourceAssetRef) {
+            stagesRefs[getStageIndex(type)].emplace(std::move(sourceAssetRef));
+        }
 
-    explicit Asset(BlockAsset &&asset) : asset(asset) {}
+        [[nodiscard]] inline const std::string &getSourceAssetRef(ShaderType type) const {
+            return stagesRefs[getStageIndex(type)].value();
+        }
 
-    inline AssetType getType() {
-        return static_cast<AssetType>(asset.index());
-    }
+    private:
+        constexpr static std::size_t getStageIndex(ShaderType type) {
+            return static_cast<std::size_t>(type);
+        }
 
-    inline const TextAsset &getText() {
-        return std::get<TextAsset>(asset);
-    }
+        std::array<std::optional<std::string>, SHADER_STAGE_COUNT> stagesRefs;
+    };
 
-    inline const TextureAsset &getTexture() {
-        return std::get<TextureAsset>(asset);
-    }
-
-    inline const ShaderAsset &getShader() {
-        return std::get<ShaderAsset>(asset);
-    }
-
-    inline const BlockAsset &getBlock() {
-        return std::get<BlockAsset>(asset);
-    }
-private:
-    std::variant<TextAsset, TextureAsset, ShaderAsset, BlockAsset> asset;
-};
-
+} // asset
 
 #endif //SHITCRAFT_ASSET_H
