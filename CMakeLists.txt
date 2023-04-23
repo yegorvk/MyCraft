@@ -44,8 +44,8 @@ FetchContent_Declare(spdlog URL https://github.com/gabime/spdlog/archive/refs/ta
 FetchContent_Declare(nlohmann_json URL https://github.com/nlohmann/json/archive/refs/tags/v3.11.2.tar.gz)
 FetchContent_Declare(nlohmann_json_schema_validator URL https://github.com/pboettch/json-schema-validator/archive/refs/tags/2.2.0.zip)
 
-set(CACHE SDL2_DISABLE_INSTALL ON)
-set(JSON_VALIDATOR_INSTALL OFF)
+set(SDL2_DISABLE_INSTALL ON CACHE BOOL "" FORCE)
+set(JSON_VALIDATOR_INSTALL OFF CACHE BOOL "" FORCE)
 
 FetchContent_MakeAvailable(SDL2 GLM spdlog glad cmrc nlohmann_json nlohmann_json_schema_validator)
 

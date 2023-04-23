@@ -33,8 +33,8 @@ enum class TexType : GLenum {
 
 struct TexOptions {
     TexWrapping wrapping = TexWrapping::Repeat;
-    TexFiltering minFilter = TexFiltering::NearestMipmapNearest;
-    TexFiltering magFilter = TexFiltering::Nearest;
+    TexFiltering minFilter = TexFiltering::LinearMipmapLinear;
+    TexFiltering magFilter = TexFiltering::Linear;
 };
 
 enum PixelFormat : GLenum {
@@ -60,7 +60,7 @@ public:
     static Texture loadTex2dFromMemory(int width,
                                        int height,
                                        PixelFormat format,
-                                       const uint8_t *pixels,
+                                       const unsigned char *pixels,
                                        TexOptions options = TexOptions());
 
     inline Texture &operator=(Texture &&other) noexcept = default;
