@@ -2,6 +2,8 @@
 // Created by egorv on 4/8/2023.
 //
 
+#include "renderer/Texture.h"
+
 #include "SimpleCube.h"
 #include "Context.h"
 
@@ -66,7 +68,7 @@ static Vertex vertices[] = {
 };
 
 SimpleCube::SimpleCube() :
-        shader(Context::global().getAssets().getShader("@shaders/basic")) {
+        shader(Context::global().getAssets().getShader("@shader/basic")) {
     glGenBuffers(1, &vbo);
 
     glGenVertexArrays(1, &vao);
@@ -94,7 +96,7 @@ SimpleCube::SimpleCube() :
 }
 
 void SimpleCube::draw(const Transform &transform) const {
-    const auto &tex = Context::global().getAssets().getTexture("@textures/box");
+    const auto &tex = Texture::texture2D(Context::global().getAssets().getImage("@img/box"));
 
     glActiveTexture(GL_TEXTURE0);
     tex.bind();

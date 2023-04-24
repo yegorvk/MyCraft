@@ -60,8 +60,8 @@ namespace asset {
                 group(std::move(newState), root);
             else if (type == "text")
                 text(std::move(newState), root);
-            else if (type == "texture")
-                texture(std::move(newState), root);
+            else if (type == "image")
+                image(std::move(newState), root);
             else if (type == "shader")
                 shader(std::move(newState), root);
             else
@@ -85,11 +85,11 @@ namespace asset {
         index.insert(std::move(state.parentName), TextAsset(path.generic_string()));
     }
 
-    void Parser::texture(detail::ParserState &&state, const json &root) {
+    void Parser::image(detail::ParserState &&state, const json &root) {
         auto path = std::move(state.directory);
         path.append(root["path"].get<std::string>());
 
-        index.insert(std::move(state.parentName), TextureAsset(path.generic_string()));
+        index.insert(std::move(state.parentName), ImageAsset(path.generic_string()));
     }
 
     void Parser::shader(detail::ParserState &&state, const json &root) {

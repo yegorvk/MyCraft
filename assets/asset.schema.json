@@ -12,7 +12,7 @@
             "$ref": "#/$defs/text"
         },
         {
-            "$ref": "#/$defs/texture"
+            "$ref": "#/$defs/image"
         },
         {
             "$ref": "#/$defs/shader"
@@ -84,11 +84,11 @@
                 }
             ]
         },
-        "texture": {
+        "image": {
             "type": "object",
             "properties": {
                 "type": {
-                    "const": "texture"
+                    "const": "image"
                 },
                 "name": {
                     "$ref": "#/$defs/assetName"
@@ -99,13 +99,13 @@
             },
             "required": ["type", "name", "path"]
         },
-        "textureOrRef": {
+        "imageOrRef": {
             "oneOf": [
                 {
                     "$ref": "#/$defs/include"
                 },
                 {
-                    "$ref": "#/$defs/texture"
+                    "$ref": "#/$defs/image"
                 }
             ]
         },

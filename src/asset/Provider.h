@@ -6,7 +6,8 @@
 #define SHITCRAFT_PROVIDER_H
 
 #include <string>
-#include "renderer/Texture.h"
+
+#include "Image.h"
 #include "renderer/Shader.h"
 
 namespace asset {
@@ -17,7 +18,7 @@ namespace asset {
 
         [[nodiscard]] virtual const std::string &getText(const std::string &key) const = 0;
 
-        [[nodiscard]] virtual const Texture &getTexture(const std::string &key) const = 0;
+        [[nodiscard]] virtual const Image &getImage(const std::string &key) const = 0;
 
         [[nodiscard]] virtual const Shader &getShader(const std::string &key) const = 0;
     };

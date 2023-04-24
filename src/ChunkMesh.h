@@ -12,7 +12,7 @@
 
 class ChunkMesh : public Drawable {
 public:
-    //inline ChunkMesh(uint vbo, uint vao, const Texture2D &texture) : vbo(vbo), vao(vao), texture(texture) {}
+    //inline ChunkMesh(uint vbo, uint vao, const Texture2D &texture) : vbo(vbo), vao(vao), texture(image) {}
 
     inline ~ChunkMesh() {
         if (vao != 0) glDeleteVertexArrays(1, &vao);
@@ -25,7 +25,7 @@ public:
     }
 private:
     uint vbo = 0, vao = 0;
-    //const Texture2D &texture;
+    //const Texture2D &image;
 };
 
 class ChunkMeshBuilder {

@@ -1,10 +1,10 @@
 {
-    "name": "textures",
+    "name": "img",
     "type": "group",
     "assets": [
         {
             "name": "box",
-            "type": "texture",
+            "type": "image",
             "path": "box.png"
         }
     ]

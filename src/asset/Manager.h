@@ -24,7 +24,7 @@ namespace asset {
 
         const std::string &getText(const std::string &key) const final;
 
-        const Texture &getTexture(const std::string &key) const final;
+        const Image &getImage(const std::string &key) const final;
 
         const Shader &getShader(const std::string &key) const final;
 
@@ -46,7 +46,7 @@ namespace asset {
 
         Index index;
         std::unique_ptr<FileReader> reader;
-        mutable detail::Cache<std::string, Texture, Shader> cache;
+        mutable detail::Cache<std::string, Image, Shader> cache;
     };
 
 }

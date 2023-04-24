@@ -3,10 +3,10 @@
     "type": "group",
     "assets": [
         {
-            "include": "shaders"
+            "include": "shader"
         },
         {
-            "include": "textures"
+            "include": "img"
         }
     ]
 }

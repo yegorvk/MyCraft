@@ -2,7 +2,6 @@
 // Created by egorv on 4/22/2023.
 //
 
-#include "renderer/Texture.h"
 #include "renderer/Shader.h"
 
 #include "Manager.h"
@@ -25,8 +24,8 @@ namespace asset {
         return cache.get<std::string, Resolver<std::string>>(key, Resolver<std::string>(*this));
     }
 
-    const Texture &Manager::getTexture(const std::string &key) const {
-        return cache.get<Texture, Resolver<Texture>>(key, Resolver<Texture>(*this));
+    const Image &Manager::getImage(const std::string &key) const {
+        return cache.get<Image, Resolver<Image>>(key, Resolver<Image>(*this));
     }
 
     const Shader &Manager::getShader(const std::string &key) const {
@@ -40,11 +39,11 @@ namespace asset {
     }
 
     template<>
-    Texture Manager::resolve<Texture>(const std::string &ref) const {
-        const auto &asset = index.get<TextureAsset>(ref);
+    Image Manager::resolve<Image>(const std::string &ref) const {
+        const auto &asset = index.get<ImageAsset>(ref);
         auto bytes = reader->getBytes(asset.path.c_str());
 
-        return Texture::loadTex2dFromBytes(bytes.data(), bytes.size());
+        return Image::loadFromMemory(bytes.data(), bytes.size());
     }
 
     template<>

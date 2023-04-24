@@ -20,8 +20,8 @@ namespace asset {
         std::string path;
     };
 
-    struct TextureAsset {
-        inline explicit TextureAsset(std::string &&path) : path(std::move(path)) {}
+    struct ImageAsset {
+        inline explicit ImageAsset(std::string &&path) : path(std::move(path)) {}
 
         std::string path;
     };

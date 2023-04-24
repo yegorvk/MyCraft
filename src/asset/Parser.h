@@ -11,8 +11,8 @@
 #include "nlohmann/json.hpp"
 #include "nlohmann/json-schema.hpp"
 
-#include "asset/Index.h"
-#include "asset/FileReader.h"
+#include "Index.h"
+#include "FileReader.h"
 
 namespace asset {
     namespace detail {
@@ -45,7 +45,7 @@ namespace asset {
 
         void text(detail::ParserState &&state, const nlohmann::json &root);
 
-        void texture(detail::ParserState &&state, const nlohmann::json &root);
+        void image(detail::ParserState &&state, const nlohmann::json &root);
 
         void shader(detail::ParserState &&state, const nlohmann::json &root);
 

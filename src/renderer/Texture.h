@@ -8,7 +8,9 @@
 #include <cstddef>
 
 #include "glad/gl.h"
+
 #include "types.h"
+#include "asset/Image.h"
 
 enum class TexWrapping : GLenum {
     Repeat = GL_REPEAT,
@@ -26,21 +28,15 @@ enum class TexFiltering : GLenum {
     LinearMipmapLinear = GL_LINEAR_MIPMAP_LINEAR
 };
 
-enum class TexType : GLenum {
+enum class TextureType : GLenum {
     Invalid = 0,
     Tex2D = GL_TEXTURE_2D,
 };
 
-struct TexOptions {
+struct TextureOptions {
     TexWrapping wrapping = TexWrapping::Repeat;
     TexFiltering minFilter = TexFiltering::LinearMipmapLinear;
     TexFiltering magFilter = TexFiltering::Linear;
-};
-
-enum PixelFormat : GLenum {
-    Grayscale = GL_RED,
-    Rgb = GL_RGB,
-    Rgba = GL_RGBA
 };
 
 class Texture {
@@ -55,17 +51,11 @@ public:
         other.handle = 0;
     }
 
-    static Texture loadTex2dFromBytes(const unsigned char *bytes, std::size_t size, TexOptions options = {});
-
-    static Texture loadTex2dFromMemory(int width,
-                                       int height,
-                                       PixelFormat format,
-                                       const unsigned char *pixels,
-                                       TexOptions options = TexOptions());
+    static Texture texture2D(const Image &image, TextureOptions options = {});
 
     inline Texture &operator=(Texture &&other) noexcept = default;
 
-    inline explicit Texture(uint handle, TexType type) : handle(handle), type(type) {}
+    inline explicit Texture(uint handle, TextureType type) : handle(handle), type(type) {}
 
     inline ~Texture() {
         if (handle != 0)
@@ -77,7 +67,9 @@ public:
     }
 
 private:
-    TexType type = TexType::Invalid;
+    static void applyTextureOptions(GLenum target, TextureOptions options);
+
+    TextureType type = TextureType::Invalid;
     uint handle = 0;
 };
 
