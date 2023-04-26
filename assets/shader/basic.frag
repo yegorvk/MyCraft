@@ -4,8 +4,8 @@ in vec2 vUv;
 
 out vec4 FragColor;
 
-uniform sampler2D tex;
+uniform sampler2DArray tex;
 
 void main() {
-    FragColor = vec4(texture(tex, vUv).rgb, 1.0);
+    FragColor = vec4(texture(tex, vec3(vUv, 0.0)).rgb, 1);
 }

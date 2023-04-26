@@ -69,6 +69,10 @@ static Vertex vertices[] = {
 
 SimpleCube::SimpleCube() :
         shader(Context::global().getAssets().getShader("@shader/basic")) {
+    std::array<std::reference_wrapper<const Image>, 1> images = {{std::cref(Context::global().getAssets().getImage("@img/box"))}};
+
+    texture = Texture::texture2dArray(64, 64, PixelFormat::Rgb, images.begin(), images.end());
+
     glGenBuffers(1, &vbo);
 
     glGenVertexArrays(1, &vao);
@@ -96,10 +100,8 @@ SimpleCube::SimpleCube() :
 }
 
 void SimpleCube::draw(const Transform &transform) const {
-    const auto &tex = Texture::texture2D(Context::global().getAssets().getImage("@img/box"));
-
     glActiveTexture(GL_TEXTURE0);
-    tex.bind();
+    texture.bind();
 
     glBindVertexArray(vao);
     shader.bind();

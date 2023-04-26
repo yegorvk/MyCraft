@@ -61,13 +61,17 @@ if (NOT EXISTS ${CMAKE_BINARY_DIR}/stb/stb_image.h)
     file(DOWNLOAD https://raw.githubusercontent.com/nothings/stb/master/stb_image.h ${CMAKE_BINARY_DIR}/stb/stb_image.h)
 endif()
 
+if (NOT EXISTS ${CMAKE_BINARY_DIR}/stb/stb_image_resize.h)
+    file(DOWNLOAD https://raw.githubusercontent.com/nothings/stb/master/stb_image_resize.h ${CMAKE_BINARY_DIR}/stb/stb_image_resize.h)
+endif()
+
 # Build project
 
 set(EXECUTABLE_TARGET_NAME ShitCraft)
 
 set(SRC
         ${CMAKE_BINARY_DIR}/src/config.h
-        src/external/stb_image.cpp
+        src/external/stb.cpp
         src/main.cpp
         src/Game.cpp
         src/Game.h
@@ -101,10 +105,6 @@ set(SRC
         src/Context.cpp
         src/renderer/Vertex.h
         src/arch.h
-        src/ChunkMesh.cpp
-        src/ChunkMesh.h
-        src/Chunk.h
-        src/Block.h
         src/asset/Provider.h
         src/asset/Manager.cpp
         src/asset/Manager.h

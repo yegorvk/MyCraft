@@ -16,6 +16,8 @@ struct Image {
 
     Image(Image &&other) noexcept;
 
+    Image resize(int newWidth, int newHeight) const;
+
     [[nodiscard]] inline PixelFormat getFormat() const {
         return format;
     }

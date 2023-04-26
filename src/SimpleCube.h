@@ -7,6 +7,7 @@
 
 #include "core/Drawable.h"
 #include "renderer/Shader.h"
+#include "renderer/Texture.h"
 
 class SimpleCube : public Drawable {
 public:
@@ -16,6 +17,7 @@ public:
 
     void draw(const Transform &transform) const final;
 private:
+    Texture texture;
     const Shader &shader;
     uint vbo = 0, vao = 0;
 };

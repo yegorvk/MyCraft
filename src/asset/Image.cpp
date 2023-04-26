@@ -4,6 +4,7 @@
 
 #include "spdlog/spdlog.h"
 #include "stb_image.h"
+#include "stb_image_resize.h"
 
 #include "Image.h"
 
@@ -32,16 +33,35 @@ Image Image::loadFromMemory(const unsigned char *data, std::size_t size) {
     return {width, height, format, pixels};
 }
 
-Image::Image(Image &&other) noexcept : width(other.width), height(other.height), format(other.format) {
+Image::Image(Image &&other) noexcept: width(other.width), height(other.height), format(other.format) {
     pixels = other.pixels, other.pixels = nullptr;
 }
 
 Image::Image(int width, int height, PixelFormat format, unsigned char *pixels) : width(width),
-                                                                                             height(height),
-                                                                                             format(format),
-                                                                                             pixels(pixels) {}
+                                                                                 height(height),
+                                                                                 format(format),
+                                                                                 pixels(pixels) {}
 
 Image::~Image() {
     if (isValid())
         stbi_image_free(pixels);
+}
+
+Image Image::resize(int newWidth, int newHeight) const {
+    int numChannels = getNumChannels(format);
+    auto newPixels = reinterpret_cast<unsigned char *>(malloc(
+            sizeof(unsigned char) * newWidth * newHeight * numChannels));
+
+    stbir_resize_uint8(
+            pixels,
+            width,
+            height,
+            0,
+            newPixels,
+            newWidth,
+            newHeight,
+            0,
+            numChannels);
+
+    return {newWidth, newHeight, format, newPixels};
 }
