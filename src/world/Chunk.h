@@ -18,6 +18,13 @@ public:
         return (x * sideLen * sideLen) + (y * sideLen) + z;
     }
 
+    [[nodiscard]] ALWAYS_INLINE inline uint16_t getBlockChecked(int x, int y, int z) const {
+        if (x < 0 || x >= sideLen || y < 0 || y >= sideLen || z < 0 || z >= sideLen)
+            return 0;
+
+        return getBlock(x, y, z);
+    }
+
     [[nodiscard]] ALWAYS_INLINE inline int getSideLen() const {
         return sideLen;
     }

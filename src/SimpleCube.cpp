@@ -90,7 +90,7 @@ SimpleCube::SimpleCube() :
                           reinterpret_cast<void *>(offsetof(Vertex, position)));
 
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex),
-                          reinterpret_cast<void *>(offsetof(Vertex, texCoord)));
+                          reinterpret_cast<void *>(offsetof(Vertex, texCoords)));
 
     Shader::unbind();
 

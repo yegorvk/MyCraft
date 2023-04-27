@@ -11,12 +11,12 @@
 #include "types.h"
 
 enum class BlockFace : uint8_t {
-    Front = 0,
-    Back = 1,
-    Left = 2,
-    Right = 3,
-    Top = 4,
-    Bottom = 5
+    Front = 0, // z+
+    Back = 1, // z-
+    Right = 2, // x+
+    Left = 3, // x-
+    Top = 4, // y+
+    Bottom = 5 // y-
 };
 
 struct Block {
