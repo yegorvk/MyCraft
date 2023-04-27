@@ -9,10 +9,12 @@
 
 struct Vertex {
     constexpr Vertex() = default;
-    constexpr Vertex(glm::vec3 position, glm::vec3 texCoords) : position(position), texCoords(texCoords) {}
+    constexpr Vertex(glm::vec3 position, glm::vec3 texCoords, glm::vec3 color = {1.f, 1.f, 1.f})
+    : position(position), texCoords(texCoords), color(color) {}
 
     glm::vec3 position{};
     glm::vec3 texCoords{};
+    glm::vec3 color{};
 };
 
 

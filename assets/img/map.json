@@ -6,6 +6,11 @@
             "name": "box",
             "type": "image",
             "path": "box.png"
+        },
+        {
+            "name": "grass_top",
+            "type": "image",
+            "path": "grass_block_top.png"
         }
     ]
 }

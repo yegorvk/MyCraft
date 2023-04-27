@@ -9,7 +9,7 @@
 #include "Vertex.h"
 #include "ChunkMesh.h"
 
-#define VERTEX(x, y, z, s, t) Vertex(glm::vec3(x, y, z), glm::vec3(s, t, 0.f))
+#define VERTEX(x, y, z, s, t) Vertex(glm::vec3(x, y, z), glm::vec3(s, t, 0.f), glm::vec3(1.f, 1.f, 1.f))
 
 static Vertex CUBE_VERTICES[] = {
         // Front face
@@ -67,8 +67,6 @@ static Vertex CUBE_VERTICES[] = {
         VERTEX(-0.5f, -0.5f, 0.5f, 0.f, 1.f)
 };
 
-constexpr int CUBE_VERTEX_COUNT = 36;
-
 ChunkMesh::ChunkMesh(const Texture &arrayTexture) {
     glGenBuffers(1, &vbo);
     glGenVertexArrays(1, &vao);
@@ -83,12 +81,16 @@ ChunkMesh::ChunkMesh(const Texture &arrayTexture) {
 
     glEnableVertexAttribArray(0); // aPosition
     glEnableVertexAttribArray(1); // aTexCoords
+    glEnableVertexAttribArray(2); // aColor
 
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex),
                           reinterpret_cast<void *>(offsetof(Vertex, position)));
 
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex),
                           reinterpret_cast<void *>(offsetof(Vertex, texCoords)));
+
+    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex),
+                          reinterpret_cast<void *>(offsetof(Vertex, color)));
 
     glBindVertexArray(0);
 }
@@ -108,17 +110,24 @@ void ChunkMesh::update(const BlockCache &blockCache, const Chunk &chunk, float s
     for (int x = 0; x < chunk.getSideLen(); ++x) {
         for (int y = 0; y < chunk.getSideLen(); ++y) {
             for (int z = 0; z < chunk.getSideLen(); ++z) {
+                auto blockId = chunk.getBlock(x, y, z);
+                auto block = blockCache.getBlock(blockId);
+
                 glm::vec3 origin = offset + sideLen * glm::vec3(x, y, z);
 
-                for (int face = 0; face < 6; ++face) {
-                    auto nBlockCoords = glm::ivec3(x, y, z) + neighborBlockOffsets[face];
+                for (int faceIndex = 0; faceIndex < 6; ++faceIndex) {
+                    auto face = static_cast<BlockFace>(faceIndex);
+                    auto nBlockCoords = glm::ivec3(x, y, z) + neighborBlockOffsets[faceIndex];
 
                     if (chunk.getBlockChecked(nBlockCoords.x, nBlockCoords.y, nBlockCoords.z) == 0) {
                         vertices.resize(vertices.size() + 6);
-                        memcpy(&vertices[vertices.size() - 6], &CUBE_VERTICES[6 * face], 6 * sizeof(Vertex));
+                        memcpy(&vertices[vertices.size() - 6], &CUBE_VERTICES[6 * faceIndex], 6 * sizeof(Vertex));
 
-                        for (std::size_t i = vertices.size()-6; i < vertices.size(); ++i)
+                        for (std::size_t i = vertices.size() - 6; i < vertices.size(); ++i) {
                             vertices[i].position = sideLen * vertices[i].position + origin;
+                            vertices[i].texCoords.z = static_cast<float>(block.getFaceTextureIndex(face));
+                            if (blockId == 1) vertices[i].color = glm::vec3(0.f, 1.f, 0.f);
+                        }
                     }
                 }
             }

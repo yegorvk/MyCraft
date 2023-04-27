@@ -23,7 +23,7 @@ struct Block {
 public:
     Block();
 
-    constexpr uint getFaceTextureIndex(BlockFace face) {
+    constexpr uint getFaceTextureIndex(BlockFace face) const {
         return faceTextureIndices[static_cast<std::size_t>(face)];
     }
 

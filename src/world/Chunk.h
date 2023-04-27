@@ -15,7 +15,7 @@ public:
     explicit Chunk(int size);
 
     [[nodiscard]] ALWAYS_INLINE inline uint16_t getBlock(int x, int y, int z) const {
-        return (x * sideLen * sideLen) + (y * sideLen) + z;
+        return blocks[(x * sideLen * sideLen) + (y * sideLen) + z];
     }
 
     [[nodiscard]] ALWAYS_INLINE inline uint16_t getBlockChecked(int x, int y, int z) const {

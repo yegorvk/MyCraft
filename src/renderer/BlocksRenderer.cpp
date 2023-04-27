@@ -8,7 +8,7 @@
 BlocksRenderer::BlocksRenderer()
 : shader(Context::global().getAssets().getShader("@shader/chunk")), texture(createArrayTexture()) {
     chunk = ChunkMesh(texture);
-    chunk.update(BlockCache(), Chunk(16), 1.f);
+    chunk.update(BlockCache(), Chunk(16), 0.2f);
 }
 
 void BlocksRenderer::draw(const Transform &transform) const {
@@ -19,8 +19,8 @@ void BlocksRenderer::draw(const Transform &transform) const {
 }
 
 Texture BlocksRenderer::createArrayTexture() {
-    const auto &image = Context::global().getAssets().getImage("@img/box");
+    const auto &image = Context::global().getAssets().getImage("@img/grass_top");
     std::array<std::reference_wrapper<const Image>, 1> images = {{std::cref(image)}};
 
-    return Texture::texture2dArray(64, 64, image.getFormat(), images.begin(), images.end());
+    return Texture::texture2dArray(image.getWidth(), image.getHeight(), image.getFormat(), images.begin(), images.end());
 }

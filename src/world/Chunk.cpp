@@ -7,5 +7,5 @@
 #include "Chunk.h"
 
 Chunk::Chunk(int size) : sideLen(size) {
-    blocks.resize(size*size*size, 0);
+    blocks.resize(size*size*size, 1);
 }
