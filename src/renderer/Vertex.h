@@ -8,10 +8,11 @@
 #include "glm/glm.hpp"
 
 struct Vertex {
-    constexpr Vertex(glm::vec3 position, glm::vec2 texCoords) : position(position), texCoord(texCoords) {}
+    constexpr Vertex() = default;
+    constexpr Vertex(glm::vec3 position, glm::vec3 texCoords) : position(position), texCoord(texCoords) {}
 
-    glm::vec3 position;
-    glm::vec2 texCoord;
+    glm::vec3 position{};
+    glm::vec3 texCoord{};
 };
 
 

@@ -113,7 +113,7 @@ set(SRC
         src/asset/Cache.h
         src/asset/FileReader.h
         src/asset/Index.h
-        src/asset/Parser.cpp src/asset/Parser.h src/asset/LocalFileReader.cpp src/asset/LocalFileReader.h src/asset/Image.cpp src/asset/Image.h src/PixelFormat.h)
+        src/asset/Parser.cpp src/asset/Parser.h src/asset/LocalFileReader.cpp src/asset/LocalFileReader.h src/asset/Image.cpp src/asset/Image.h src/PixelFormat.h src/world/Chunk.cpp src/world/Chunk.h src/renderer/BlocksRenderer.cpp src/renderer/BlocksRenderer.h src/renderer/ChunkMesh.cpp src/renderer/ChunkMesh.h src/world/ChunkCache.cpp src/world/ChunkCache.h src/scene/WorldScene.cpp src/scene/WorldScene.h src/world/BlockCache.cpp src/world/BlockCache.h src/world/Block.h src/world/Block.cpp)
 
 set(LIBS SDL2::SDL2main SDL2::SDL2-static glad_gl_core_33 glm::glm spdlog::spdlog nlohmann_json nlohmann_json_schema_validator)
 

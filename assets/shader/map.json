@@ -17,6 +17,22 @@
                     "path": "basic.frag"
                 }
             }
+        },
+        {
+            "name": "chunk",
+            "type": "shader",
+            "stages": {
+                "vertex": {
+                    "type": "text",
+                    "name": "chunk-vert",
+                    "path": "chunk.vert"
+                },
+                "fragment": {
+                    "type": "text",
+                    "name": "chunk-frag",
+                    "path": "chunk.frag"
+                }
+            }
         }
     ]
 }

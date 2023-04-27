@@ -11,10 +11,8 @@
 #include "SDL.h"
 #include "camera/CameraControls.h"
 #include "Context.h"
-#include "config.h"
-
-#include "scene/SimpleCubeScene.h"
 #include "arch.h"
+#include "scene/WorldScene.h"
 
 #define glGetStr(prop) reinterpret_cast<const char*>(glGetString(prop))
 
@@ -168,7 +166,7 @@ void Game::onWindowGlContextReady() {
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
 
-    rootNode = std::make_unique<SimpleCubeScene>();
+    rootNode = std::make_unique<WorldScene>();
 
     camera.moveAbsolute(glm::vec3(0.f, 0.f, 3.f));
 

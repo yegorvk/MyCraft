@@ -87,6 +87,14 @@ public:
 
     void bind() const;
 
+    [[nodiscard]] inline TextureType getType() const {
+        return type;
+    }
+
+    [[nodiscard]] inline uint getGlHandle() const {
+        return handle;
+    }
+
 private:
     TextureType type = TextureType::Invalid;
     uint handle = 0;

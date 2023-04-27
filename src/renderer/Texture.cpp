@@ -79,6 +79,7 @@ detail::Texture2dArrayBuilder::Texture2dArrayBuilder(int width, int height, int 
 void detail::Texture2dArrayBuilder::setLayer(int layer, const Image &image) {
     if (image.getFormat() != format) {
         spdlog::error("Could not set array texture layer pixels: incompatible pixel formats");
+        throw std::invalid_argument("could not set layer pixels because of incompatible texture formats");
     } else if (image.getWidth() != width || image.getHeight() != height) {
         spdlog::warn("Dimensions of provided array layer image differ from ones of the texture");
         setLayer(layer, image.resize(width, height));
