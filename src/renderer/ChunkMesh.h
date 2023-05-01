@@ -20,7 +20,7 @@ public:
 
     explicit ChunkMesh(const Texture &arrayTexture);
 
-    void update(const BlockCache &blockCache, const Chunk &chunk, float sideLen, glm::vec3 offset = {});
+    void update(const BlockCache &blockCache, const Chunk &chunk, float blockSideLen, glm::vec3 offset = {});
 
     void draw() const;
 

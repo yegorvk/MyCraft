@@ -8,12 +8,13 @@
 #include <vector>
 
 #include "Block.h"
+#include "arch.h"
 
 class BlockCache {
 public:
     BlockCache();
 
-    [[nodiscard]] inline const Block &getBlock(uint16_t id) const {
+    [[nodiscard]] inline ALWAYS_INLINE const Block &getBlock(uint16_t id) const {
         return blocks[id - 1];
     }
 private:

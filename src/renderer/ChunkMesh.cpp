@@ -8,64 +8,7 @@
 
 #include "Vertex.h"
 #include "ChunkMesh.h"
-
-#define VERTEX(x, y, z, s, t) Vertex(glm::vec3(x, y, z), glm::vec3(s, t, 0.f), glm::vec3(1.f, 1.f, 1.f))
-
-static Vertex CUBE_VERTICES[] = {
-        // Front face
-
-        VERTEX(-0.5f, -0.5f, 0.5f, 0.f, 0.f), // bottom left
-        VERTEX(0.5f, -0.5f, 0.5f, 1.f, 0.f), // bottom right
-        VERTEX(0.5f, 0.5f, 0.5f, 1.f, 1.f), // top right
-        VERTEX(-0.5f, -0.5f, 0.5f, 0.f, 0.f), // bottom left
-        VERTEX(0.5f, 0.5f, 0.5f, 1.f, 1.f), // top right
-        VERTEX(-0.5f, 0.5f, 0.5f, 0.f, 1.f), // top left
-
-        // Back face
-
-        VERTEX(-0.5f, -0.5f, -0.5f, 1.f, 0.f), // bottom left
-        VERTEX(-0.5f, 0.5f, -0.5f, 1.f, 1.f), // top left
-        VERTEX(0.5f, 0.5f, -0.5f, 0.f, 1.f), // top right
-        VERTEX(-0.5f, -0.5f, -0.5f, 1.f, 0.f), // bottom left
-        VERTEX(0.5f, 0.5f, -0.5f, 0.f, 1.f), // top right
-        VERTEX(0.5f, -0.5f, -0.5f, 0.f, 0.f), // bottom right
-
-        // Right face
-
-        VERTEX(0.5f, -0.5f, 0.5f, 0.f, 0.f),
-        VERTEX(0.5f, -0.5f, -0.5f, 1.f, 0.f),
-        VERTEX(0.5f, 0.5f, -0.5f, 1.f, 1.f),
-        VERTEX(0.5f, -0.5f, 0.5f, 0.f, 0.f),
-        VERTEX(0.5f, 0.5f, -0.5f, 1.f, 1.f),
-        VERTEX(0.5f, 0.5f, 0.5f, 0.f, 1.f),
-
-        // Left face
-
-        VERTEX(-0.5f, -0.5f, 0.5f, 1.f, 0.f),
-        VERTEX(-0.5f, 0.5f, 0.5f, 1.f, 1.f),
-        VERTEX(-0.5f, 0.5f, -0.5f, 0.f, 1.f),
-        VERTEX(-0.5f, -0.5f, 0.5f, 1.f, 0.f),
-        VERTEX(-0.5f, 0.5f, -0.5f, 0.f, 1.f),
-        VERTEX(-0.5f, -0.5f, -0.5f, 0.f, 0.f),
-
-        // Top face
-
-        VERTEX(-0.5f, 0.5f, 0.5f, 0.f, 0.f),
-        VERTEX(0.5f, 0.5f, 0.5f, 1.f, 0.f),
-        VERTEX(0.5f, 0.5f, -0.5f, 1.f, 1.f),
-        VERTEX(-0.5f, 0.5f, 0.5f, 0.f, 0.f),
-        VERTEX(0.5f, 0.5f, -0.5f, 1.f, 1.f),
-        VERTEX(-0.5f, 0.5f, -0.5f, 0.f, 1.f),
-
-        // Bottom face
-
-        VERTEX(-0.5f, -0.5f, -0.5f, 0.f, 0.f),
-        VERTEX(0.5f, -0.5f, -0.5f, 1.f, 0.f),
-        VERTEX(0.5f, -0.5f, 0.5f, 1.f, 1.f),
-        VERTEX(-0.5f, -0.5f, -0.5f, 0.f, 0.f),
-        VERTEX(0.5f, -0.5f, 0.5f, 1.f, 1.f),
-        VERTEX(-0.5f, -0.5f, 0.5f, 0.f, 1.f)
-};
+#include "ChunkMeshBuilder.h"
 
 ChunkMesh::ChunkMesh(const Texture &arrayTexture) {
     glGenBuffers(1, &vbo);
@@ -95,51 +38,23 @@ ChunkMesh::ChunkMesh(const Texture &arrayTexture) {
     glBindVertexArray(0);
 }
 
-void ChunkMesh::update(const BlockCache &blockCache, const Chunk &chunk, float sideLen, glm::vec3 offset) {
-    glm::ivec3 neighborBlockOffsets[] = {
-            {0, 0, 1},
-            {0, 0, -1},
-            {1, 0, 0},
-            {-1, 0, 0},
-            {0, 1, 0},
-            {0, -1, 0}
-    };
+void ChunkMesh::update(const BlockCache &blockCache, const Chunk &chunk, float blockSideLen, glm::vec3 offset) {
+    ChunkMeshBuilder builder(chunk, blockCache, offset, blockSideLen);
 
-    std::vector<Vertex> vertices;
-
-    for (int x = 0; x < chunk.getSideLen(); ++x) {
-        for (int y = 0; y < chunk.getSideLen(); ++y) {
-            for (int z = 0; z < chunk.getSideLen(); ++z) {
-                auto blockId = chunk.getBlock(x, y, z);
-                auto block = blockCache.getBlock(blockId);
-
-                glm::vec3 origin = offset + sideLen * glm::vec3(x, y, z);
-
-                for (int faceIndex = 0; faceIndex < 6; ++faceIndex) {
-                    auto face = static_cast<BlockFace>(faceIndex);
-                    auto nBlockCoords = glm::ivec3(x, y, z) + neighborBlockOffsets[faceIndex];
-
-                    if (chunk.getBlockChecked(nBlockCoords.x, nBlockCoords.y, nBlockCoords.z) == 0) {
-                        vertices.resize(vertices.size() + 6);
-                        memcpy(&vertices[vertices.size() - 6], &CUBE_VERTICES[6 * faceIndex], 6 * sizeof(Vertex));
-
-                        for (std::size_t i = vertices.size() - 6; i < vertices.size(); ++i) {
-                            vertices[i].position = sideLen * vertices[i].position + origin;
-                            vertices[i].texCoords.z = static_cast<float>(block.getFaceTextureIndex(face));
-                            if (blockId == 1) vertices[i].color = glm::vec3(0.f, 1.f, 0.f);
-                        }
-                    }
-                }
-            }
-        }
-    }
+    vertexCount = builder.getTotalVertexCount();
+    auto bufSize = static_cast<int>(sizeof(Vertex) * vertexCount);
 
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
+    glBufferData(GL_ARRAY_BUFFER, bufSize, nullptr, GL_DYNAMIC_DRAW);
 
-    glBufferData(GL_ARRAY_BUFFER, static_cast<GLsizeiptr>(sizeof(Vertex) * vertices.size()), vertices.data(),
-                 GL_DYNAMIC_DRAW);
+    for (int face = 0, bufOffset = 0; face < 6; ++face) {
+        const auto &vertices = builder.getVertices(static_cast<BlockFace>(face));
+        auto size = static_cast<int>(sizeof(Vertex) * vertices.size());
 
-    vertexCount = static_cast<int>(vertices.size());
+        glBufferSubData(GL_ARRAY_BUFFER, bufOffset, size, vertices.data());
+
+        bufOffset += size;
+    }
 }
 
 void ChunkMesh::draw() const {

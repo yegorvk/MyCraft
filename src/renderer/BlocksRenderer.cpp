@@ -8,7 +8,7 @@
 BlocksRenderer::BlocksRenderer()
 : shader(Context::global().getAssets().getShader("@shader/chunk")), texture(createArrayTexture()) {
     chunk = ChunkMesh(texture);
-    chunk.update(BlockCache(), Chunk(16), 0.2f);
+    chunk.update(BlockCache(), Chunk(4), 0.2f);
 }
 
 void BlocksRenderer::draw(const Transform &transform) const {

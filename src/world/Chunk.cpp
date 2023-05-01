@@ -6,6 +6,10 @@
 
 #include "Chunk.h"
 
-Chunk::Chunk(int size) : sideLen(size) {
-    blocks.resize(size*size*size, 1);
+Chunk::Chunk(int sideLenLog2) : sideBlockCountLog2(sideLenLog2) {
+    blocks.resize(1 << sideLenLog2 << sideLenLog2 << sideLenLog2, 1);
+
+    blocks[0] = 0;
+    blocks[74] = 0;
+    blocks[(10 << 4 << 4) + (10 << 4) + 10] = 0;
 }
