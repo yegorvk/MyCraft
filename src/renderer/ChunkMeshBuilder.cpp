@@ -42,9 +42,7 @@ ChunkMeshBuilder::ChunkMeshBuilder(const Chunk &chunk, const BlockCache &blockCa
         : chunk(chunk), blockCache(blockCache), offset(offset), blockSideLen(blockSideLen) {
     std::vector<bool> blockFaceOrientation(chunk.getFaceBlockCount());
 
-    for (int i = 0; i < 3; ++i) {
-        auto axis = static_cast<Axis>(i);
-
+    for (int axis = 0; axis < 3; ++axis) {
         std::fill(blockFaceOrientation.begin(), blockFaceOrientation.end(), true);
 
         for (int j = 0; j < chunk.getSideBlockCount(); ++j) {
@@ -63,23 +61,20 @@ int ChunkMeshBuilder::getTotalVertexCount() const {
     return count;
 }
 
-void ChunkMeshBuilder::build2dMesh(int originBlockOffset, BlockFace face, Axis axis,
+void ChunkMeshBuilder::build2dMesh(int originBlockOffset, int face, int axis,
                                    std::vector<bool> &blockFaceOrientation) {
-    auto axisIndex = static_cast<int>(axis);
-    auto faceIndex = static_cast<int>(face);
+    auto originBlock = FACE_ORIGIN[face] * (chunk.getSideBlockCount() - 1) + AXIS[axis] * originBlockOffset;
 
-    auto originBlock = FACE_ORIGIN[faceIndex] * (chunk.getSideBlockCount() - 1) + AXIS[axisIndex] * originBlockOffset;
-
-    auto originBlockWorld = glm::vec3(FACE_ORIGIN[faceIndex] * chunk.getSideBlockCount());
-    originBlockWorld += AXIS[axisIndex] * originBlockOffset;
+    auto originBlockWorld = offset + glm::vec3(FACE_ORIGIN[face] * chunk.getSideBlockCount());
+    originBlockWorld += AXIS[axis] * originBlockOffset;
 
     if (faceOrientationAlongNormalAxis(face))
-        originBlockWorld += glm::vec3(AXIS[axisIndex]);
+        originBlockWorld += glm::vec3(AXIS[axis]);
 
     originBlockWorld *= blockSideLen;
 
-    auto right = FACE_RIGHT[faceIndex];
-    auto top = FACE_TOP[faceIndex];
+    auto right = FACE_RIGHT[face];
+    auto top = FACE_TOP[face];
 
     std::vector<bool> visited(chunk.getFaceBlockCount(), false);
 
@@ -88,7 +83,7 @@ void ChunkMeshBuilder::build2dMesh(int originBlockOffset, BlockFace face, Axis a
             auto curBlock = originBlock + right * x + top * y;
             auto texId = getTexId(curBlock, face);
 
-            if (visited[(y << chunk.getSideBlockCountLog2()) + x] || !hasTranslucentNeighbour(curBlock, faceIndex) ||
+            if (visited[(y << chunk.getSideBlockCountLog2()) + x] || !hasTranslucentNeighbour(curBlock, face) ||
                 texId == 0)
                 continue;
 
@@ -98,7 +93,7 @@ void ChunkMeshBuilder::build2dMesh(int originBlockOffset, BlockFace face, Axis a
                 auto nextPos = curBlock + right * (rx - x + 1);
 
                 if (visited[(y << chunk.getSideBlockCountLog2()) + (rx + 1)] ||
-                    !hasTranslucentNeighbour(nextPos, faceIndex) || getTexId(nextPos, face) != texId)
+                    !hasTranslucentNeighbour(nextPos, face) || getTexId(nextPos, face) != texId)
                     break;
                 else
                     ++rx;
@@ -112,7 +107,7 @@ void ChunkMeshBuilder::build2dMesh(int originBlockOffset, BlockFace face, Axis a
                     auto coords = nextRowLeft + right * (i - x);
 
                     if (visited[((ty + 1) << chunk.getSideBlockCountLog2()) + i] ||
-                        !hasTranslucentNeighbour(coords, faceIndex) || getTexId(coords, face) != texId) {
+                        !hasTranslucentNeighbour(coords, face) || getTexId(coords, face) != texId) {
                         f = false;
                         break;
                     }
@@ -154,12 +149,12 @@ void ChunkMeshBuilder::build2dMesh(int originBlockOffset, BlockFace face, Axis a
                     {quadVertexCoords[3], glm::vec3(0.f, maxV, texId), color}
             };
 
-            vertices[faceIndex].push_back(quadVertices[0]);
-            vertices[faceIndex].push_back(quadVertices[1]);
-            vertices[faceIndex].push_back(quadVertices[2]);
-            vertices[faceIndex].push_back(quadVertices[0]);
-            vertices[faceIndex].push_back(quadVertices[2]);
-            vertices[faceIndex].push_back(quadVertices[3]);
+            vertices[face].push_back(quadVertices[0]);
+            vertices[face].push_back(quadVertices[1]);
+            vertices[face].push_back(quadVertices[2]);
+            vertices[face].push_back(quadVertices[0]);
+            vertices[face].push_back(quadVertices[2]);
+            vertices[face].push_back(quadVertices[3]);
 
             for (int i = y; i <= ty; ++i) {
                 for (int j = x; j <= rx; ++j) {

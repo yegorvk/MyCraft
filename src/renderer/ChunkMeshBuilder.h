@@ -17,8 +17,8 @@ class ChunkMeshBuilder {
 public:
     ChunkMeshBuilder(const Chunk &chunk, const BlockCache &blockCache, glm::vec3 offset, float blockSideLen);
 
-    [[nodiscard]] inline const std::vector<Vertex> &getVertices(BlockFace face) const {
-        return vertices[static_cast<std::size_t>(face)];
+    [[nodiscard]] inline const std::vector<Vertex> &getVertices(int face) const {
+        return vertices[face];
     }
 
     [[nodiscard]] int getTotalVertexCount() const;
@@ -30,13 +30,13 @@ private:
      * @param axis axis perpendicular (normal) to the face
      * @param blockFaceOrientation whether block face is visible when looking towards positive direction of axis
      * */
-    void build2dMesh(int originBlockOffset, BlockFace face, Axis axis, std::vector<bool> &blockFaceOrientation);
+    void build2dMesh(int originBlockOffset, int face, int axis, std::vector<bool> &blockFaceOrientation);
 
-    [[nodiscard]] inline ALWAYS_INLINE std::vector<Vertex> &getVertices(int face) {
+    [[nodiscard]] inline ALWAYS_INLINE std::vector<Vertex> &getVerticesMut(int face) {
         return vertices[face];
     }
 
-    [[nodiscard]] inline ALWAYS_INLINE uint getTexId(glm::ivec3 blockCoords, BlockFace face) {
+    [[nodiscard]] inline ALWAYS_INLINE uint getTexId(glm::ivec3 blockCoords, int face) {
         auto block = chunk.getBlock(blockCoords);
         return ((block == 0) ? 0 : blockCache.getBlock(block).getFaceTextureIndex(face));
     }

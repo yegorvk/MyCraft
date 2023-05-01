@@ -48,7 +48,7 @@ void ChunkMesh::update(const BlockCache &blockCache, const Chunk &chunk, float b
     glBufferData(GL_ARRAY_BUFFER, bufSize, nullptr, GL_DYNAMIC_DRAW);
 
     for (int face = 0, bufOffset = 0; face < 6; ++face) {
-        const auto &vertices = builder.getVertices(static_cast<BlockFace>(face));
+        const auto &vertices = builder.getVertices(face);
         auto size = static_cast<int>(sizeof(Vertex) * vertices.size());
 
         glBufferSubData(GL_ARRAY_BUFFER, bufOffset, size, vertices.data());

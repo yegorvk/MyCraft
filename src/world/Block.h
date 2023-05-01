@@ -10,36 +10,32 @@
 
 #include "types.h"
 
-enum class Axis : int {
-    X = 0,
-    Y = 1,
-    Z = 2
-};
+constexpr int AXIS_X = 0;
+constexpr int AXIS_Y = 1;
+constexpr int AXIS_Z = 2;
 
-enum class BlockFace : int {
-    Right = 0, // x+
-    Left = 1, // x-
-    Top = 2, // y+
-    Bottom = 3, // y-
-    Front = 4, // z+
-    Back = 5 // z-
-};
+constexpr int RIGHT_FACE = 0;
+constexpr int LEFT_FACE = 1;
+constexpr int TOP_FACE = 2;
+constexpr int BOTTOM_FACE = 3;
+constexpr int FRONT_FACE = 4;
+constexpr int BACK_FACE = 5;
 
-constexpr BlockFace face(Axis axis, bool visibleWhenLookingInPositiveDirection) {
-    return static_cast<BlockFace>(static_cast<int>(axis) * 2 + visibleWhenLookingInPositiveDirection);
+constexpr int face(int axis, bool visibleWhenLookingInPositiveDirection) {
+    return axis * 2 + visibleWhenLookingInPositiveDirection;
 }
 
 /** Checks if face is visible when looking in positive direction of normal axis **/
-constexpr bool faceOrientationAlongNormalAxis(BlockFace face) {
-    return static_cast<int>(face) % 2 == 0;
+constexpr bool faceOrientationAlongNormalAxis(int face) {
+    return face % 2 == 0;
 }
 
 struct Block {
 public:
     Block();
 
-    [[nodiscard]] constexpr uint getFaceTextureIndex(BlockFace face) const {
-        return faceTextureIndices[static_cast<std::size_t>(face)];
+    [[nodiscard]] constexpr uint getFaceTextureIndex(int face) const {
+        return faceTextureIndices[face];
     }
 
 private:
