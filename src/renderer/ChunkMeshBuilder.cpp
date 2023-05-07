@@ -40,14 +40,10 @@ constexpr glm::ivec3 AXIS[3] = {
 ChunkMeshBuilder::ChunkMeshBuilder(const Chunk &chunk, const BlockCache &blockCache, glm::vec3 offset,
                                    float blockSideLen)
         : chunk(chunk), blockCache(blockCache), offset(offset), blockSideLen(blockSideLen) {
-    std::vector<bool> blockFaceOrientation(chunk.getFaceBlockCount());
-
     for (int axis = 0; axis < 3; ++axis) {
-        std::fill(blockFaceOrientation.begin(), blockFaceOrientation.end(), true);
-
         for (int j = 0; j < chunk.getSideBlockCount(); ++j) {
-            build2dMesh(j, face(axis, true), axis, blockFaceOrientation);
-            build2dMesh(j, face(axis, false), axis, blockFaceOrientation);
+            build2dMesh(j, face(axis, true), axis);
+            build2dMesh(j, face(axis, false), axis);
         }
     }
 }
@@ -61,8 +57,7 @@ int ChunkMeshBuilder::getTotalVertexCount() const {
     return count;
 }
 
-void ChunkMeshBuilder::build2dMesh(int originBlockOffset, int face, int axis,
-                                   std::vector<bool> &blockFaceOrientation) {
+void ChunkMeshBuilder::build2dMesh(int originBlockOffset, int face, int axis) {
     auto originBlock = FACE_ORIGIN[face] * (chunk.getSideBlockCount() - 1) + AXIS[axis] * originBlockOffset;
 
     auto originBlockWorld = offset + glm::vec3(FACE_ORIGIN[face] * chunk.getSideBlockCount());
@@ -159,9 +154,7 @@ void ChunkMeshBuilder::build2dMesh(int originBlockOffset, int face, int axis,
             for (int i = y; i <= ty; ++i) {
                 for (int j = x; j <= rx; ++j) {
                     int pos = (i << chunk.getSideBlockCountLog2()) + j;
-
                     visited[pos] = true;
-                    blockFaceOrientation[pos] = !blockFaceOrientation[pos];
                 }
             }
         }

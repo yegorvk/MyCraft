@@ -5,12 +5,14 @@
 #ifndef SHITCRAFT_TRANSFORM_H
 #define SHITCRAFT_TRANSFORM_H
 
-#include "glm/glm.hpp"
+#include "ViewFrustrum.h"
 
 struct Transform {
-    inline explicit Transform(glm::mat4 transform) : transform(transform) {}
+    inline Transform(glm::mat4 transform, ViewFrustrum frustrum)
+    : mvp(transform), frustrum(frustrum) {}
 
-    glm::mat4 transform;
+    glm::mat4 mvp;
+    ViewFrustrum frustrum;
 };
 
 #endif //SHITCRAFT_TRANSFORM_H

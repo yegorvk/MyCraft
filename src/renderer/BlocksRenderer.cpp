@@ -2,6 +2,8 @@
 // Created by egorv on 4/26/2023.
 //
 
+#include "ViewFrustrum.h"
+
 #include "Context.h"
 #include "BlocksRenderer.h"
 
@@ -13,9 +15,12 @@ BlocksRenderer::BlocksRenderer()
 
 void BlocksRenderer::draw(const Transform &transform) const {
     shader.bind();
-    shader.setMat4("mvp", transform.transform);
+    shader.setMat4("mvp", transform.mvp);
 
-    chunk.draw();
+    BoundingBox box(glm::vec3(0.f), glm::vec3(16.f * 0.2f));
+
+    if (box.isOnFrustrum(transform.frustrum))
+        chunk.draw();
 }
 
 Texture BlocksRenderer::createArrayTexture() {

@@ -12,39 +12,33 @@
 
 class Camera {
 public:
-    inline explicit Camera(
-            glm::vec3 position = glm::vec3(0.f),
-            glm::vec3 front = glm::vec3(0.f, 0.f, -1.f),
-            glm::vec3 up = glm::vec3(0.f, 1.f, 0.f))
-            : position(position), front(glm::normalize(front)), up(glm::normalize(up)),
-              camFront(front), camUp(up), camRight(glm::normalize(glm::cross(front, up))) {}
+    explicit Camera(glm::vec3 position = glm::vec3(0.f), glm::vec3 front = glm::vec3(0.f, 0.f, -1.f),
+                           glm::vec3 up = glm::vec3(0.f, 1.f, 0.f));
 
-    inline void moveAbsolute(glm::vec3 delta) {
-        position += delta;
-        update();
-    }
+    void moveAbsolute(glm::vec3 delta);
 
-    inline void moveRelative(glm::vec3 delta) {
-        position += camRight * delta.x + camUp * delta.y + camFront * delta.z;
-        update();
-    }
+    void moveRelative(glm::vec3 delta);
 
-    inline void rotate(glm::vec3 angles) {
-        qRot *= glm::conjugate(glm::quat(angles));
-        update();
-    }
+    void rotate(glm::vec3 angles);
 
     [[nodiscard]] inline glm::mat4 getViewMatrix() const {
         return viewMatrix;
     }
-private:
-    inline void update() {
-        camFront = glm::rotate(qRot, front);
-        camUp = glm::rotate(qRot, up);
-        camRight = glm::normalize(glm::cross(camFront, camUp));
 
-        viewMatrix = glm::lookAt(position, position + camFront, camUp);
+    [[nodiscard]] inline glm::vec3 getFront() const {
+        return camFront;
     }
+
+    [[nodiscard]] inline glm::vec3 getRight() const {
+        return camRight;
+    }
+
+    [[nodiscard]] inline glm::vec3 getPosition() const {
+        return position;
+    }
+
+private:
+    void update();
 
     glm::vec3 position, front, up, camFront, camUp, camRight;
     glm::quat qRot = glm::quat(1.f, 0.f, 0.f, 0.f);

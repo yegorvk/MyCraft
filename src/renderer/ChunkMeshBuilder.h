@@ -30,7 +30,7 @@ private:
      * @param axis axis perpendicular (normal) to the face
      * @param blockFaceOrientation whether block face is visible when looking towards positive direction of axis
      * */
-    void build2dMesh(int originBlockOffset, int face, int axis, std::vector<bool> &blockFaceOrientation);
+    void build2dMesh(int originBlockOffset, int face, int axis);
 
     [[nodiscard]] inline ALWAYS_INLINE std::vector<Vertex> &getVerticesMut(int face) {
         return vertices[face];

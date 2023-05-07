@@ -106,7 +106,7 @@ void SimpleCube::draw(const Transform &transform) const {
     glBindVertexArray(vao);
     shader.bind();
 
-    shader.setMat4("mvp", transform.transform);
+    shader.setMat4("mvp", transform.mvp);
 
     glDrawArrays(GL_TRIANGLES, 0, sizeof(vertices) / sizeof(Vertex));
 

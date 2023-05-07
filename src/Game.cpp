@@ -91,7 +91,12 @@ void Game::run() {
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        Transform transform(projMat * camera.getViewMatrix());
+        auto p = camera.getPosition();
+
+        const Perspective perspective = {aspect, P_FOV_RAD, P_NEAR, P_FAR};
+        const auto frustrum = ViewFrustrum(perspective, camera.getPosition(), camera.getFront(), camera.getRight());
+
+        Transform transform(projMat * camera.getViewMatrix(), frustrum);
 
         if (rootNode)
             rootNode->draw(transform);
@@ -164,7 +169,7 @@ void Game::onWindowGlContextReady() {
 #endif
 
     glEnable(GL_DEPTH_TEST);
-    //glEnable(GL_CULL_FACE);
+    glEnable(GL_CULL_FACE);
 
     rootNode = std::make_unique<WorldScene>();
 

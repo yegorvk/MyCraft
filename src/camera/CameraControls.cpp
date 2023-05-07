@@ -8,7 +8,7 @@
 bool CameraControls::handleEvent(const SDL_Event &event) {
     if (event.type == SDL_MOUSEMOTION) {
         int xRel = event.motion.xrel, yRel = event.motion.yrel;
-        camera.rotate(sensitivity * glm::vec3(static_cast<float>(yRel), static_cast<float>(xRel), 0.f));
+        camera.rotate(sensitivity * -glm::vec3(static_cast<float>(yRel), static_cast<float>(xRel), 0.f));
     } else if (event.type == SDL_KEYUP || event.type == SDL_KEYDOWN) {
         bool down = event.type == SDL_KEYDOWN;
         SDL_Scancode scancode = event.key.keysym.scancode;
@@ -49,6 +49,6 @@ void CameraControls::update(uint64_t deltaMs) {
 
     if (roll != 0) {
         float rollDelta = roll * deltaMsF * DEFAULT_CAMERA_SENSITIVITY * DEFAULT_CAMERA_SENSITIVITY_KEYBOARD_COEFFICIENT;
-        camera.rotate(glm::vec3(0.f, 0.f, rollDelta));
+        camera.rotate(glm::vec3(0.f, 0.f, -rollDelta));
     }
 }
