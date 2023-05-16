@@ -9,12 +9,17 @@
 #include "Chunk.h"
 #include "WrapAround3dArray.h"
 #include "BlockCache.h"
+#include "WorldGenerator.h"
 
 class World {
 public:
     World() = default;
 
-    void reloadedChunks(AAB region);
+    void reloadedAllChunks(AAB region);
+
+    void loadChunks(AAB region);
+
+    void unloadChunks(AAB region);
 
     template<typename F>
     inline void forEachLoadedChunk(F &&consumer) {
@@ -45,6 +50,8 @@ public:
 private:
     AAB loadedRegion;
     WrapAround3dArray<Chunk> loadedChunks;
+
+    WorldGenerator generator;
 
     BlockCache cache;
 

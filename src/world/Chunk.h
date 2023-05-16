@@ -18,6 +18,10 @@ class Chunk {
 public:
     explicit Chunk(int sideLenLog2 = CHUNK_SIDE_BLOCK_COUNT_LOG2);
 
+    ALWAYS_INLINE inline void setBlock(int x, int y, int z, uint16_t id) {
+        blocks[(x << sideBlockCountLog2 << sideBlockCountLog2) + (y << sideBlockCountLog2) + z] = id;
+    }
+
     [[nodiscard]] ALWAYS_INLINE inline uint16_t getBlock(int x, int y, int z) const {
         return blocks[(x << sideBlockCountLog2 << sideBlockCountLog2) + (y << sideBlockCountLog2) + z];
     }

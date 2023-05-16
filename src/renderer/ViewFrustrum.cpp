@@ -44,7 +44,7 @@ bool BoundingBox::isOnFrustrum(const ViewFrustrum &frustrum) const {
 }
 
 bool BoundingBox::isForwardToPlane(const FrustrumPlane &plane) const {
-    constexpr float EPS = 0.2f;
+    constexpr double EPS = 0.05;
 
     for (int i = 0; i < 8; ++i) {
         if (plane.signedDistanceFrom(vertices[i]) >= -EPS)

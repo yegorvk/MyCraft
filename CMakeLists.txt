@@ -50,6 +50,7 @@ set(JSON_VALIDATOR_INSTALL OFF CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(SDL2 GLM spdlog glad cmrc nlohmann_json nlohmann_json_schema_validator)
 
 add_subdirectory(${glad_SOURCE_DIR}/cmake ${glad_BINARY_DIR})
+add_subdirectory(src/external/SimplexNoise)
 
 if (DEBUG)
     glad_add_library(glad_gl_core_33 REPRODUCIBLE DEBUG API gl:core=3.3)
@@ -59,11 +60,11 @@ endif ()
 
 if (NOT EXISTS ${CMAKE_BINARY_DIR}/stb/stb_image.h)
     file(DOWNLOAD https://raw.githubusercontent.com/nothings/stb/master/stb_image.h ${CMAKE_BINARY_DIR}/stb/stb_image.h)
-endif()
+endif ()
 
 if (NOT EXISTS ${CMAKE_BINARY_DIR}/stb/stb_image_resize.h)
     file(DOWNLOAD https://raw.githubusercontent.com/nothings/stb/master/stb_image_resize.h ${CMAKE_BINARY_DIR}/stb/stb_image_resize.h)
-endif()
+endif ()
 
 # Build project
 
@@ -113,9 +114,41 @@ set(SRC
         src/asset/Cache.h
         src/asset/FileReader.h
         src/asset/Index.h
-        src/asset/Parser.cpp src/asset/Parser.h src/asset/LocalFileReader.cpp src/asset/LocalFileReader.h src/asset/Image.cpp src/asset/Image.h src/PixelFormat.h src/world/Chunk.cpp src/world/Chunk.h src/renderer/BlocksRenderer.cpp src/renderer/BlocksRenderer.h src/renderer/ChunkMesh.cpp src/renderer/ChunkMesh.h src/scene/WorldScene.cpp src/scene/WorldScene.h src/world/BlockCache.cpp src/world/BlockCache.h src/world/Block.h src/world/Block.cpp src/renderer/ChunkMeshBuilder.cpp src/renderer/ChunkMeshBuilder.h src/renderer/ViewFrustrum.h src/camera/Camera.cpp src/renderer/ViewFrustrum.cpp src/renderer/ViewFrustrum.cpp src/world/WorldEventManager.h src/TypedContainer.h src/AAB.h src/world/World.cpp src/world/World.h src/WrapAround3dArray.h)
+        src/asset/Parser.cpp
+        src/asset/Parser.h
+        src/asset/LocalFileReader.cpp
+        src/asset/LocalFileReader.h
+        src/asset/Image.cpp
+        src/asset/Image.h
+        src/PixelFormat.h
+        src/world/Chunk.cpp
+        src/world/Chunk.h
+        src/renderer/BlocksRenderer.cpp
+        src/renderer/BlocksRenderer.h
+        src/renderer/ChunkMesh.cpp
+        src/renderer/ChunkMesh.h
+        src/scene/WorldScene.cpp
+        src/scene/WorldScene.h
+        src/world/BlockCache.cpp
+        src/world/BlockCache.h
+        src/world/Block.h
+        src/world/Block.cpp
+        src/renderer/ChunkMeshBuilder.cpp
+        src/renderer/ChunkMeshBuilder.h
+        src/renderer/ViewFrustrum.h
+        src/camera/Camera.cpp
+        src/renderer/ViewFrustrum.cpp
+        src/renderer/ViewFrustrum.cpp
+        src/world/WorldEventManager.h
+        src/TypedContainer.h
+        src/AAB.h
+        src/world/World.cpp
+        src/world/World.h
+        src/WrapAround3dArray.h
+        src/world/WorldGenerator.cpp
+        src/world/WorldGenerator.h src/external/SimplexNoise/SimplexNoise.cpp src/external/SimplexNoise/SimplexNoise.h)
 
-set(LIBS SDL2::SDL2main SDL2::SDL2-static glad_gl_core_33 glm::glm spdlog::spdlog nlohmann_json nlohmann_json_schema_validator)
+set(LIBS SDL2::SDL2main SDL2::SDL2-static glad_gl_core_33 glm::glm spdlog::spdlog nlohmann_json nlohmann_json_schema_validator SimplexNoise)
 
 if (DEBUG)
     set(ASSETS_DIR ${PROJECT_SOURCE_DIR}/assets/)
@@ -129,5 +162,5 @@ configure_file(src/config.h.in ${CMAKE_BINARY_DIR}/src/config.h)
 
 add_executable(${EXECUTABLE_TARGET_NAME} ${SRC})
 
-target_link_libraries(${EXECUTABLE_TARGET_NAME} PRIVATE ${LIBS})
+target_link_libraries(${EXECUTABLE_TARGET_NAME} ${LIBS})
 target_include_directories(${EXECUTABLE_TARGET_NAME} PRIVATE ${CMAKE_BINARY_DIR}/src ${CMAKE_BINARY_DIR}/stb ${CMAKE_BINARY_DIR}/json src)

@@ -63,10 +63,10 @@ void BlocksRenderer::draw(const Transform &transform) const {
 
     BoundingBox box(glm::vec3(0.f), glm::vec3(16.f * 0.2f));
 
-    const glm::vec3 chunkExtents(BLOCK_SIDE_LEN * static_cast<float>(1 << CHUNK_SIDE_BLOCK_COUNT_LOG2) / 2.f);
+    const glm::vec3 chunkExtents(BLOCK_SIDE_LEN * static_cast<float>(1 << CHUNK_SIDE_BLOCK_COUNT_LOG2));
 
     chunkMeshes.forEach([chunkExtents, transform](glm::ivec3 position, const ChunkMesh &mesh) {
-        BoundingBox chunkBB(chunkExtents * (glm::vec3(position) * 2.f + 1.f), chunkExtents);
+        BoundingBox chunkBB(chunkExtents * glm::vec3(position), chunkExtents);
 
         if (chunkBB.isOnFrustrum(transform.frustrum))
             mesh.draw();

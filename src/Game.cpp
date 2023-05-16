@@ -16,7 +16,7 @@
 
 constexpr double P_FOV_RAD = glm::pi<double>() / 3.0;
 constexpr double P_NEAR = 0.001;
-constexpr double P_FAR = 1000.0;
+constexpr double P_FAR = 200.0;
 
 constexpr float P_FOV_RAD_F = static_cast<float>(P_FOV_RAD);
 constexpr float P_NEAR_F = static_cast<float>(P_NEAR);
