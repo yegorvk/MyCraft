@@ -11,8 +11,8 @@
 
 template<typename T>
 struct ChildNodeEntry {
-    inline explicit ChildNodeEntry(const std::shared_ptr<T> &child, int priority = 0) : child(child),
-                                                                                        priority(priority) {}
+    inline explicit ChildNodeEntry(std::shared_ptr<T> child, int priority = 0) : priority(priority),
+                                                                                 child(std::move(child)) {}
 
     inline bool operator>(const ChildNodeEntry<T> &rhs) const {
         return priority > rhs.priority;
@@ -26,6 +26,8 @@ class Node : public INode {
 public:
     Node() = default;
 
+    ~Node() override = default;
+
     void draw(const Transform &transform) const final;
 
     bool handleEvent(const SDL_Event &event) final;
@@ -38,16 +40,16 @@ public:
 
     virtual void onUpdate(uint64_t deltaMs);
 
-    inline void addDrawable(const std::shared_ptr<Drawable> &drawable, int priority = 0) {
-        drawables.emplace(drawable, priority);
+    inline void addDrawable(std::shared_ptr<Drawable> drawable, int priority = 0) {
+        drawables.emplace(std::move(drawable), priority);
     }
 
-    inline void addEventConsumer(const std::shared_ptr<EventConsumer> &consumer, int priority = 0) {
-        eventConsumers.emplace(consumer, priority);
+    inline void addEventConsumer(std::shared_ptr<EventConsumer> consumer, int priority = 0) {
+        eventConsumers.emplace(std::move(consumer), priority);
     }
 
-    inline void scheduleForUpdates(const std::shared_ptr<UpdateDelegate> &delegate, int priority = 0) {
-        updateDelegates.emplace(delegate, priority);
+    inline void scheduleForUpdates(std::shared_ptr<UpdateDelegate> delegate, int priority = 0) {
+        updateDelegates.emplace(std::move(delegate), priority);
     }
 
 private:

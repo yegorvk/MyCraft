@@ -8,6 +8,8 @@
 #include "SDL.h"
 
 struct EventConsumer {
+    virtual ~EventConsumer() = default;
+
     virtual bool handleEvent(const SDL_Event& event) = 0;
 };
 

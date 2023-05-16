@@ -24,13 +24,11 @@ public:
     [[nodiscard]] int getTotalVertexCount() const;
 private:
     /**
+     * @param originBlockOffset block offset in the direction of positive normal axis
      * @param face block face
-     * @param origin bottom left (relative to the face's coordinate system) block's chunk-based coordinates
-     * @param originPos bottom left position of [origin] in world coords
-     * @param axis axis perpendicular (normal) to the face
-     * @param blockFaceOrientation whether block face is visible when looking towards positive direction of axis
+     * @param normalAxis face normal axis
      * */
-    void build2dMesh(int originBlockOffset, int face, int axis);
+    void build2dMesh(int originBlockOffset, int face, int normalAxis);
 
     [[nodiscard]] inline ALWAYS_INLINE std::vector<Vertex> &getVerticesMut(int face) {
         return vertices[face];

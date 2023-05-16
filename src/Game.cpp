@@ -2,8 +2,6 @@
 // Created by egorv on 4/5/2023.
 //
 
-#define GLM_FORCE_RADIANCE
-
 #include "Game.h"
 #include "spdlog/spdlog.h"
 #include "renderer/Shader.h"
@@ -16,9 +14,13 @@
 
 #define glGetStr(prop) reinterpret_cast<const char*>(glGetString(prop))
 
-constexpr float P_FOV_RAD = glm::pi<float>() / 3.f;
-constexpr float P_NEAR = 0.001f;
-constexpr float P_FAR = 1000.f;
+constexpr double P_FOV_RAD = glm::pi<double>() / 3.0;
+constexpr double P_NEAR = 0.001;
+constexpr double P_FAR = 1000.0;
+
+constexpr float P_FOV_RAD_F = static_cast<float>(P_FOV_RAD);
+constexpr float P_NEAR_F = static_cast<float>(P_NEAR);
+constexpr float P_FAR_F = static_cast<float>(P_FAR);
 
 Game::Game(const char *winTitle, int winWidth, int winHeight, bool fullscreen) {
     initSDL();
@@ -55,8 +57,8 @@ void Game::run() {
     int winWidth, winHeight;
     SDL_GetWindowSize(window, &winWidth, &winHeight);
 
-    float aspect = static_cast<float>(winWidth) / static_cast<float>(winHeight);
-    glm::mat4 projMat = glm::perspective(P_FOV_RAD, aspect, P_NEAR, P_FAR);
+    double aspect = static_cast<double>(winWidth) / static_cast<double>(winHeight);
+    glm::mat4 projMat = glm::perspective(P_FOV_RAD_F, static_cast<float>(aspect), P_NEAR_F, P_FAR_F);
 
     auto lastFrameTimestamp = SDL_GetTicks64();
 
@@ -77,8 +79,8 @@ void Game::run() {
             if (event.type == SDL_WINDOWEVENT && event.window.event == SDL_WINDOWEVENT_SIZE_CHANGED) {
                 winWidth = event.window.data1, winHeight = event.window.data2;
 
-                aspect = static_cast<float>(winWidth) / static_cast<float>(winHeight);
-                projMat = glm::perspective(P_FOV_RAD, aspect, P_NEAR, P_FAR);
+                aspect = static_cast<double>(winWidth) / static_cast<double>(winHeight);
+                projMat = glm::perspective(P_FOV_RAD_F, static_cast<float>(aspect), P_NEAR_F, P_FAR_F);
 
                 glViewport(0, 0, event.window.data1, event.window.data2);
             }
@@ -90,8 +92,6 @@ void Game::run() {
         rootNode->update(delta);
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-        auto p = camera.getPosition();
 
         const Perspective perspective = {aspect, P_FOV_RAD, P_NEAR, P_FAR};
         const auto frustrum = ViewFrustrum(perspective, camera.getPosition(), camera.getFront(), camera.getRight());
@@ -187,8 +187,8 @@ void Game::die(const char *msg) {
     exit(EXIT_FAILURE);
 }
 
-void STDCALL Game::processGlDebugMessage(GLuint source, GLuint type, GLuint id, GLuint severity, GLsizei length,
-                                 const GLchar *message, const void *userParam) {
+void STDCALL Game::processGlDebugMessage(GLuint source, GLuint type, GLuint id, GLuint severity, GLsizei,
+                                 const GLchar *message, const void *) {
     spdlog::level::level_enum logLevel;
 
     switch (severity) {

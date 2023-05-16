@@ -41,7 +41,9 @@ public:
                                    float speed = DEFAULT_CAMERA_SPEED,
                                    float sensitivity = DEFAULT_CAMERA_SENSITIVITY,
                                    CameraControlBindings bindings = CameraControlBindings())
-            : camera(camera), bindings(bindings), speed(speed), sensitivity(sensitivity) {}
+            : camera(camera), bindings(bindings), sensitivity(sensitivity), speed(speed) {};
+
+    virtual ~CameraControls() = default;
 
     bool handleEvent(const SDL_Event &event) final;
 

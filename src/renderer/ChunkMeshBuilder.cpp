@@ -42,8 +42,8 @@ ChunkMeshBuilder::ChunkMeshBuilder(const Chunk &chunk, const BlockCache &blockCa
         : chunk(chunk), blockCache(blockCache), offset(offset), blockSideLen(blockSideLen) {
     for (int axis = 0; axis < 3; ++axis) {
         for (int j = 0; j < chunk.getSideBlockCount(); ++j) {
-            build2dMesh(j, face(axis, true), axis);
             build2dMesh(j, face(axis, false), axis);
+            build2dMesh(j, face(axis, true), axis);
         }
     }
 }
@@ -57,16 +57,16 @@ int ChunkMeshBuilder::getTotalVertexCount() const {
     return count;
 }
 
-void ChunkMeshBuilder::build2dMesh(int originBlockOffset, int face, int axis) {
-    auto originBlock = FACE_ORIGIN[face] * (chunk.getSideBlockCount() - 1) + AXIS[axis] * originBlockOffset;
+void ChunkMeshBuilder::build2dMesh(int originBlockOffset, int face, int normalAxis) {
+    auto originBlock = FACE_ORIGIN[face] * (chunk.getSideBlockCount() - 1) + AXIS[normalAxis] * originBlockOffset;
 
-    auto originBlockWorld = offset + glm::vec3(FACE_ORIGIN[face] * chunk.getSideBlockCount());
-    originBlockWorld += AXIS[axis] * originBlockOffset;
+    auto originBlockWorld = glm::vec3(FACE_ORIGIN[face] * chunk.getSideBlockCount());
+    originBlockWorld += AXIS[normalAxis] * originBlockOffset;
 
-    if (faceOrientationAlongNormalAxis(face))
-        originBlockWorld += glm::vec3(AXIS[axis]);
+    if (isForwardOriented(face))
+        originBlockWorld += glm::vec3(AXIS[normalAxis]);
 
-    originBlockWorld *= blockSideLen;
+    originBlockWorld = offset + originBlockWorld * blockSideLen;
 
     auto right = FACE_RIGHT[face];
     auto top = FACE_TOP[face];

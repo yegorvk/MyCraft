@@ -21,12 +21,12 @@ constexpr int BOTTOM_FACE = 3;
 constexpr int FRONT_FACE = 4;
 constexpr int BACK_FACE = 5;
 
-constexpr int face(int axis, bool visibleWhenLookingInPositiveDirection) {
-    return axis * 2 + visibleWhenLookingInPositiveDirection;
+constexpr int face(int axis, bool forwardOrientated) {
+    return axis * 2 + !forwardOrientated;
 }
 
-/** Checks if face is visible when looking in positive direction of normal axis **/
-constexpr bool faceOrientationAlongNormalAxis(int face) {
+/** Checks if face normal is pointing towards positive values **/
+constexpr bool isForwardOriented(int face) {
     return face % 2 == 0;
 }
 

@@ -6,10 +6,16 @@
 #define SHITCRAFT_WORLDSCENE_H
 
 #include "core/Node.h"
+#include "world/World.h"
 
 class WorldScene : public Node {
 public:
     WorldScene();
+
+    ~WorldScene() override = default;
+
+private:
+    World world;
 };
 
 

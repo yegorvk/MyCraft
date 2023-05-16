@@ -6,5 +6,6 @@
 #include "WorldScene.h"
 
 WorldScene::WorldScene() {
-    addDrawable(std::make_shared<BlocksRenderer>());
+    addDrawable(std::make_shared<BlocksRenderer>(world));
+    world.reloadedChunks(AAB(glm::ivec3(0), glm::ivec3(10)));
 }

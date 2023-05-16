@@ -12,35 +12,35 @@
 struct FrustrumPlane {
     FrustrumPlane() = default;
 
-    inline FrustrumPlane(glm::vec3 point, glm::vec3 normal)
+    inline FrustrumPlane(glm::dvec3 point, glm::dvec3 normal)
     : point(point), normal(glm::normalize(normal)) {}
 
-    [[nodiscard]] inline float signedDistanceFrom(glm::vec3 p) const {
+    [[nodiscard]] inline double signedDistanceFrom(glm::dvec3 p) const {
         return glm::dot(normal, p - point);
     }
 
-    glm::vec3 point{}, normal{};
+    glm::dvec3 point{}, normal{};
 };
 
 struct Perspective {
-    float aspectRatio, vFovRad, near, far;
+    double aspectRatio, vFovRad, near, far;
 };
 
 struct ViewFrustrum {
-    ViewFrustrum(Perspective perspective, glm::vec3 cameraPosition, glm::vec3 cameraFront, glm::vec3 cameraRight);
+    ViewFrustrum(Perspective perspective, glm::dvec3 cameraPosition, glm::dvec3 cameraFront, glm::dvec3 cameraRight);
 
     FrustrumPlane near, far, right, left, top, bottom;
 };
 
 class BoundingBox {
 public:
-    BoundingBox(glm::vec3 min, glm::vec3 extents);
+    BoundingBox(glm::dvec3 min, glm::dvec3 extents);
 
     [[nodiscard]] bool isOnFrustrum(const ViewFrustrum &frustrum) const;
 private:
     [[nodiscard]] bool isForwardToPlane(const FrustrumPlane &plane) const;
 
-    std::array<glm::vec3, 8> vertices{};
+    std::array<glm::dvec3, 8> vertices{};
 };
 
 #endif //SHITCRAFT_VIEWFRUSTRUM_H

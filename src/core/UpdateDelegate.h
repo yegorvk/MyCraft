@@ -9,6 +9,8 @@
 
 class UpdateDelegate {
 public:
+    virtual ~UpdateDelegate() = default;
+
     virtual void update(uint64_t deltaMs) = 0;
 };
 

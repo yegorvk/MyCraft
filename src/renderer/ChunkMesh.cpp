@@ -10,14 +10,24 @@
 #include "ChunkMesh.h"
 #include "ChunkMeshBuilder.h"
 
-ChunkMesh::ChunkMesh(const Texture &arrayTexture) {
+ChunkMesh::ChunkMesh(ChunkMesh &&other)  noexcept {
+    vao = other.vao, other.vao = 0;
+    vbo = other.vbo, other.vbo = 0;
+    arrayTextureId = other.arrayTextureId;
+    vertexCount = other.vertexCount, other.vertexCount = 0;
+}
+
+ChunkMesh::~ChunkMesh() {
+    if (vao != 0)
+        glDeleteVertexArrays(1, &vao);
+
+    if (vbo != 0)
+        glDeleteBuffers(1, &vbo);
+}
+
+ChunkMesh::ChunkMesh() {
     glGenBuffers(1, &vbo);
     glGenVertexArrays(1, &vao);
-
-    if (arrayTexture.getType() != TextureType::Tex2dArray)
-        throw std::invalid_argument("texture must be array texture");
-
-    arrayTextureId = arrayTexture.getGlHandle();
 
     glBindVertexArray(vao);
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
@@ -38,11 +48,22 @@ ChunkMesh::ChunkMesh(const Texture &arrayTexture) {
     glBindVertexArray(0);
 }
 
+void ChunkMesh::setTilesTexture(const Texture &tilesTexture) {
+    if (tilesTexture.getType() != TextureType::Tex2dArray)
+        throw std::invalid_argument("texture must be array texture");
+
+    arrayTextureId = tilesTexture.getGlHandle();
+}
+
 void ChunkMesh::update(const BlockCache &blockCache, const Chunk &chunk, float blockSideLen, glm::vec3 offset) {
     ChunkMeshBuilder builder(chunk, blockCache, offset, blockSideLen);
 
     vertexCount = builder.getTotalVertexCount();
     auto bufSize = static_cast<int>(sizeof(Vertex) * vertexCount);
+
+    if (vbo == 0) {
+        int k;
+    }
 
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
     glBufferData(GL_ARRAY_BUFFER, bufSize, nullptr, GL_DYNAMIC_DRAW);

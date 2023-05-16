@@ -13,7 +13,7 @@ public:
     NodeHost() = default;
 
     template <typename T>
-    inline explicit NodeHost(T&& node) : currentNode(std::make_unique<T>(node)) {}
+    inline explicit NodeHost(T node) : currentNode(std::make_unique<T>(std::move(node))) {}
 
     template <typename T>
     inline void setNode(T&& node) {

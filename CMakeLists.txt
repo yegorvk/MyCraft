@@ -5,7 +5,7 @@ set(CMAKE_CXX_STANDARD 17)
 
 set(BUILD_SHARED_LIBS OFF)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -static -static-libgcc -static-libstdc++")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -static -static-libgcc -static-libstdc++")
 
 if (${CMAKE_BUILD_TYPE} STREQUAL Debug)
     set(DEBUG ON)
@@ -113,7 +113,7 @@ set(SRC
         src/asset/Cache.h
         src/asset/FileReader.h
         src/asset/Index.h
-        src/asset/Parser.cpp src/asset/Parser.h src/asset/LocalFileReader.cpp src/asset/LocalFileReader.h src/asset/Image.cpp src/asset/Image.h src/PixelFormat.h src/world/Chunk.cpp src/world/Chunk.h src/renderer/BlocksRenderer.cpp src/renderer/BlocksRenderer.h src/renderer/ChunkMesh.cpp src/renderer/ChunkMesh.h src/scene/WorldScene.cpp src/scene/WorldScene.h src/world/BlockCache.cpp src/world/BlockCache.h src/world/Block.h src/world/Block.cpp src/renderer/ChunkMeshBuilder.cpp src/renderer/ChunkMeshBuilder.h src/renderer/ViewFrustrum.h src/camera/Camera.cpp src/renderer/ViewFrustrum.cpp src/renderer/ViewFrustrum.cpp)
+        src/asset/Parser.cpp src/asset/Parser.h src/asset/LocalFileReader.cpp src/asset/LocalFileReader.h src/asset/Image.cpp src/asset/Image.h src/PixelFormat.h src/world/Chunk.cpp src/world/Chunk.h src/renderer/BlocksRenderer.cpp src/renderer/BlocksRenderer.h src/renderer/ChunkMesh.cpp src/renderer/ChunkMesh.h src/scene/WorldScene.cpp src/scene/WorldScene.h src/world/BlockCache.cpp src/world/BlockCache.h src/world/Block.h src/world/Block.cpp src/renderer/ChunkMeshBuilder.cpp src/renderer/ChunkMeshBuilder.h src/renderer/ViewFrustrum.h src/camera/Camera.cpp src/renderer/ViewFrustrum.cpp src/renderer/ViewFrustrum.cpp src/world/WorldEventManager.h src/TypedContainer.h src/AAB.h src/world/World.cpp src/world/World.h src/WrapAround3dArray.h)
 
 set(LIBS SDL2::SDL2main SDL2::SDL2-static glad_gl_core_33 glm::glm spdlog::spdlog nlohmann_json nlohmann_json_schema_validator)
 

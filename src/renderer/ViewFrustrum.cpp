@@ -6,13 +6,13 @@
 
 #include "ViewFrustrum.h"
 
-ViewFrustrum::ViewFrustrum(Perspective perspective, glm::vec3 cameraPosition, glm::vec3 cameraFront,
-                           glm::vec3 cameraRight) {
+ViewFrustrum::ViewFrustrum(Perspective perspective, glm::dvec3 cameraPosition, glm::dvec3 cameraFront,
+                           glm::dvec3 cameraRight) {
     const auto cameraUp = glm::normalize(glm::cross(cameraRight, cameraFront));
     const auto farOffset = cameraFront * perspective.far;
 
-    float halfFarHeight = perspective.far * glm::tan(perspective.vFovRad / 2.f);
-    float halfFarWidth = halfFarHeight * perspective.aspectRatio;
+    auto halfFarHeight = perspective.far * glm::tan(perspective.vFovRad / 2.f);
+    auto halfFarWidth = halfFarHeight * perspective.aspectRatio;
 
     near = {cameraPosition + cameraFront * perspective.near, cameraFront};
     far = {cameraPosition + farOffset, -cameraFront};
@@ -24,16 +24,16 @@ ViewFrustrum::ViewFrustrum(Perspective perspective, glm::vec3 cameraPosition, gl
     bottom = {cameraPosition, glm::cross(farOffset - halfFarHeight * cameraUp, -cameraRight)};
 }
 
-BoundingBox::BoundingBox(glm::vec3 min, glm::vec3 extents) {
+BoundingBox::BoundingBox(glm::dvec3 min, glm::dvec3 extents) {
     vertices = {
             min,
-            min + glm::vec3(extents.x, 0.f, 0.f),
-            min + glm::vec3(0.f, extents.y, 0.f),
-            min + glm::vec3(0.f, 0.f, extents.z),
-            min + glm::vec3(0.f, extents.y, extents.z),
-            min + glm::vec3(extents.x, 0.f, extents.z),
-            min + glm::vec3(extents.x, extents.y, 0.f),
-            min + glm::vec3(extents.x, extents.y, extents.z),
+            min + glm::dvec3(extents.x, 0, 0),
+            min + glm::dvec3(0, extents.y, 0),
+            min + glm::dvec3(0, 0, extents.z),
+            min + glm::dvec3(0, extents.y, extents.z),
+            min + glm::dvec3(extents.x, 0, extents.z),
+            min + glm::dvec3(extents.x, extents.y, 0),
+            min + glm::dvec3(extents.x, extents.y, extents.z),
     };
 }
 
@@ -44,7 +44,7 @@ bool BoundingBox::isOnFrustrum(const ViewFrustrum &frustrum) const {
 }
 
 bool BoundingBox::isForwardToPlane(const FrustrumPlane &plane) const {
-    constexpr float EPS = 0.05f;
+    constexpr float EPS = 0.2f;
 
     for (int i = 0; i < 8; ++i) {
         if (plane.signedDistanceFrom(vertices[i]) >= -EPS)

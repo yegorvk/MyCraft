@@ -16,9 +16,15 @@
 
 class ChunkMesh {
 public:
-    ChunkMesh() = default;
+    ChunkMesh();
 
-    explicit ChunkMesh(const Texture &arrayTexture);
+    ChunkMesh(ChunkMesh &&other) noexcept;
+
+    ChunkMesh(const ChunkMesh &other) = delete;
+
+    ~ChunkMesh();
+
+    void setTilesTexture(const Texture &tilesTexture);
 
     void update(const BlockCache &blockCache, const Chunk &chunk, float blockSideLen, glm::vec3 offset = {});
 

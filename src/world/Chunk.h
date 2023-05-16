@@ -12,9 +12,11 @@
 
 #include "arch.h"
 
+constexpr int CHUNK_SIDE_BLOCK_COUNT_LOG2 = 4;
+
 class Chunk {
 public:
-    explicit Chunk(int sideLenLog2);
+    explicit Chunk(int sideLenLog2 = CHUNK_SIDE_BLOCK_COUNT_LOG2);
 
     [[nodiscard]] ALWAYS_INLINE inline uint16_t getBlock(int x, int y, int z) const {
         return blocks[(x << sideBlockCountLog2 << sideBlockCountLog2) + (y << sideBlockCountLog2) + z];

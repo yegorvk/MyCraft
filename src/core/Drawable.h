@@ -8,6 +8,7 @@
 #include "../renderer/Transform.h"
 
 struct Drawable {
+    virtual ~Drawable() = default;
     virtual void draw(const Transform &transform) const = 0;
 };
 
