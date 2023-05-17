@@ -8,7 +8,6 @@
 #include "SDL.h"
 #include "glad/gl.h"
 #include "core/Node.h"
-#include "camera/Camera.h"
 #include "arch.h"
 
 class Game {
@@ -51,8 +50,6 @@ private:
     // Data
 
     std::unique_ptr<Node> rootNode;
-
-    Camera camera;
 
     SDL_Window *window = nullptr;
     SDL_GLContext glContext = nullptr;

@@ -37,6 +37,15 @@ constexpr glm::ivec3 AXIS[3] = {
         {0, 0, 1}
 };
 
+constexpr float brightnessCoefficient[6] = {
+        .8f,
+        .8f,
+        1.f,
+        .1f,
+        .7f,
+        .7f
+};
+
 ChunkMeshBuilder::ChunkMeshBuilder(const Chunk &chunk, const BlockCache &blockCache, glm::vec3 offset,
                                    float blockSideLen)
         : chunk(chunk), blockCache(blockCache), offset(offset), blockSideLen(blockSideLen) {
@@ -137,11 +146,18 @@ void ChunkMeshBuilder::build2dMesh(int originBlockOffset, int face, int normalAx
             if (texId == 1)
                 color = glm::vec3(0.f, 1.f, 0.f);
 
+            color *= brightnessCoefficient[face];
+
+            glm::vec3 normal = glm::normalize(glm::cross(glm::vec3(right), glm::vec3(top)));
+
+            if (isForwardOriented(face))
+                normal = -normal;
+
             Vertex quadVertices[4] = {
-                    {quadVertexCoords[0], glm::vec3(0.f, 0.f, texId), color},
-                    {quadVertexCoords[1], glm::vec3(maxU, 0.f, texId), color},
-                    {quadVertexCoords[2], glm::vec3(maxU, maxV, texId), color},
-                    {quadVertexCoords[3], glm::vec3(0.f, maxV, texId), color}
+                    {quadVertexCoords[0], glm::vec3(0.f, 0.f, texId), normal, color},
+                    {quadVertexCoords[1], glm::vec3(maxU, 0.f, texId), normal, color},
+                    {quadVertexCoords[2], glm::vec3(maxU, maxV, texId), normal, color},
+                    {quadVertexCoords[3], glm::vec3(0.f, maxV, texId), normal, color}
             };
 
             vertices[face].push_back(quadVertices[0]);

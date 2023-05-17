@@ -15,7 +15,7 @@ class World {
 public:
     World() = default;
 
-    void reloadedAllChunks(AAB region);
+    void reloadAllChunks(AAB region);
 
     void loadChunks(AAB region);
 

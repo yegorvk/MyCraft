@@ -8,6 +8,7 @@
 #include "INode.h"
 #include <set>
 #include <memory>
+#include <optional>
 
 template<typename T>
 struct ChildNodeEntry {
@@ -28,13 +29,15 @@ public:
 
     ~Node() override = default;
 
-    void draw(const Transform &transform) const final;
+    void draw(const std::optional<Transform> &transform) const final;
 
     bool handleEvent(const SDL_Event &event) final;
 
     void update(uint64_t deltaMs) final;
 
-    virtual void onDraw(const glm::mat4 &transform);
+    virtual void onPreDraw(const std::optional<Transform> &transform) const;
+
+    virtual void onPostDraw(const std::optional<Transform> &transform) const;
 
     virtual bool onHandleEvent(const SDL_Event &event);
 
@@ -52,7 +55,13 @@ public:
         updateDelegates.emplace(std::move(delegate), priority);
     }
 
+    inline void setTransform(Transform &&transform) {
+        localTransform.emplace(std::forward<Transform>(transform));
+    }
+
 private:
+    std::optional<Transform> localTransform;
+
     std::multiset<ChildNodeEntry<Drawable>, std::greater<>> drawables;
     std::multiset<ChildNodeEntry<EventConsumer>, std::greater<>> eventConsumers;
     std::multiset<ChildNodeEntry<UpdateDelegate>, std::greater<>> updateDelegates;

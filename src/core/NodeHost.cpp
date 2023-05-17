@@ -4,7 +4,7 @@
 
 #include "NodeHost.h"
 
-void NodeHost::draw(const Transform &transform) const {
+void NodeHost::draw(const std::optional<Transform> &transform) const {
     if (currentNode)
         currentNode->draw(transform);
 }

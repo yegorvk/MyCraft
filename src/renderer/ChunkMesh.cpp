@@ -35,6 +35,7 @@ ChunkMesh::ChunkMesh() {
     glEnableVertexAttribArray(0); // aPosition
     glEnableVertexAttribArray(1); // aTexCoords
     glEnableVertexAttribArray(2); // aColor
+    glEnableVertexAttribArray(3); // aNormal
 
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex),
                           reinterpret_cast<void *>(offsetof(Vertex, position)));
@@ -44,6 +45,9 @@ ChunkMesh::ChunkMesh() {
 
     glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex),
                           reinterpret_cast<void *>(offsetof(Vertex, color)));
+
+    glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex),
+                          reinterpret_cast<void *>(offsetof(Vertex, normal)));
 
     glBindVertexArray(0);
 }

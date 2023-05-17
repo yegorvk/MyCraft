@@ -43,7 +43,7 @@ public:
                                    CameraControlBindings bindings = CameraControlBindings())
             : camera(camera), bindings(bindings), sensitivity(sensitivity), speed(speed) {};
 
-    virtual ~CameraControls() = default;
+    ~CameraControls() override = default;
 
     bool handleEvent(const SDL_Event &event) final;
 

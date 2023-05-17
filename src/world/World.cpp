@@ -4,7 +4,7 @@
 
 #include "World.h"
 
-void World::reloadedAllChunks(AAB region) {
+void World::reloadAllChunks(AAB region) {
     eventManager.dispatchEvent(WorldEvent<ChunksStateChanged>(loadedRegion, ChunkState::Released));
 
     loadedRegion = region;

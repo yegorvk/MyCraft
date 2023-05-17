@@ -7,20 +7,11 @@
 #include "renderer/Shader.h"
 #include "config.h"
 #include "SDL.h"
-#include "camera/CameraControls.h"
 #include "Context.h"
 #include "arch.h"
 #include "scene/WorldScene.h"
 
 #define glGetStr(prop) reinterpret_cast<const char*>(glGetString(prop))
-
-constexpr double P_FOV_RAD = glm::pi<double>() / 3.0;
-constexpr double P_NEAR = 0.001;
-constexpr double P_FAR = 200.0;
-
-constexpr float P_FOV_RAD_F = static_cast<float>(P_FOV_RAD);
-constexpr float P_NEAR_F = static_cast<float>(P_NEAR);
-constexpr float P_FAR_F = static_cast<float>(P_FAR);
 
 Game::Game(const char *winTitle, int winWidth, int winHeight, bool fullscreen) {
     initSDL();
@@ -49,7 +40,7 @@ Game::~Game() {
 }
 
 void Game::run() {
-    glClearColor(1.f, 1.f, 1.f, 1.f);
+    glClearColor(0.f, 0.f, 0.f, 1.f);
 
     bool quit = false;
     SDL_Event event;
@@ -57,8 +48,14 @@ void Game::run() {
     int winWidth, winHeight;
     SDL_GetWindowSize(window, &winWidth, &winHeight);
 
-    double aspect = static_cast<double>(winWidth) / static_cast<double>(winHeight);
-    glm::mat4 projMat = glm::perspective(P_FOV_RAD_F, static_cast<float>(aspect), P_NEAR_F, P_FAR_F);
+    SDL_Event resizeEvent;
+
+    resizeEvent.type = SDL_WINDOWEVENT;
+    resizeEvent.window.event = SDL_WINDOWEVENT_SIZE_CHANGED;
+    resizeEvent.window.data1 = winWidth;
+    resizeEvent.window.data2 = winHeight;
+
+    rootNode->handleEvent(resizeEvent);
 
     auto lastFrameTimestamp = SDL_GetTicks64();
 
@@ -73,33 +70,22 @@ void Game::run() {
         SDL_GetWindowSize(window, &winWidth, &winHeight);
 
         while (SDL_PollEvent(&event)) {
-            if (event.type == SDL_QUIT || (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_ESCAPE))
-                quit = true;
-
-            if (event.type == SDL_WINDOWEVENT && event.window.event == SDL_WINDOWEVENT_SIZE_CHANGED) {
-                winWidth = event.window.data1, winHeight = event.window.data2;
-
-                aspect = static_cast<double>(winWidth) / static_cast<double>(winHeight);
-                projMat = glm::perspective(P_FOV_RAD_F, static_cast<float>(aspect), P_NEAR_F, P_FAR_F);
-
+            if (event.type == SDL_WINDOWEVENT && event.window.event == SDL_WINDOWEVENT_SIZE_CHANGED)
                 glViewport(0, 0, event.window.data1, event.window.data2);
-            }
 
             if (rootNode)
                 rootNode->handleEvent(event);
+
+            if (event.type == SDL_QUIT || (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_ESCAPE))
+                quit = true;
         }
 
         rootNode->update(delta);
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        const Perspective perspective = {aspect, P_FOV_RAD, P_NEAR, P_FAR};
-        const auto frustrum = ViewFrustrum(perspective, camera.getPosition(), camera.getFront(), camera.getRight());
-
-        Transform transform(projMat * camera.getViewMatrix(), frustrum);
-
         if (rootNode)
-            rootNode->draw(transform);
+            rootNode->draw(std::nullopt);
     }
 
     SDL_SetRelativeMouseMode(SDL_FALSE);
@@ -172,13 +158,6 @@ void Game::onWindowGlContextReady() {
     glEnable(GL_CULL_FACE);
 
     rootNode = std::make_unique<WorldScene>();
-
-    camera.moveAbsolute(glm::vec3(0.f, 0.f, 3.f));
-
-    auto camControls = std::make_shared<CameraControls>(camera);
-
-    rootNode->scheduleForUpdates(camControls);
-    rootNode->addEventConsumer(camControls);
 }
 
 [[noreturn]]

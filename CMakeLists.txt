@@ -90,9 +90,6 @@ set(SRC
         src/core/NodeHost.cpp
         src/core/Node.cpp
         src/renderer/Transform.h
-        src/SimpleCube.cpp
-        src/SimpleCube.h
-        src/scene/SimpleCubeScene.h
         src/camera/Camera.h
         src/camera/CameraControls.h
         src/camera/CameraControls.cpp

@@ -16,7 +16,7 @@ public:
 
     ~BlocksRenderer() override;
 
-    void draw(const Transform &transform) const final;
+    void draw(const std::optional<Transform> &transform) const final;
 
 private:
     static Texture createArrayTexture();

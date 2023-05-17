@@ -57,18 +57,20 @@ void BlocksRenderer::updateChunkMesh(glm::ivec3 position, const Chunk &chunk) {
     mesh.update(world.getBlocks(), chunk, BLOCK_SIDE_LEN, offset);
 }
 
-void BlocksRenderer::draw(const Transform &transform) const {
+void BlocksRenderer::draw(const std::optional<Transform> &transform) const {
+    const auto &curTransform = transform.value();
+
     shader.bind();
-    shader.setMat4("mvp", transform.mvp);
+    shader.setMat4("mvp", curTransform.mvp);
 
     BoundingBox box(glm::vec3(0.f), glm::vec3(16.f * 0.2f));
 
     const glm::vec3 chunkExtents(BLOCK_SIDE_LEN * static_cast<float>(1 << CHUNK_SIDE_BLOCK_COUNT_LOG2));
 
-    chunkMeshes.forEach([chunkExtents, transform](glm::ivec3 position, const ChunkMesh &mesh) {
+    chunkMeshes.forEach([chunkExtents, curTransform](glm::ivec3 position, const ChunkMesh &mesh) {
         BoundingBox chunkBB(chunkExtents * glm::vec3(position), chunkExtents);
 
-        if (chunkBB.isOnFrustrum(transform.frustrum))
+        if (chunkBB.isOnFrustrum(curTransform.frustrum))
             mesh.draw();
     }, world.getLoadedRegion());
 }
