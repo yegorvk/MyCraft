@@ -6,11 +6,11 @@
 #define SHITCRAFT_CHUNKMESH_H
 
 #include <vector>
+#include <cstdint>
 
 #include "types.h"
-#include "core/Drawable.h"
-#include "world/Chunk.h"
-#include "world/BlockCache.h"
+#include "chunk/ChunkData.h"
+#include "block/BlockCache.h"
 #include "Shader.h"
 #include "Texture.h"
 
@@ -24,15 +24,15 @@ public:
 
     ~ChunkMesh();
 
-    void setTilesTexture(const Texture &tilesTexture);
+    void setTilesTexture(TextureHandle tilesTexture);
 
-    void update(const BlockCache &blockCache, const Chunk &chunk, float blockSideLen, glm::vec3 offset = {});
+    void update(const ChunkMeshData &meshData);
 
     void draw() const;
 
 private:
     uint vbo = 0, vao = 0;
-    uint arrayTextureId = 0;
+    TextureHandle texture;
 
     int vertexCount = 0;
 };

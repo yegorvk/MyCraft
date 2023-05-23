@@ -7,5 +7,6 @@ out vec4 FragColor;
 uniform sampler2DArray tex;
 
 void main() {
-    FragColor = vec4(texture(tex, vec3(vUv, 0.0)).rgb, 1);
+    vec3 texColor = texture(tex, vec3(vUv, 0.0)).rgb;
+    FragColor = vec4(texColor * texColor * texColor * texColor, 1);
 }

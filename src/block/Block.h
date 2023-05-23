@@ -10,17 +10,6 @@
 
 #include "types.h"
 
-constexpr int AXIS_X = 0;
-constexpr int AXIS_Y = 1;
-constexpr int AXIS_Z = 2;
-
-constexpr int RIGHT_FACE = 0;
-constexpr int LEFT_FACE = 1;
-constexpr int TOP_FACE = 2;
-constexpr int BOTTOM_FACE = 3;
-constexpr int FRONT_FACE = 4;
-constexpr int BACK_FACE = 5;
-
 constexpr int face(int axis, bool forwardOrientated) {
     return axis * 2 + !forwardOrientated;
 }
@@ -32,7 +21,7 @@ constexpr bool isForwardOriented(int face) {
 
 struct Block {
 public:
-    Block();
+    Block(uint rightTex, uint leftTex, uint topTex, uint bottomTex, uint frontTex, uint backTex);
 
     [[nodiscard]] constexpr uint getFaceTextureIndex(int face) const {
         return faceTextureIndices[face];

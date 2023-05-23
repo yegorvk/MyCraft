@@ -5,6 +5,8 @@
 #ifndef SHITCRAFT_CAMERACONTROLS_H
 #define SHITCRAFT_CAMERACONTROLS_H
 
+#include <functional>
+
 #include "Camera.h"
 #include "../core/EventConsumer.h"
 #include "../core/UpdateDelegate.h"
@@ -18,21 +20,21 @@ struct CameraControlBindings {
 
 constexpr float DEFAULT_CAMERA_SENSITIVITY = 0.0005f;
 constexpr float DEFAULT_CAMERA_SENSITIVITY_KEYBOARD_COEFFICIENT = 1.f;
-constexpr float DEFAULT_CAMERA_SPEED = 0.001f;
+constexpr float DEFAULT_CAMERA_SPEED = 0.005f;
 
 struct PressedControlKeys {
     PressedControlKeys() {
         forward = back = left = right = up = down = rollLeft = rollRight = false;
     }
 
-    bool forward : 1;
-    bool back : 1;
-    bool left : 1;
-    bool right : 1;
-    bool up : 1;
-    bool down : 1;
-    bool rollLeft : 1;
-    bool rollRight : 1;
+    bool forward: 1;
+    bool back: 1;
+    bool left: 1;
+    bool right: 1;
+    bool up: 1;
+    bool down: 1;
+    bool rollLeft: 1;
+    bool rollRight: 1;
 };
 
 class CameraControls : public EventConsumer, public UpdateDelegate {
@@ -48,6 +50,7 @@ public:
     bool handleEvent(const SDL_Event &event) final;
 
     void update(uint64_t deltaMs) final;
+
 private:
     Camera &camera;
     CameraControlBindings bindings;

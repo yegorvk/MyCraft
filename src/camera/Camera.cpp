@@ -28,6 +28,6 @@ void Camera::update() {
     camUp = glm::rotate(qRot, up);
     camRight = glm::normalize(glm::cross(camFront, camUp));
 
-    viewMatrix = glm::lookAt(position, position + camFront, camUp);
+    viewMatrix = glm::lookAt(glm::vec3(0), camFront, camUp);
 }
 

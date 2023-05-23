@@ -8,22 +8,18 @@
 #include <random>
 #include <cstdlib>
 
-#include "Chunk.h"
+#include "PerlinNoise.hpp"
+
+#include "chunk/ChunkData.h"
 
 class WorldGenerator {
 public:
     explicit WorldGenerator(uint64_t seed = 0);
 
-    Chunk generate(glm::ivec3 position);
+    ChunkData generate(glm::ivec3 position);
 
 private:
-    [[nodiscard]] static float getNoise(float x, float y) ;
-
-    std::uniform_int_distribution<int> dist;
-    std::mt19937 rng;
-
-    float noiseSeed;
+    siv::PerlinNoise perlin;
 };
-
 
 #endif //SHITCRAFT_WORLDGENERATOR_H

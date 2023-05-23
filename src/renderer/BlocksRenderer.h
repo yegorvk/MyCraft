@@ -5,37 +5,43 @@
 #ifndef SHITCRAFT_BLOCKSRENDERER_H
 #define SHITCRAFT_BLOCKSRENDERER_H
 
-#include "core/Drawable.h"
 #include "ChunkMesh.h"
 #include "world/World.h"
-#include "WrapAround3dArray.h"
+#include "chunk/ChunkMeshData.h"
+#include "ViewFrustrum.h"
+#include "MathUtils.h"
+#include "ArrayUtils.h"
 
-class BlocksRenderer : public Drawable {
+class BlocksRenderer {
 public:
-    explicit BlocksRenderer(World &world);
+    explicit BlocksRenderer();
 
-    ~BlocksRenderer() override;
+    void draw(glm::dvec3 cameraPosition, const glm::mat4 &viewProjection, const ViewFrustrum &frustrum) const;
 
-    void draw(const std::optional<Transform> &transform) const final;
+    void reset(glm::ivec3 newActiveRegionMin, glm::ivec3 newActiveRegionSize);
+
+    inline void setActiveRegionMin(glm::ivec3 min) {
+        activeRegionMin = min;
+    }
+
+    void update(glm::ivec3 chunkPos, const ChunkMeshData &meshData);
 
 private:
     static Texture createArrayTexture();
 
-    void reloadChunks(AAB loadedRegion);
+    [[nodiscard]] inline ChunkMesh &getMesh(glm::ivec3 position) {
+        return chunkMeshes[flatten(positiveMod(position, activeRegionSize), activeRegionSize)];
+    }
 
-    void chunksStateChanged(AAB region, ChunkState newState);
-
-    void updateChunkMesh(glm::ivec3 position, const Chunk &chunk);
-
-    std::size_t id;
-
-    WorldEventListener<ChunksStateChanged> chunksStateChangedListener;
-    WorldEventListener<ReloadChunks> reloadChunksListener;
-
-    World &world;
+    [[nodiscard]] inline const ChunkMesh &getMesh(glm::ivec3 position) const {
+        return chunkMeshes[flatten(positiveMod(position, activeRegionSize), activeRegionSize)];
+    }
 
     const Shader &shader;
-    WrapAround3dArray<ChunkMesh> chunkMeshes;
+
+    glm::ivec3 activeRegionMin{}, activeRegionSize{};
+
+    std::vector<ChunkMesh> chunkMeshes;
 
     Texture texture;
 };

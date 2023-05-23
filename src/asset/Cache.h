@@ -18,7 +18,7 @@ namespace asset::detail {
         template<typename T>
         struct DummyResolver {
             inline T operator()(const std::string &key) {
-                throw std::out_of_range("cache doesn't contain key " + key);
+                throw std::out_of_range("blockCache doesn't contain key " + key);
             }
         };
     }

@@ -1,4 +1,4 @@
-//
+ //
 // Created by egorv on 4/26/2023.
 //
 
@@ -20,15 +20,39 @@ WorldScene::WorldScene() {
     scheduleForUpdates(cameraControls);
     addEventConsumer(cameraControls);
 
-    addDrawable(std::make_shared<BlocksRenderer>(world));
-    world.reloadAllChunks(AAB(glm::ivec3(0), glm::ivec3(9, 0, 9)));
+    world.setActiveRegion(glm::ivec3(0, 0, 0), glm::ivec3(10, 1, 10));
+    renderer.reset(world.getActiveRegionMin(), world.getActiveRegionSize());
+
+    camera.moveAbsolute(glm::dvec3(2 * world.getActiveRegionMin() + world.getActiveRegionSize() - 1) / 2.0 * CHUNK_SIDE_SCALE);
+    world.setPlayerPosition(camera.getPosition());
+}
+
+void WorldScene::onPreDraw() const {
+    const auto viewProjection = projMat * camera.getViewMatrix();
+
+    Perspective perspective{winAspectRatio, P_FOV_RAD, P_NEAR, P_FAR};
+    ViewFrustrum frustrum(perspective, glm::vec3(0), camera.getFront(), camera.getRight());
+
+    renderer.draw(camera.getPosition(), viewProjection, frustrum);
 }
 
 void WorldScene::onUpdate(uint64_t deltaMs) {
-    Perspective perspective{winAspectRatio, P_FOV_RAD, P_NEAR, P_FAR};
-    ViewFrustrum frustrum(perspective, camera.getPosition(), camera.getFront(), camera.getRight());
+    world.processPlayerPositionChange(camera.getPosition());
+    world.tick();
 
-    setTransform({projMat * camera.getViewMatrix(), frustrum});
+    renderer.setActiveRegionMin(world.getActiveRegionMin());
+
+    constexpr int MAX_MESH_UPDATES_PER_TICK = 5;
+
+    for (int i = 0; i < MAX_MESH_UPDATES_PER_TICK; ++i) {
+        auto meshUpdateReq = world.dequeueMeshUpdateRequest();
+
+        if (meshUpdateReq.has_value()) {
+            auto req = meshUpdateReq.value();
+            renderer.update(req.position, req.chunk->getMeshData());
+        } else
+            break;
+    }
 }
 
 bool WorldScene::onHandleEvent(const SDL_Event &event) {

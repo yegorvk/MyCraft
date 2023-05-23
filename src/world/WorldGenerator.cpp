@@ -7,51 +7,43 @@
 
 #include <iostream>
 
-#include "SimplexNoise.h"
+#include "glm/glm.hpp"
 
 #include "WorldGenerator.h"
 
-inline float computeFloatSeed(uint64_t seed) {
-    const auto seed32 = static_cast<uint32_t>(seed);
-    constexpr uint32_t mask = (1u << 24u) - 1u;
-    const auto rawExp = static_cast<int32_t>((seed32 & (~mask)) >> 24u);
-    return ldexpf(static_cast<float>(seed32 & mask), glm::clamp(rawExp, -32, 32));
-}
+WorldGenerator::WorldGenerator(uint64_t seed) : perlin(seed) {}
 
-WorldGenerator::WorldGenerator(uint64_t seed) : rng(seed), noiseSeed(computeFloatSeed(seed)) {
-    SimplexNoise::seed(seed);
-}
+ChunkData WorldGenerator::generate(glm::ivec3 position) {
+    ChunkData chunk;
 
-Chunk WorldGenerator::generate(glm::ivec3 position) {
-    Chunk chunk;
+    if (position.y != 0)
+        return chunk;
 
-    std::vector<int> heightmap(1 << CHUNK_SIDE_BLOCK_COUNT_LOG2 << CHUNK_SIDE_BLOCK_COUNT_LOG2);
+    std::vector<int> heightmap(CHUNK_SIDE_BLOCK_COUNT * CHUNK_SIDE_BLOCK_COUNT);
 
-    for (int x = 0; x < (1 << CHUNK_SIDE_BLOCK_COUNT_LOG2); ++x)
-        for (int z = 0; z < (1 << CHUNK_SIDE_BLOCK_COUNT_LOG2); ++z) {
-            float noiseValue = getNoise(static_cast<float>((position.x << CHUNK_SIDE_BLOCK_COUNT_LOG2) + x) / 20.f,
-                                        static_cast<float>((position.z << CHUNK_SIDE_BLOCK_COUNT_LOG2) + z) / 20.f);
+    for (int x = 0; x < CHUNK_SIDE_BLOCK_COUNT; ++x)
+        for (int z = 0; z < CHUNK_SIDE_BLOCK_COUNT; ++z) {
+            glm::dvec3 worldPosition =
+                    BLOCK_SIDE_SCALE * glm::dvec3(position * CHUNK_SIDE_BLOCK_COUNT + glm::ivec3(x, 0, z));
 
-            float height = glm::clamp((noiseValue + 1.f) * 0.3f + 0.4f, 0.f, 1.f) *
-                           static_cast<float>(1 << CHUNK_SIDE_BLOCK_COUNT_LOG2);
+            const double noiseValue = perlin.noise2D(worldPosition.x / 5.0, worldPosition.z / 5.0);
 
-            heightmap[(x << CHUNK_SIDE_BLOCK_COUNT_LOG2) + z] = static_cast<int>(height);
+            double height =
+                    glm::clamp((noiseValue + 1.0) * 0.3 + 0.4, 0.0, 1.0) * static_cast<double>(CHUNK_SIDE_BLOCK_COUNT);
+
+            heightmap[x * CHUNK_SIDE_BLOCK_COUNT + z] = static_cast<int>(height);
         }
 
-    for (int x = 0; x < (1 << CHUNK_SIDE_BLOCK_COUNT_LOG2); ++x) {
-        for (int y = 0; y < (1 << CHUNK_SIDE_BLOCK_COUNT_LOG2); ++y) {
-            for (int z = 0; z < (1 << CHUNK_SIDE_BLOCK_COUNT_LOG2); ++z) {
-                if (y < heightmap[(x << CHUNK_SIDE_BLOCK_COUNT_LOG2) + z])
-                    chunk.setBlock(x, y, z, 1);
+    for (int x = 0; x < CHUNK_SIDE_BLOCK_COUNT; ++x) {
+        for (int y = 0; y < CHUNK_SIDE_BLOCK_COUNT; ++y) {
+            for (int z = 0; z < CHUNK_SIDE_BLOCK_COUNT; ++z) {
+                if (y < heightmap[x * CHUNK_SIDE_BLOCK_COUNT + z])
+                    chunk.setBlock(glm::ivec3(x, y, z), 1);
                 else
-                    chunk.setBlock(x, y, z, 0);
+                    chunk.setBlock(glm::ivec3(x, y, z), 0);
             }
         }
     }
 
     return chunk;
-}
-
-float WorldGenerator::getNoise(float x, float y) {
-    return SimplexNoise::noise(x, y);
 }

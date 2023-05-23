@@ -36,8 +36,8 @@ enum class TextureType : GLenum {
 
 struct TextureOptions {
     TexWrapping wrapping = TexWrapping::Repeat;
-    TexFiltering minFilter = TexFiltering::NearestMipmapNearest;
-    TexFiltering magFilter = TexFiltering::Nearest;
+    TexFiltering minFilter = TexFiltering::LinearMipmapNearest;
+    TexFiltering magFilter = TexFiltering::Linear;
 };
 
 class Texture;
@@ -55,6 +55,8 @@ namespace detail {
         uint handle = 0;
     };
 }
+
+class TextureHandle;
 
 class Texture {
 public:
@@ -91,8 +93,33 @@ public:
         return type;
     }
 
-    [[nodiscard]] inline uint getGlHandle() const {
+    [[nodiscard]] inline uint getRawHandle() const {
         return handle;
+    }
+
+private:
+    TextureType type = TextureType::Invalid;
+    uint handle = 0;
+};
+
+class TextureHandle {
+public:
+    TextureHandle() = default;
+
+    explicit TextureHandle(const Texture &texture);
+
+    void bind() const;
+
+    [[nodiscard]] inline TextureType getType() const {
+        return type;
+    }
+
+    [[nodiscard]] inline uint getRawHandle() const {
+        return handle;
+    }
+
+    [[nodiscard]] inline bool isValid() const {
+        return handle != 0;
     }
 
 private:

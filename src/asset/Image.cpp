@@ -9,8 +9,8 @@
 #include "Image.h"
 
 Image Image::loadFromMemory(const unsigned char *data, std::size_t size) {
-    int width, height, channels;
-    auto pixels = stbi_load_from_memory(data, static_cast<int>(size), &width, &height, &channels, 0);
+    int width, height, channels = 4;
+    auto pixels = stbi_load_from_memory(data, static_cast<int>(size), &width, &height, nullptr, channels);
 
     PixelFormat format;
 

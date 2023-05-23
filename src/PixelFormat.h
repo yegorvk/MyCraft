@@ -7,7 +7,7 @@
 
 #include <cstdlib>
 
-#include "glad/gl.h"
+#include "glad/glad.h"
 
 enum class PixelFormat {
     Grayscale = GL_RED,

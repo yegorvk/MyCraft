@@ -4,9 +4,9 @@
 
 #include "NodeHost.h"
 
-void NodeHost::draw(const std::optional<Transform> &transform) const {
+void NodeHost::draw() const {
     if (currentNode)
-        currentNode->draw(transform);
+        currentNode->draw();
 }
 
 bool NodeHost::handleEvent(const SDL_Event &event) {

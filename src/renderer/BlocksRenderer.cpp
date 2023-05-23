@@ -5,79 +5,55 @@
 #include "spdlog/spdlog.h"
 
 #include "ViewFrustrum.h"
-
 #include "Context.h"
+#include "chunk/Constants.h"
 #include "BlocksRenderer.h"
 
-constexpr float BLOCK_SIDE_LEN = 0.2f;
+BlocksRenderer::BlocksRenderer()
+        : shader(Context::global().getAssets().getShader("@shader/chunk")),
+          texture(createArrayTexture()) {}
 
-BlocksRenderer::BlocksRenderer(World &world)
-        : chunksStateChangedListener([this](const auto &event) {
-              chunksStateChanged(event.region, event.newState);
-          }),
-          reloadChunksListener([this](const auto &event) {
-              reloadChunks(event.loadedRegion);
-          }),
-          world(world),
-          shader(Context::global().getAssets().getShader("@shader/chunk")),
-          texture(createArrayTexture()) {
-    id = reinterpret_cast<std::size_t>(this);
+void BlocksRenderer::reset(glm::ivec3 newActiveRegionMin, glm::ivec3 newActiveRegionSize) {
+    activeRegionSize = newActiveRegionSize, activeRegionMin = newActiveRegionMin;
 
-    world.getEventManager().addEventListener(id, chunksStateChangedListener);
-    world.getEventManager().addEventListener(id, reloadChunksListener);
+    chunkMeshes.clear();
+    chunkMeshes.resize(newActiveRegionSize.x * newActiveRegionSize.y * newActiveRegionSize.z);
 }
 
-BlocksRenderer::~BlocksRenderer() {
-    //world.getEventManager().removeEventListener<ChunksStateChanged>(id);
-    //world.getEventManager().removeEventListener<ReloadChunks>(id);
+void BlocksRenderer::update(glm::ivec3 chunkPos, const ChunkMeshData &meshData) {
+    auto &mesh = getMesh(chunkPos);
+
+    mesh.update(meshData);
+    mesh.setTilesTexture(TextureHandle(texture));
 }
 
-void BlocksRenderer::reloadChunks(AAB loadedRegion) {
-    chunkMeshes.reset(loadedRegion.getMax() - loadedRegion.getMin() + glm::ivec3(1));
-
-    world.forEachLoadedChunk([this](glm::ivec3 position, const Chunk &chunk) {
-        updateChunkMesh(position, chunk);
-    });
-}
-
-void BlocksRenderer::chunksStateChanged(AAB region, ChunkState newState) {
-    if (newState == ChunkState::Released)
-        return;
-
-    world.forEachChunk([this](glm::ivec3 position, const Chunk &chunk) {
-        updateChunkMesh(position, chunk);
-    }, region);
-}
-
-void BlocksRenderer::updateChunkMesh(glm::ivec3 position, const Chunk &chunk) {
-    auto &mesh = chunkMeshes.get(position);
-    const auto offset = glm::vec3(position << chunk.getSideBlockCountLog2()) * BLOCK_SIDE_LEN;
-
-    mesh.setTilesTexture(texture);
-    mesh.update(world.getBlocks(), chunk, BLOCK_SIDE_LEN, offset);
-}
-
-void BlocksRenderer::draw(const std::optional<Transform> &transform) const {
-    const auto &curTransform = transform.value();
-
+void
+BlocksRenderer::draw(glm::dvec3 cameraPosition, const glm::mat4 &viewProjection, const ViewFrustrum &frustrum) const {
     shader.bind();
-    shader.setMat4("mvp", curTransform.mvp);
 
-    BoundingBox box(glm::vec3(0.f), glm::vec3(16.f * 0.2f));
+    for (int i = activeRegionMin.x; i < activeRegionMin.x + activeRegionSize.x; ++i) {
+        for (int j = activeRegionMin.y; j < activeRegionMin.y + activeRegionSize.y; ++j) {
+            for (int k = activeRegionMin.z; k < activeRegionMin.z + activeRegionSize.z; ++k) {
+                const auto position = CHUNK_SIDE_SCALE * glm::dvec3(i, j, k);
+                const auto relPosition = glm::vec3(position - cameraPosition);
 
-    const glm::vec3 chunkExtents(BLOCK_SIDE_LEN * static_cast<float>(1 << CHUNK_SIDE_BLOCK_COUNT_LOG2));
+                const BoundingBox chunkBB(position - cameraPosition, glm::dvec3(CHUNK_SIDE_SCALE));
 
-    chunkMeshes.forEach([chunkExtents, curTransform](glm::ivec3 position, const ChunkMesh &mesh) {
-        BoundingBox chunkBB(chunkExtents * glm::vec3(position), chunkExtents);
-
-        if (chunkBB.isOnFrustrum(curTransform.frustrum))
-            mesh.draw();
-    }, world.getLoadedRegion());
+                if (chunkBB.isOnFrustrum(frustrum)) {
+                    shader.setMat4("mvp", viewProjection * glm::translate(glm::mat4(1.f), relPosition));
+                    getMesh(glm::ivec3(i, j, k)).draw();
+                }
+            }
+        }
+    }
 }
 
 Texture BlocksRenderer::createArrayTexture() {
     const auto &image = Context::global().getAssets().getImage("@img/grass_top");
-    std::array<std::reference_wrapper<const Image>, 1> images = {{std::cref(image)}};
+    const auto &image1 = Context::global().getAssets().getImage("@img/box");
 
-    return Texture::texture2dArray(image.getWidth(), image.getHeight(), image.getFormat(), images.begin(), images.end());
+    std::array<std::reference_wrapper<const Image>, 2> images = {{std::cref(image), std::cref(image1)}};
+
+    return Texture::texture2dArray(image.getWidth(), image.getHeight(), image.getFormat(), images.begin(),
+                                   images.end());
 }

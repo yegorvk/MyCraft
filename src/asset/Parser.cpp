@@ -23,14 +23,14 @@ namespace asset {
             copy.parentName += name;
         }
 
-        return std::move(copy);
+        return copy;
     }
 
     Parser::Parser(asset::Index &index,
                    FileReader &reader,
-                   std::string_view schemaPath) : index(index),
-                                                  reader(reader),
-                                                  validator(json::parse(reader.getText(schemaPath.data()))) {}
+                   std::string_view schemaPath) : validator(json::parse(reader.getText(schemaPath.data()))),
+                                                  index(index),
+                                                  reader(reader) {}
 
     void Parser::parse(std::string_view rootDir, std::string_view mapFilename) {
         file(detail::ParserState(rootDir), mapFilename);
@@ -40,7 +40,7 @@ namespace asset {
         auto mapFilePath = state.directory;
         mapFilePath.append(mapFilename);
 
-        auto root = json::parse(reader.getText(mapFilePath.generic_string().c_str()));
+        auto root = json::parse(reader.getText(mapFilePath.generic_string()));
         validator.validate(root);
 
         return asset(state, root);

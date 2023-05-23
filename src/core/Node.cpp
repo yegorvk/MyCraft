@@ -5,15 +5,13 @@
 #include "Node.h"
 #include <algorithm>
 
-void Node::draw(const std::optional<Transform> &transform) const {
-    const auto &curTransform = transform.has_value() ? transform : localTransform;
-
-    onPreDraw(curTransform);
+void Node::draw() const {
+    onPreDraw();
 
     for (const auto& drawable : drawables)
-        drawable.child->draw(curTransform);
+        drawable.child->draw();
 
-    onPostDraw(curTransform);
+    onPostDraw();
 }
 
 bool Node::handleEvent(const SDL_Event &event) {
@@ -35,9 +33,9 @@ void Node::update(uint64_t deltaMs) {
         delegate.child->update(deltaMs);
 }
 
-void Node::onPreDraw(const std::optional<Transform> &transform) const {}
+void Node::onPreDraw() const {}
 
-void Node::onPostDraw(const std::optional<Transform> &transform) const {}
+void Node::onPostDraw() const {}
 
 bool Node::onHandleEvent(const SDL_Event &event) {
     return false;

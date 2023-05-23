@@ -13,30 +13,10 @@ else ()
     set(DEBUG OFF)
 endif ()
 
-# Check python installation with required modules
-
-find_package(PythonInterp)
-
-if (NOT DEFINED PYTHONINTERP_FOUND)
-    message(FATAL_ERROR "Python interpreter not found.")
-endif ()
-
-execute_process(
-        COMMAND ${PYTHON_EXECUTABLE} -c "import jinja2"
-        RESULT_VARIABLE EXIT_CODE
-        OUTPUT_QUIET
-        ERROR_QUIET
-)
-
-if (NOT (${EXIT_CODE} EQUAL "0"))
-    message(FATAL_ERROR "jinja2 module for Python not found.")
-endif ()
-
 # Resolve dependencies using FetchContent
 
 include(FetchContent)
 
-FetchContent_Declare(glad URL https://github.com/Dav1dde/glad/archive/refs/tags/v2.0.4.tar.gz)
 FetchContent_Declare(cmrc URL https://github.com/vector-of-bool/cmrc/archive/refs/tags/2.0.1.tar.gz)
 FetchContent_Declare(SDL2 URL https://github.com/libsdl-org/SDL/archive/refs/tags/release-2.26.5.tar.gz)
 FetchContent_Declare(GLM URL https://github.com/g-truc/glm/archive/refs/tags/0.9.9.8.tar.gz)
@@ -47,16 +27,7 @@ FetchContent_Declare(nlohmann_json_schema_validator URL https://github.com/pboet
 set(SDL2_DISABLE_INSTALL ON CACHE BOOL "" FORCE)
 set(JSON_VALIDATOR_INSTALL OFF CACHE BOOL "" FORCE)
 
-FetchContent_MakeAvailable(SDL2 GLM spdlog glad cmrc nlohmann_json nlohmann_json_schema_validator)
-
-add_subdirectory(${glad_SOURCE_DIR}/cmake ${glad_BINARY_DIR})
-add_subdirectory(src/external/SimplexNoise)
-
-if (DEBUG)
-    glad_add_library(glad_gl_core_33 REPRODUCIBLE DEBUG API gl:core=3.3)
-else ()
-    glad_add_library(glad_gl_core_33 REPRODUCIBLE API gl:core=3.3)
-endif ()
+FetchContent_MakeAvailable(SDL2 GLM spdlog cmrc nlohmann_json nlohmann_json_schema_validator)
 
 if (NOT EXISTS ${CMAKE_BINARY_DIR}/stb/stb_image.h)
     file(DOWNLOAD https://raw.githubusercontent.com/nothings/stb/master/stb_image.h ${CMAKE_BINARY_DIR}/stb/stb_image.h)
@@ -65,6 +36,17 @@ endif ()
 if (NOT EXISTS ${CMAKE_BINARY_DIR}/stb/stb_image_resize.h)
     file(DOWNLOAD https://raw.githubusercontent.com/nothings/stb/master/stb_image_resize.h ${CMAKE_BINARY_DIR}/stb/stb_image_resize.h)
 endif ()
+
+# Build glad
+
+if (DEBUG)
+    set(GLAD_SRC_DIR "src/external/glad_debug")
+else ()
+    set(GLAD_SRC_DIR "src/external/glad")
+endif ()
+
+add_library(glad STATIC ${GLAD_SRC_DIR}/src/glad.c)
+target_include_directories(glad PUBLIC ${GLAD_SRC_DIR}/include)
 
 # Build project
 
@@ -89,7 +71,6 @@ set(SRC
         src/core/Node.h
         src/core/NodeHost.cpp
         src/core/Node.cpp
-        src/renderer/Transform.h
         src/camera/Camera.h
         src/camera/CameraControls.h
         src/camera/CameraControls.cpp
@@ -97,8 +78,8 @@ set(SRC
         src/core/INode.h
         src/renderer/Texture.h
         src/renderer/Texture.cpp
-        src/utils.cpp
-        src/utils.h
+        src/IoUtils.cpp
+        src/IoUtils.h
         src/Context.h
         src/Context.cpp
         src/renderer/Vertex.h
@@ -118,34 +99,38 @@ set(SRC
         src/asset/Image.cpp
         src/asset/Image.h
         src/PixelFormat.h
-        src/world/Chunk.cpp
-        src/world/Chunk.h
         src/renderer/BlocksRenderer.cpp
         src/renderer/BlocksRenderer.h
         src/renderer/ChunkMesh.cpp
         src/renderer/ChunkMesh.h
         src/scene/WorldScene.cpp
         src/scene/WorldScene.h
-        src/world/BlockCache.cpp
-        src/world/BlockCache.h
-        src/world/Block.h
-        src/world/Block.cpp
-        src/renderer/ChunkMeshBuilder.cpp
-        src/renderer/ChunkMeshBuilder.h
+        src/block/BlockCache.cpp
+        src/block/BlockCache.h
+        src/block/Block.h
+        src/block/Block.cpp
         src/renderer/ViewFrustrum.h
         src/camera/Camera.cpp
         src/renderer/ViewFrustrum.cpp
         src/renderer/ViewFrustrum.cpp
-        src/world/WorldEventManager.h
         src/TypedContainer.h
-        src/AAB.h
         src/world/World.cpp
         src/world/World.h
-        src/WrapAround3dArray.h
         src/world/WorldGenerator.cpp
-        src/world/WorldGenerator.h src/external/SimplexNoise/SimplexNoise.cpp src/external/SimplexNoise/SimplexNoise.h)
+        src/world/WorldGenerator.h
+        src/chunk/ChunkMeshData.cpp
+        src/chunk/ChunkMeshData.h
+        src/chunk/ChunkData.cpp
+        src/chunk/ChunkData.h
+        src/chunk/ChunkMeshDataBuilder.cpp
+        src/chunk/ChunkMeshDataBuilder.h
+        src/chunk/Constants.h
+        src/chunk/Utils.h
+        src/MathUtils.h
+        src/ArrayUtils.h
+        src/external/PerlinNoise.hpp)
 
-set(LIBS SDL2::SDL2main SDL2::SDL2-static glad_gl_core_33 glm::glm spdlog::spdlog nlohmann_json nlohmann_json_schema_validator SimplexNoise)
+set(LIBS SDL2::SDL2main SDL2::SDL2-static glad glm::glm spdlog::spdlog nlohmann_json nlohmann_json_schema_validator)
 
 if (DEBUG)
     set(ASSETS_DIR ${PROJECT_SOURCE_DIR}/assets/)
@@ -160,4 +145,4 @@ configure_file(src/config.h.in ${CMAKE_BINARY_DIR}/src/config.h)
 add_executable(${EXECUTABLE_TARGET_NAME} ${SRC})
 
 target_link_libraries(${EXECUTABLE_TARGET_NAME} ${LIBS})
-target_include_directories(${EXECUTABLE_TARGET_NAME} PRIVATE ${CMAKE_BINARY_DIR}/src ${CMAKE_BINARY_DIR}/stb ${CMAKE_BINARY_DIR}/json src)
+target_include_directories(${EXECUTABLE_TARGET_NAME} PRIVATE ${CMAKE_BINARY_DIR}/src ${CMAKE_BINARY_DIR}/stb ${CMAKE_BINARY_DIR}/json src src/external)

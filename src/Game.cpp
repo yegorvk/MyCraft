@@ -4,7 +4,6 @@
 
 #include "Game.h"
 #include "spdlog/spdlog.h"
-#include "renderer/Shader.h"
 #include "config.h"
 #include "SDL.h"
 #include "Context.h"
@@ -85,7 +84,7 @@ void Game::run() {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         if (rootNode)
-            rootNode->draw(std::nullopt);
+            rootNode->draw();
     }
 
     SDL_SetRelativeMouseMode(SDL_FALSE);
@@ -110,6 +109,10 @@ void Game::setGlContextSettings() {
     SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, 16);
 
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+
+#ifdef DEBUG
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, SDL_GL_CONTEXT_DEBUG_FLAG);
+#endif
 }
 
 void Game::createWindow(const char *winTitle, int winWidth, int winHeight, bool fullscreen) {
@@ -130,7 +133,7 @@ void Game::createGlContext() {
     if (glContext == nullptr)
         die("Failed to create OpenGL context");
 
-    gladLoadGL(reinterpret_cast<GLADloadfunc>(SDL_GL_GetProcAddress));
+    gladLoadGLLoader(reinterpret_cast<GLADloadproc>(SDL_GL_GetProcAddress));
 
     spdlog::info("OpenGL loaded correctly.");
 
@@ -149,13 +152,20 @@ void Game::onWindowGlContextReady() {
     glViewport(0, 0, winWidth, winHeight);
 
 #ifdef DEBUG
-    glEnable(GL_DEBUG_OUTPUT);
-    glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
-    glDebugMessageCallback(Game::processGlDebugMessage, nullptr);
+    glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS_ARB);
+    glDebugMessageControlARB(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, GL_TRUE);
+    glDebugMessageCallbackARB(Game::processGlDebugMessage, nullptr);
 #endif
 
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
+    glEnable(GL_MULTISAMPLE);
+
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glEnable(GL_BLEND);
+
+    glHint(GL_FRAGMENT_SHADER_DERIVATIVE_HINT, GL_NICEST);
+    glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
 
     rootNode = std::make_unique<WorldScene>();
 }
@@ -171,16 +181,13 @@ void STDCALL Game::processGlDebugMessage(GLuint source, GLuint type, GLuint id, 
     spdlog::level::level_enum logLevel;
 
     switch (severity) {
-        case GL_DEBUG_SEVERITY_HIGH:
-            logLevel = spdlog::level::critical;
-            break;
-        case GL_DEBUG_SEVERITY_MEDIUM:
+        case GL_DEBUG_SEVERITY_HIGH_ARB:
             logLevel = spdlog::level::err;
             break;
-        case GL_DEBUG_SEVERITY_LOW:
+        case GL_DEBUG_SEVERITY_MEDIUM_ARB:
             logLevel = spdlog::level::warn;
             break;
-        case GL_DEBUG_SEVERITY_NOTIFICATION:
+        case GL_DEBUG_SEVERITY_LOW_ARB:
             logLevel = spdlog::level::info;
             break;
         default:
@@ -190,22 +197,22 @@ void STDCALL Game::processGlDebugMessage(GLuint source, GLuint type, GLuint id, 
     const char *sourceStr;
 
     switch (source) {
-        case GL_DEBUG_SOURCE_API:
+        case GL_DEBUG_SOURCE_API_ARB:
             sourceStr = "API";
             break;
-        case GL_DEBUG_SOURCE_WINDOW_SYSTEM:
+        case GL_DEBUG_SOURCE_WINDOW_SYSTEM_ARB:
             sourceStr = "WINDOW_SYSTEM";
             break;
-        case GL_DEBUG_SOURCE_SHADER_COMPILER:
+        case GL_DEBUG_SOURCE_SHADER_COMPILER_ARB:
             sourceStr = "SHADER_COMPILER";
             break;
-        case GL_DEBUG_SOURCE_THIRD_PARTY:
+        case GL_DEBUG_SOURCE_THIRD_PARTY_ARB:
             sourceStr = "THIRD_PARTY";
             break;
-        case GL_DEBUG_SOURCE_APPLICATION:
+        case GL_DEBUG_SOURCE_APPLICATION_ARB:
             sourceStr = "APPLICATION";
             break;
-        case GL_DEBUG_SOURCE_OTHER:
+        case GL_DEBUG_SOURCE_OTHER_ARB:
             sourceStr = "OTHER";
             break;
         default:
@@ -215,31 +222,22 @@ void STDCALL Game::processGlDebugMessage(GLuint source, GLuint type, GLuint id, 
     const char *typeStr;
 
     switch (type) {
-        case GL_DEBUG_TYPE_ERROR:
+        case GL_DEBUG_TYPE_ERROR_ARB:
             typeStr = "ERROR";
             break;
-        case GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR:
+        case GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR_ARB:
             typeStr = "DEPRECATED_BEHAVIOR";
             break;
-        case GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR:
+        case GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR_ARB:
             typeStr = "UNDEFINED_BEHAVIOR";
             break;
-        case GL_DEBUG_TYPE_PORTABILITY:
+        case GL_DEBUG_TYPE_PORTABILITY_ARB:
             typeStr = "PORTABILITY";
             break;
-        case GL_DEBUG_TYPE_PERFORMANCE:
+        case GL_DEBUG_TYPE_PERFORMANCE_ARB:
             typeStr = "PERFORMANCE";
             break;
-        case GL_DEBUG_TYPE_MARKER:
-            typeStr = "MARKER";
-            break;
-        case GL_DEBUG_TYPE_PUSH_GROUP:
-            typeStr = "PUSH_GROUP";
-            break;
-        case GL_DEBUG_TYPE_POP_GROUP:
-            typeStr = "POP_GROUP";
-            break;
-        case GL_DEBUG_TYPE_OTHER:
+        case GL_DEBUG_TYPE_OTHER_ARB:
             typeStr = "OTHER";
             break;
         default:

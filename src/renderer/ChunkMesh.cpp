@@ -4,16 +4,15 @@
 
 #include <stdexcept>
 
-#include "glad/gl.h"
+#include "glad/glad.h"
 
 #include "Vertex.h"
 #include "ChunkMesh.h"
-#include "ChunkMeshBuilder.h"
 
 ChunkMesh::ChunkMesh(ChunkMesh &&other)  noexcept {
     vao = other.vao, other.vao = 0;
     vbo = other.vbo, other.vbo = 0;
-    arrayTextureId = other.arrayTextureId;
+    texture = other.texture;
     vertexCount = other.vertexCount, other.vertexCount = 0;
 }
 
@@ -52,28 +51,22 @@ ChunkMesh::ChunkMesh() {
     glBindVertexArray(0);
 }
 
-void ChunkMesh::setTilesTexture(const Texture &tilesTexture) {
+void ChunkMesh::setTilesTexture(TextureHandle tilesTexture) {
     if (tilesTexture.getType() != TextureType::Tex2dArray)
         throw std::invalid_argument("texture must be array texture");
 
-    arrayTextureId = tilesTexture.getGlHandle();
+    texture = tilesTexture;
 }
 
-void ChunkMesh::update(const BlockCache &blockCache, const Chunk &chunk, float blockSideLen, glm::vec3 offset) {
-    ChunkMeshBuilder builder(chunk, blockCache, offset, blockSideLen);
-
-    vertexCount = builder.getTotalVertexCount();
+void ChunkMesh::update(const ChunkMeshData &meshData) {
+    vertexCount = meshData.getVertexCount();
     auto bufSize = static_cast<int>(sizeof(Vertex) * vertexCount);
-
-    if (vbo == 0) {
-        int k;
-    }
 
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
     glBufferData(GL_ARRAY_BUFFER, bufSize, nullptr, GL_DYNAMIC_DRAW);
 
     for (int face = 0, bufOffset = 0; face < 6; ++face) {
-        const auto &vertices = builder.getVertices(face);
+        const auto &vertices = meshData.getVertices(face);
         auto size = static_cast<int>(sizeof(Vertex) * vertices.size());
 
         glBufferSubData(GL_ARRAY_BUFFER, bufOffset, size, vertices.data());
@@ -83,10 +76,12 @@ void ChunkMesh::update(const BlockCache &blockCache, const Chunk &chunk, float b
 }
 
 void ChunkMesh::draw() const {
-    glBindTexture(GL_TEXTURE_2D_ARRAY, arrayTextureId);
-    glBindVertexArray(vao);
+    if (texture.isValid()) {
+        texture.bind();
+        glBindVertexArray(vao);
 
-    glDrawArrays(GL_TRIANGLES, 0, vertexCount);
+        glDrawArrays(GL_TRIANGLES, 0, vertexCount);
 
-    glBindVertexArray(0);
+        glBindVertexArray(0);
+    }
 }

@@ -8,10 +8,13 @@
 #include "core/Node.h"
 #include "world/World.h"
 #include "camera/Camera.h"
+#include "renderer/BlocksRenderer.h"
 
 class WorldScene : public Node {
 public:
     WorldScene();
+
+    void onPreDraw() const override;
 
     void onUpdate(uint64_t deltaMs) override;
 
@@ -26,6 +29,7 @@ private:
     glm::mat4 projMat{1.f};
 
     World world;
+    BlocksRenderer renderer;
 };
 
 

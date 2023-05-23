@@ -13,7 +13,7 @@
 class Camera {
 public:
     explicit Camera(glm::vec3 position = glm::vec3(0.f), glm::vec3 front = glm::vec3(0.f, 0.f, -1.f),
-                           glm::vec3 up = glm::vec3(0.f, 1.f, 0.f));
+                    glm::vec3 up = glm::vec3(0.f, 1.f, 0.f));
 
     void moveAbsolute(glm::vec3 delta);
 
@@ -33,14 +33,15 @@ public:
         return camRight;
     }
 
-    [[nodiscard]] inline glm::vec3 getPosition() const {
+    [[nodiscard]] inline glm::dvec3 getPosition() const {
         return position;
     }
 
 private:
     void update();
 
-    glm::vec3 position, front, up, camFront, camUp, camRight;
+    glm::dvec3 position;
+    glm::vec3 front, up, camFront, camUp, camRight;
     glm::quat qRot = glm::quat(1.f, 0.f, 0.f, 0.f);
     glm::mat4 viewMatrix = glm::mat4(1.f);
 };
