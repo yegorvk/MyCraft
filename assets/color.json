@@ -1,0 +1,10 @@
+{
+    "type": "group",
+    "members": [
+        {
+            "type": "image",
+            "name": "grass_color",
+            "color": "#00FF00FF"
+        }
+    ]
+}

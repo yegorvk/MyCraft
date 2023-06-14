@@ -23,7 +23,7 @@ namespace asset {
         }
 
     private:
-        detail::Cache<TextAsset, ImageAsset, ShaderAsset> assets;
+        detail::Cache<TextAsset, ImageAsset, ShaderAsset, BlockAsset> assets;
     };
 
 }

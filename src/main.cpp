@@ -12,7 +12,7 @@ int main(int argv, char **args) {
     spdlog::set_level(spdlog::level::info);
 #endif
 
-    Game("ShitCraft " VERSION_STR, WINDOW_WIDTH, WINDOW_HEIGHT, false).run();
+    Game("ShitCraft " VERSION_STR, WINDOW_WIDTH, WINDOW_HEIGHT, true).run();
 
     return 0;
 }

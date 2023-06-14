@@ -9,6 +9,7 @@
 #include "world/World.h"
 #include "camera/Camera.h"
 #include "renderer/BlocksRenderer.h"
+#include "block/BlockRegistry.h"
 
 class WorldScene : public Node {
 public:
@@ -29,7 +30,9 @@ private:
     glm::mat4 projMat{1.f};
 
     World world;
+
     BlocksRenderer renderer;
+    BlockRegistry blockReg;
 };
 
 

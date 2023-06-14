@@ -6,9 +6,6 @@
             "$ref": "#/$defs/group"
         },
         {
-            "$ref": "#/$defs/include"
-        },
-        {
             "$ref": "#/$defs/text"
         },
         {
@@ -22,62 +19,85 @@
         }
     ],
     "$defs": {
-        "assetName": {
+        "fileRelPath": {
             "type": "string"
         },
-        "assetGroupRelPath": {
+        "assetRef": {
             "type": "string"
         },
-        "assetRelPath": {
+        "assetRefSuffix": {
             "type": "string"
         },
-        "include": {
-            "type": "object",
-            "properties": {
-                "include": {
-                    "$ref": "#/$defs/assetGroupRelPath"
-                }
-            },
-            "required": ["include"]
+        "color": {
+            "type": "string"
         },
         "group": {
             "type": "object",
             "properties": {
+                "name": {
+                    "$ref": "#/$defs/assetRefSuffix"
+                },
                 "type": {
                     "const": "group"
                 },
-                "name": {
-                    "$ref": "#/$defs/assetName"
-                },
-                "assets": {
+                "members": {
                     "type": "array",
                     "uniqueItems": true,
                     "items": {
-                        "$ref": "#"
+                        "oneOf": [
+                            {
+                                "$ref": "#/$defs/assetRefSuffix"
+                            },
+                            {
+                                "$ref": "#"
+                            }
+                        ]
                     }
                 }
             },
-            "required": ["type", "name", "assets"]
+            "additionalProperties": false,
+            "required": ["type", "members"]
         },
         "text": {
-            "type": "object",
-            "properties": {
-                "type": {
-                    "const": "text"
+            "oneOf": [
+                {
+                    "type": "object",
+                    "properties": {
+                        "name": {
+                            "$ref": "#/$defs/assetRefSuffix"
+                        },
+                        "type": {
+                            "const": "text"
+                        },
+                        "path": {
+                            "$ref": "#/$defs/fileRelPath"
+                        }
+                    },
+                    "additionalProperties": false,
+                    "required": ["type", "path"]
                 },
-                "name": {
-                    "$ref": "#/$defs/assetName"
-                },
-                "path": {
-                    "$ref": "#/$defs/assetRelPath"
+                {
+                    "type": "object",
+                    "properties": {
+                        "name": {
+                            "$ref": "#/$defs/assetRefSuffix"
+                        },
+                        "type": {
+                            "const": "text"
+                        },
+                        "value": {
+                            "type": "string"
+                        }
+                    },
+                    "additionalProperties": false,
+                    "required": ["type", "value"]
                 }
-            },
-            "required": ["type", "name", "path"]
+            ]
         },
         "textOrRef": {
             "oneOf": [
                 {
-                    "$ref": "#/$defs/include"
+                    "$ref": "#/$defs/assetRef"
                 },
                 {
                     "$ref": "#/$defs/text"
@@ -85,24 +105,58 @@
             ]
         },
         "image": {
-            "type": "object",
-            "properties": {
-                "type": {
-                    "const": "image"
+            "oneOf": [
+                {
+                    "type": "object",
+                    "properties": {
+                        "name": {
+                            "$ref": "#/$defs/assetRefSuffix"
+                        },
+                        "type": {
+                            "const": "image"
+                        },
+                        "path": {
+                            "$ref": "#/$defs/fileRelPath"
+                        },
+                        "channelCount": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4
+                        },
+                        "width": {
+                            "type": "integer",
+                            "minimum": 0
+                        },
+                        "height": {
+                            "type": "integer",
+                            "minimum": 0
+                        }
+                    },
+                    "required": ["type", "path"],
+                    "additionalProperties": false
                 },
-                "name": {
-                    "$ref": "#/$defs/assetName"
-                },
-                "path": {
-                    "$ref": "#/$defs/assetRelPath"
+                {
+                    "type": "object",
+                    "properties": {
+                        "name": {
+                            "$ref": "#/$defs/assetRefSuffix"
+                        },
+                        "type": {
+                            "const": "image"
+                        },
+                        "color": {
+                            "$ref": "#/$defs/color"
+                        }
+                    },
+                    "required": ["type", "color"],
+                    "additionalProperties": false
                 }
-            },
-            "required": ["type", "name", "path"]
+            ]
         },
         "imageOrRef": {
             "oneOf": [
                 {
-                    "$ref": "#/$defs/include"
+                    "$ref": "#/$defs/assetRef"
                 },
                 {
                     "$ref": "#/$defs/image"
@@ -112,11 +166,11 @@
         "shader": {
             "type": "object",
             "properties": {
+                "name": {
+                    "$ref": "#/$defs/assetRefSuffix"
+                },
                 "type": {
                     "const": "shader"
-                },
-                "name": {
-                    "$ref": "#/$defs/assetName"
                 },
                 "stages": {
                     "type": "object",
@@ -127,27 +181,32 @@
                         "fragment": {
                             "$ref": "#/$defs/textOrRef"
                         }
-                    }
+                    },
+                    "required": ["vertex"],
+                    "additionalProperties": false
                 }
             },
-            "required": ["type", "name"]
+            "required": ["type", "stages"],
+            "additionalProperties": false
         },
         "blockFace": {
             "type": "object",
             "properties": {
                 "texture": {
-                    "$ref": "#/$defs/textOrRef"
+                    "$ref": "#/$defs/imageOrRef"
                 }
-            }
+            },
+            "required": ["texture"],
+            "additionalProperties": false
         },
         "block": {
             "type": "object",
             "properties": {
+                "name": {
+                    "$ref": "#/$defs/assetRefSuffix"
+                },
                 "type": {
                     "const": "block"
-                },
-                "name": {
-                    "$ref": "#/$defs/assetName"
                 },
                 "translucent": {
                     "type": "boolean"
@@ -155,33 +214,31 @@
                 "faces": {
                     "type": "object",
                     "properties": {
-                        "faces": {
-                            "type": "object",
-                            "properties": {
-                                "front": {
-                                    "$ref": "#/$defs/blockFace"
-                                },
-                                "back": {
-                                    "$ref": "#/$defs/blockFace"
-                                },
-                                "left": {
-                                    "$ref": "#/$defs/blockFace"
-                                },
-                                "right": {
-                                    "$ref": "#/$defs/blockFace"
-                                },
-                                "top": {
-                                    "$ref": "#/$defs/blockFace"
-                                },
-                                "bottom": {
-                                    "$ref": "#/$defs/blockFace"
-                                }
-                            }
+                        "right": {
+                            "$ref": "#/$defs/blockFace"
+                        },
+                        "left": {
+                            "$ref": "#/$defs/blockFace"
+                        },
+                        "top": {
+                            "$ref": "#/$defs/blockFace"
+                        },
+                        "bottom": {
+                            "$ref": "#/$defs/blockFace"
+                        },
+                        "front": {
+                            "$ref": "#/$defs/blockFace"
+                        },
+                        "back": {
+                            "$ref": "#/$defs/blockFace"
                         }
-                    }
+                    },
+                    "additionalProperties": false,
+                    "required": ["right", "left", "top", "bottom", "front", "back"]
                 }
             },
-            "required": ["type", "name"]
+            "required": ["type", "translucent", "faces"],
+            "additionalProperties": false
         }
     }
 }

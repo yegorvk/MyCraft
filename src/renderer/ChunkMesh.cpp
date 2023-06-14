@@ -9,7 +9,7 @@
 #include "Vertex.h"
 #include "ChunkMesh.h"
 
-ChunkMesh::ChunkMesh(ChunkMesh &&other)  noexcept {
+ChunkMesh::ChunkMesh(ChunkMesh &&other) noexcept {
     vao = other.vao, other.vao = 0;
     vbo = other.vbo, other.vbo = 0;
     texture = other.texture;
@@ -34,19 +34,20 @@ ChunkMesh::ChunkMesh() {
     glEnableVertexAttribArray(0); // aPosition
     glEnableVertexAttribArray(1); // aTexCoords
     glEnableVertexAttribArray(2); // aColor
-    glEnableVertexAttribArray(3); // aNormal
+    glEnableVertexAttribArray(3); // aTextureId
+    glEnableVertexAttribArray(4); // aOverlayTextureId
 
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex),
                           reinterpret_cast<void *>(offsetof(Vertex, position)));
 
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex),
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex),
                           reinterpret_cast<void *>(offsetof(Vertex, texCoords)));
 
     glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex),
                           reinterpret_cast<void *>(offsetof(Vertex, color)));
 
-    glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex),
-                          reinterpret_cast<void *>(offsetof(Vertex, normal)));
+    glVertexAttribIPointer(3, 1, GL_INT, sizeof(Vertex),
+                           reinterpret_cast<void *>(offsetof(Vertex, textureId)));
 
     glBindVertexArray(0);
 }

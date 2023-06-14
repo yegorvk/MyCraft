@@ -5,6 +5,7 @@
 #include "IoUtils.h"
 #include <fstream>
 #include <sstream>
+#include <iostream>
 
 std::vector<uint8_t> readBytesFromFile(const char *path) {
     std::ifstream is;

@@ -1,0 +1,4 @@
+{
+    "type": "group",
+    "members": ["image", "shader", "block"]
+}

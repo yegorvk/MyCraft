@@ -7,19 +7,41 @@
 
 #include <cstddef>
 
+#include "glm/glm.hpp"
+
+#include "Color.h"
 #include "PixelFormat.h"
 
+struct ImageDescription {
+    constexpr ImageDescription() = default;
+
+    constexpr ImageDescription(int width, int height, int channelCount) :
+            width(width),
+            height(height),
+            channelCount(channelCount) {}
+
+    [[nodiscard]] constexpr ImageDescription override(const ImageDescription &other) const {
+        return {other.width > 0 ? other.width : width,
+                other.height > 0 ? other.height : height,
+                other.channelCount > 0 ? other.channelCount : channelCount};
+    }
+
+    int width, height, channelCount;
+};
+
 struct Image {
-    static Image loadFromMemory(const unsigned char *data, std::size_t size);
+    static Image loadFromMemory(const unsigned char *data, std::size_t size, ImageDescription description = {});
+
+    static Image fromColor(Color color, ImageDescription description = {});
 
     Image(const Image &other) = delete;
 
     Image(Image &&other) noexcept;
 
-    Image resize(int newWidth, int newHeight) const;
+    [[nodiscard]] Image resize(int newWidth, int newHeight) const;
 
-    [[nodiscard]] inline PixelFormat getFormat() const {
-        return format;
+    [[nodiscard]] inline int getChannelCount() const {
+        return description.channelCount;
     }
 
     [[nodiscard]] inline bool isValid() const {
@@ -27,11 +49,11 @@ struct Image {
     }
 
     [[nodiscard]] inline int getWidth() const {
-        return width;
+        return description.width;
     }
 
     [[nodiscard]] inline int getHeight() const {
-        return height;
+        return description.height;
     }
 
     [[nodiscard]] inline const unsigned char *getPixels() const {
@@ -41,10 +63,9 @@ struct Image {
     ~Image();
 
 private:
-    Image(int width, int height, PixelFormat format, unsigned char *data);
+    Image(ImageDescription description, unsigned char *data);
 
-    const int width, height;
-    const PixelFormat format;
+    const ImageDescription description;
     unsigned char *pixels;
 };
 

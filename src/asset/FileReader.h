@@ -15,6 +15,8 @@ namespace asset {
     public:
         virtual ~FileReader() = default;
 
+        [[nodiscard]] virtual bool exists(std::string_view path) const = 0;
+
         virtual std::string getText(std::string_view path) = 0;
 
         virtual std::vector<unsigned char> getBytes(std::string_view path) = 0;

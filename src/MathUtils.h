@@ -11,9 +11,9 @@ constexpr glm::ivec3 positiveMod(glm::ivec3 v, glm::ivec3 m)  {
     return (v % m + m) % m;
 }
 
-constexpr int wrapIndex(glm::ivec3 i, glm::ivec3 size) {
-    const auto wrapped = positiveMod(i, size);
-    return wrapped.x * size.y * size.z + wrapped.y * size.z + wrapped.z;
+template<typename T>
+constexpr bool isPowerOfTwo(T n) {
+    return (n & (n - 1)) == 0;
 }
 
 #endif //SHITCRAFT_MATHUTILS_H

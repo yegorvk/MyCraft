@@ -9,6 +9,6 @@ ChunkData::ChunkData() {
     blocks.resize(CHUNK_SIDE_BLOCK_COUNT*CHUNK_SIDE_BLOCK_COUNT*CHUNK_SIDE_BLOCK_COUNT, 0);
 }
 
-void ChunkData::updateMesh(const BlockCache &blockCache) {
+void ChunkData::updateMesh(const BlockRegistry &blockCache) {
     meshData = ChunkMeshDataBuilder(blocks.data(), blockCache).build();
 }

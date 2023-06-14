@@ -10,6 +10,8 @@
 #include "Image.h"
 #include "renderer/Shader.h"
 
+#include "Asset.h"
+
 namespace asset {
 
     class Provider {
@@ -21,8 +23,9 @@ namespace asset {
         [[nodiscard]] virtual const Image &getImage(const std::string &key) const = 0;
 
         [[nodiscard]] virtual const Shader &getShader(const std::string &key) const = 0;
+
+        [[nodiscard]] virtual const BlockAsset &getBlock(const std::string& key) const = 0;
     };
 }
-
 
 #endif //SHITCRAFT_PROVIDER_H

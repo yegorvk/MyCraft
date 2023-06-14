@@ -7,7 +7,9 @@
 
 #include <array>
 #include <cstdint>
+#include <glm/glm.hpp>
 
+#include "renderer/TextureLookup.h"
 #include "types.h"
 
 constexpr int face(int axis, bool forwardOrientated) {
@@ -19,16 +21,32 @@ constexpr bool isForwardOriented(int face) {
     return face % 2 == 0;
 }
 
+struct BlockFace {
+    BlockFace() = default;
+
+    explicit BlockFace(uint16_t textureId);
+
+    [[nodiscard]] inline bool operator==(const BlockFace &other) const {
+        return textureId == other.textureId;
+    }
+
+    uint16_t textureId = 0;
+};
+
 struct Block {
 public:
-    Block(uint rightTex, uint leftTex, uint topTex, uint bottomTex, uint frontTex, uint backTex);
+    Block() = default;
 
-    [[nodiscard]] constexpr uint getFaceTextureIndex(int face) const {
-        return faceTextureIndices[face];
+    [[nodiscard]] constexpr const BlockFace &getFace(int face) const {
+        return faces[face];
+    }
+
+    inline void setFace(int face, BlockFace value) {
+        faces[face] = value;
     }
 
 private:
-    std::array<uint, 6> faceTextureIndices{};
+    std::array<BlockFace, 6> faces{};
 };
 
 

@@ -248,7 +248,7 @@ namespace siv
         ////////////////////////////////////////////////
         //
         //	These functions are provided for consistency.
-        //	You may get different results from std::shuffle() with different standard library implementations.
+        //	You may getId different results from std::shuffle() with different standard library implementations.
         //
         SIVPERLIN_CONCEPT_URBG
         [[nodiscard]]

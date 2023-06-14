@@ -2,6 +2,8 @@
 // Created by egorv on 4/22/2023.
 //
 
+#include <sstream>
+
 #include "renderer/Shader.h"
 
 #include "Manager.h"
@@ -32,18 +34,27 @@ namespace asset {
         return cache.get<Shader, Resolver<Shader>>(key, Resolver<Shader>(*this));
     }
 
+    const BlockAsset &Manager::getBlock(const std::string &key) const {
+        return cache.get<BlockAsset, Resolver<BlockAsset>>(key, Resolver<BlockAsset>(*this));
+    }
+
     template<>
     std::string Manager::resolve<std::string>(const std::string &ref) const {
         const auto &asset = index.get<TextAsset>(ref);
-        return reader->getText(asset.path.c_str());
+        return reader->getText(asset.path);
     }
 
     template<>
     Image Manager::resolve<Image>(const std::string &ref) const {
         const auto &asset = index.get<ImageAsset>(ref);
-        auto bytes = reader->getBytes(asset.path.c_str());
 
-        return Image::loadFromMemory(bytes.data(), bytes.size());
+        if (!asset.onePixelImage) {
+            auto bytes = reader->getBytes(asset.colorOrPath);
+
+            return Image::loadFromMemory(bytes.data(), bytes.size(), asset.description);
+        } else {
+            return Image::fromColor(parseColor(asset.colorOrPath), asset.description);
+        }
     }
 
     template<>
@@ -59,5 +70,24 @@ namespace asset {
         }
 
         return builder.link();
+    }
+
+    template<>
+    BlockAsset Manager::resolve<BlockAsset>(const std::string &ref) const {
+        return index.get<BlockAsset>(ref);
+    }
+
+    Color Manager::parseColor(std::string_view color) {
+        std::stringstream ss(color.substr(1).data());
+
+        int colorInt;
+        ss >> std::hex >> colorInt;
+
+        if (color.size() <= 1 + 2)
+            return {colorInt, colorInt, colorInt, colorInt};
+        else if (color.size() <= 1 + 2 * 3)
+            return {(colorInt >> 16) & 0xFF, (colorInt >> 8) & 0xFF, colorInt & 0xFF, 0xFF};
+        else
+            return {(colorInt >> 24) & 0xFF, (colorInt >> 16) & 0xFF, (colorInt >> 8) & 0xFF, colorInt & 0xFF};
     }
 }

@@ -28,6 +28,8 @@ namespace asset {
 
         const Shader &getShader(const std::string &key) const final;
 
+        const BlockAsset &getBlock(const std::string &key) const final;
+
     private:
         template<typename T>
         struct Resolver {
@@ -44,9 +46,11 @@ namespace asset {
         template<typename T>
         T resolve(const std::string &ref) const;
 
+        static Color parseColor(std::string_view color);
+
         Index index;
         std::unique_ptr<FileReader> reader;
-        mutable detail::Cache<std::string, Image, Shader> cache;
+        mutable detail::Cache<std::string, Image, Shader, BlockAsset> cache;
     };
 
 }

@@ -10,7 +10,7 @@
 
 #include "types.h"
 #include "chunk/ChunkData.h"
-#include "block/BlockCache.h"
+#include "block/BlockRegistry.h"
 #include "Shader.h"
 #include "Texture.h"
 

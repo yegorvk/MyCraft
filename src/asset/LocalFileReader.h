@@ -16,12 +16,14 @@ namespace asset {
     public:
         explicit LocalFileReader(std::string_view directory = ASSETS_DIR);
 
+        [[nodiscard]] bool exists(std::string_view path) const final;
+
         std::string getText(std::string_view path) final;
 
         std::vector<unsigned char> getBytes(std::string_view path) final;
 
     private:
-        std::filesystem::path getPath(std::string_view relPath);
+        [[nodiscard]] std::filesystem::path getPath(std::string_view relPath) const;
 
         std::filesystem::path directory;
     };

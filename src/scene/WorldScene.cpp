@@ -1,10 +1,11 @@
- //
+//
 // Created by egorv on 4/26/2023.
 //
 
 #include "renderer/BlocksRenderer.h"
 #include "camera/CameraControls.h"
 #include "WorldScene.h"
+#include "Context.h"
 
 constexpr double P_FOV_RAD = glm::pi<double>() / 3.0;
 constexpr double P_NEAR = 0.001;
@@ -20,10 +21,12 @@ WorldScene::WorldScene() {
     scheduleForUpdates(cameraControls);
     addEventConsumer(cameraControls);
 
-    world.setActiveRegion(glm::ivec3(0, 0, 0), glm::ivec3(10, 1, 10));
+    world.setActiveRegion(glm::ivec3(0, -5, 0), glm::ivec3(24, 10, 24));
     renderer.reset(world.getActiveRegionMin(), world.getActiveRegionSize());
 
-    camera.moveAbsolute(glm::dvec3(2 * world.getActiveRegionMin() + world.getActiveRegionSize() - 1) / 2.0 * CHUNK_SIDE_SCALE);
+    camera.moveAbsolute(
+            glm::dvec3(2 * world.getActiveRegionMin() + world.getActiveRegionSize() - 1) / 2.0 * CHUNK_SIDE_SCALE);
+
     world.setPlayerPosition(camera.getPosition());
 }
 
@@ -38,11 +41,11 @@ void WorldScene::onPreDraw() const {
 
 void WorldScene::onUpdate(uint64_t deltaMs) {
     world.processPlayerPositionChange(camera.getPosition());
-    world.tick();
+    world.dispatchChunkLoads();
 
     renderer.setActiveRegionMin(world.getActiveRegionMin());
 
-    constexpr int MAX_MESH_UPDATES_PER_TICK = 5;
+    constexpr int MAX_MESH_UPDATES_PER_TICK = 20;
 
     for (int i = 0; i < MAX_MESH_UPDATES_PER_TICK; ++i) {
         auto meshUpdateReq = world.dequeueMeshUpdateRequest();

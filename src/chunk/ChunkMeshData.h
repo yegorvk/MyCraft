@@ -9,7 +9,7 @@
 #include <vector>
 
 #include "renderer/Vertex.h"
-#include "block/BlockCache.h"
+#include "block/BlockRegistry.h"
 #include "Constants.h"
 
 class ChunkMeshDataBuilder;

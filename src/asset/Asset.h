@@ -10,7 +10,11 @@
 #include <array>
 #include <optional>
 
+#include "glm/glm.hpp"
+
+#include "Color.h"
 #include "renderer/ShaderType.h"
+#include "Image.h"
 
 namespace asset {
 
@@ -21,9 +25,18 @@ namespace asset {
     };
 
     struct ImageAsset {
-        inline explicit ImageAsset(std::string &&path) : path(std::move(path)) {}
+        inline ImageAsset(bool containsColor, std::string colorOrPath, ImageDescription description = {})
+            : onePixelImage(containsColor), colorOrPath(std::move(colorOrPath)), description(description) {}
 
-        std::string path;
+        bool onePixelImage;
+        std::string colorOrPath;
+        ImageDescription description;
+    };
+
+    struct ColorAsset {
+        inline explicit ColorAsset(glm::u8vec4 color) : color(color) {}
+
+        glm::u8vec4 color;
     };
 
     class ShaderAsset {
@@ -48,6 +61,52 @@ namespace asset {
         }
 
         std::array<std::optional<std::string>, SHADER_STAGE_COUNT> stagesRefs;
+    };
+
+    struct BlockFace {
+    public:
+        inline explicit BlockFace(std::string textureRef) : textureRef(std::move(textureRef)) {};
+
+        [[nodiscard]] inline const std::string &getTextureRef() const {
+            return textureRef;
+        }
+
+    private:
+        std::string textureRef;
+    };
+
+    class BlockAssetBuilder;
+
+    class BlockAsset {
+    public:
+        static BlockAssetBuilder builder();
+
+        [[nodiscard]] inline const BlockFace &getFace(int face) const {
+            return faces[face];
+        }
+
+    private:
+        friend class BlockAssetBuilder;
+
+        explicit inline BlockAsset(std::array<BlockFace, 6> &&faces)
+                : faces(std::move(faces)) {};
+
+        bool translucent = false;
+        std::array<BlockFace, 6> faces;
+    };
+
+    class BlockAssetBuilder {
+    public:
+        BlockAssetBuilder &setFace(int face, BlockFace &&value);
+
+        BlockAsset build();
+
+    private:
+        friend class BlockAsset;
+
+        BlockAssetBuilder() = default;
+
+        std::array<std::optional<BlockFace>, 6> faces;
     };
 
 } // asset

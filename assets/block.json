@@ -1,0 +1,55 @@
+{
+    "type": "group",
+    "members": [
+        {
+            "name": "grass_block",
+            "type": "block",
+            "translucent": false,
+            "faces": {
+                "front": {
+                    "texture": "@image/grass_block_side"
+                },
+                "back": {
+                    "texture": "@image/grass_block_side"
+                },
+                "right": {
+                    "texture": "@image/grass_block_side"
+                },
+                "left": {
+                    "texture": "@image/grass_block_side"
+                },
+                "top": {
+                    "texture": "@image/grass_block_top"
+                },
+                "bottom": {
+                    "texture": "@image/dirt"
+                }
+            }
+        },
+        {
+            "name": "dirt",
+            "type": "block",
+            "translucent": false,
+            "faces": {
+                "front": {
+                    "texture": "@image/dirt"
+                },
+                "back": {
+                    "texture": "@image/dirt"
+                },
+                "right": {
+                    "texture": "@image/dirt"
+                },
+                "left": {
+                    "texture": "@image/dirt"
+                },
+                "top": {
+                    "texture": "@image/dirt"
+                },
+                "bottom": {
+                    "texture": "@image/dirt"
+                }
+            }
+        }
+    ]
+}

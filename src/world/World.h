@@ -8,7 +8,7 @@
 #include <queue>
 #include <optional>
 
-#include "block/BlockCache.h"
+#include "block/BlockRegistry.h"
 #include "WorldGenerator.h"
 #include "ArrayUtils.h"
 #include "MathUtils.h"
@@ -39,12 +39,11 @@ public:
 
     inline void setPlayerPosition(glm::dvec3 position) {
         playerChunk = getChunkPosition(position);
-        playerChunk.y = 0;
     }
 
     void processPlayerPositionChange(glm::vec3 newPlayerPosition);
 
-    void tick();
+    void dispatchChunkLoads();
 
     std::optional<ChunkMeshUpdateRequest> dequeueMeshUpdateRequest();
 
@@ -73,7 +72,6 @@ private:
     std::queue<ChunkMeshUpdateRequest> chunkMeshUpdateRequests;
 
     WorldGenerator generator;
-    BlockCache blockCache;
 };
 
 #endif //SHITCRAFT_WORLD_H

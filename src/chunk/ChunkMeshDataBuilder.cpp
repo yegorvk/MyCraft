@@ -13,7 +13,7 @@ constexpr float brightnessCoefficient[6] = {
         .7f
 };
 
-ChunkMeshDataBuilder::ChunkMeshDataBuilder(const BlockId *blocks, const BlockCache &blockCache)
+ChunkMeshDataBuilder::ChunkMeshDataBuilder(const BlockId *blocks, const BlockRegistry &blockCache)
         : blocks(blocks), blockCache(blockCache) {}
 
 ChunkMeshData ChunkMeshDataBuilder::build() {
@@ -34,7 +34,7 @@ void ChunkMeshDataBuilder::build2dMesh(int originBlockOffset, int face) {
     const auto normalAxis = Axis::getPositiveDirection(Face::getNormalAxis(face));
 
     const auto originBlock = Face::getOriginNormalized(face) * (CHUNK_SIDE_BLOCK_COUNT - 1) +
-                       normalAxis * originBlockOffset;
+                             normalAxis * originBlockOffset;
 
     auto originBlockWorld = glm::vec3(Face::getOriginNormalized(face) * CHUNK_SIDE_BLOCK_COUNT);
     originBlockWorld += normalAxis * originBlockOffset;
@@ -52,9 +52,10 @@ void ChunkMeshDataBuilder::build2dMesh(int originBlockOffset, int face) {
     for (int y = 0; y < CHUNK_SIDE_BLOCK_COUNT; ++y) {
         for (int x = 0; x < CHUNK_SIDE_BLOCK_COUNT; ++x) {
             const auto curBlock = originBlock + right * x + top * y;
-            const auto texId = getTexId(curBlock, face);
+            const auto blockFace = getFace(curBlock, face);
 
-            if (visited[y * CHUNK_SIDE_BLOCK_COUNT + x] || !hasTranslucentNeighbour(curBlock, face) || texId == 0)
+            if (visited[y * CHUNK_SIDE_BLOCK_COUNT + x] || !hasTranslucentNeighbour(curBlock, face) ||
+                blockFace.textureId == 0)
                 continue;
 
             int rx = x, ty = y;
@@ -63,7 +64,7 @@ void ChunkMeshDataBuilder::build2dMesh(int originBlockOffset, int face) {
                 auto nextPos = curBlock + right * (rx - x + 1);
 
                 if (visited[y * CHUNK_SIDE_BLOCK_COUNT + (rx + 1)] ||
-                    !hasTranslucentNeighbour(nextPos, face) || getTexId(nextPos, face) != texId)
+                    !hasTranslucentNeighbour(nextPos, face) || getFace(nextPos, face) != blockFace)
                     break;
                 else
                     ++rx;
@@ -77,7 +78,7 @@ void ChunkMeshDataBuilder::build2dMesh(int originBlockOffset, int face) {
                     auto coords = nextRowLeft + right * (i - x);
 
                     if (visited[(ty + 1) * CHUNK_SIDE_BLOCK_COUNT + i] || !hasTranslucentNeighbour(coords, face) ||
-                        getTexId(coords, face) != texId) {
+                        getFace(coords, face) != blockFace) {
                         f = false;
                         break;
                     }
@@ -112,22 +113,13 @@ void ChunkMeshDataBuilder::build2dMesh(int originBlockOffset, int face) {
             };
 
             glm::vec3 color(1.f);
-
-            if (texId == 1)
-                color = glm::vec3(0.34f, 0.72f, 0.31f);
-
             color *= brightnessCoefficient[face];
 
-            glm::vec3 normal = glm::normalize(glm::cross(glm::vec3(right), glm::vec3(top)));
-
-            if (isForwardOriented(face))
-                normal = -normal;
-
             Vertex quadVertices[4] = {
-                    {quadVertexCoords[0], glm::vec3(minU, minV, texId - 1),   normal, color},
-                    {quadVertexCoords[1], glm::vec3(maxU, minV, texId - 1),  normal, color},
-                    {quadVertexCoords[2], glm::vec3(maxU, maxV, texId - 1), normal, color},
-                    {quadVertexCoords[3], glm::vec3(minU, maxV, texId - 1),  normal, color}
+                    Vertex(quadVertexCoords[0], glm::vec2(minU, minV), color, blockFace.textureId),
+                    Vertex(quadVertexCoords[1], glm::vec2(maxU, minV), color, blockFace.textureId),
+                    Vertex(quadVertexCoords[2], glm::vec2(maxU, maxV), color, blockFace.textureId),
+                    Vertex(quadVertexCoords[3], glm::vec2(minU, maxV), color, blockFace.textureId)
             };
 
             meshData.vertices[face].push_back(quadVertices[0]);

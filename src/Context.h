@@ -6,8 +6,10 @@
 #define SHITCRAFT_CONTEXT_H
 
 #include <memory>
+
 #include "asset/Manager.h"
 #include "asset/LocalFileReader.h"
+#include "block/BlockRegistry.h"
 
 class Context {
 public:
@@ -17,14 +19,19 @@ public:
 
     static void destroyGlobal();
 
-    inline Context() : assetManager(asset::Manager::createDefault(std::make_unique<asset::LocalFileReader>())) {}
+    Context();
 
     inline asset::Provider &getAssets() {
         return assetManager;
     }
 
+    [[nodiscard]] inline const BlockRegistry &getBlockRegistry() const {
+        return blockRegistry;
+    }
+
 private:
     asset::Manager assetManager;
+    BlockRegistry blockRegistry;
 };
 
 #endif //SHITCRAFT_CONTEXT_H

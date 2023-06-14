@@ -1,19 +1,18 @@
 {
-    "name": "shader",
     "type": "group",
-    "assets": [
+    "members": [
         {
             "name": "basic",
             "type": "shader",
             "stages": {
                 "vertex": {
+                    "name": "basic_vert",
                     "type": "text",
-                    "name": "basic-vert",
                     "path": "basic.vert"
                 },
                 "fragment": {
+                    "name": "basic_frag",
                     "type": "text",
-                    "name": "basic-frag",
                     "path": "basic.frag"
                 }
             }
@@ -23,13 +22,13 @@
             "type": "shader",
             "stages": {
                 "vertex": {
+                    "name": "chunk_vert",
                     "type": "text",
-                    "name": "chunk-vert",
                     "path": "chunk.vert"
                 },
                 "fragment": {
+                    "name": "chunk_frag",
                     "type": "text",
-                    "name": "chunk-frag",
                     "path": "chunk.frag"
                 }
             }

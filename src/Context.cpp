@@ -20,4 +20,7 @@ void Context::destroyGlobal() {
     GLOBAL_CONTEXT = nullptr;
 }
 
-
+Context::Context() : assetManager(asset::Manager::createDefault(std::make_unique<asset::LocalFileReader>())) {
+    blockRegistry.registerBlock(1, "@block/grass_block", assetManager);
+    blockRegistry.registerBlock(2, "@block/dirt", assetManager);
+}

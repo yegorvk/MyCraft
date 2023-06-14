@@ -19,7 +19,7 @@ namespace asset {
         struct ParserState {
             explicit ParserState(std::string_view rootDir);
 
-            [[nodiscard]] ParserState append(const std::string &name, std::string_view subDir) const;
+            [[nodiscard]] ParserState append(std::string_view nameSuffix, std::string_view subDir) const;
 
             std::filesystem::path directory;
             std::string parentName;
@@ -34,10 +34,10 @@ namespace asset {
     public:
         Parser(Index &index, FileReader &reader, std::string_view schemaPath);
 
-        void parse(std::string_view rootDir = ".", std::string_view mapFilename = "map.json");
+        void parse(std::string_view rootDir = ".", std::string_view rootFilename = "assets.json");
 
     private:
-        detail::AssetDescription file(const detail::ParserState &state, std::string_view mapFilename = "map.json");
+        detail::AssetDescription file(const detail::ParserState &state, std::string_view filename = "assets.json");
 
         detail::AssetDescription asset(const detail::ParserState &state, const nlohmann::json &root);
 
@@ -48,6 +48,12 @@ namespace asset {
         void image(detail::ParserState &&state, const nlohmann::json &root);
 
         void shader(detail::ParserState &&state, const nlohmann::json &root);
+
+        void block(detail::ParserState &&state, const nlohmann::json &root);
+
+        BlockFace blockFace(const detail::ParserState &state, const nlohmann::json &root);
+
+        std::string resolveRef(const detail::ParserState &state, const nlohmann::json &value);
 
         nlohmann::json_schema::json_validator validator;
 

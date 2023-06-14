@@ -12,6 +12,19 @@
 #include "types.h"
 #include "asset/Image.h"
 
+struct TextureDescription {
+    constexpr explicit TextureDescription(int width = 0, int height = 0, int channelCount = 0)
+            : width(width), height(height), channelCount(channelCount) {}
+
+    int width = 0, height = 0, channelCount = 0;
+
+    [[nodiscard]] constexpr TextureDescription override(const TextureDescription &other) const {
+        return TextureDescription(other.width > 0 ? other.width : width,
+                                  other.height > 0 ? other.height : height,
+                                  other.channelCount > 0 ? other.channelCount : channelCount);
+    }
+};
+
 enum class TexWrapping : GLenum {
     Repeat = GL_REPEAT,
     MirroredRepeat = GL_MIRRORED_REPEAT,
@@ -36,22 +49,22 @@ enum class TextureType : GLenum {
 
 struct TextureOptions {
     TexWrapping wrapping = TexWrapping::Repeat;
-    TexFiltering minFilter = TexFiltering::LinearMipmapNearest;
-    TexFiltering magFilter = TexFiltering::Linear;
+    TexFiltering minFilter = TexFiltering::NearestMipmapNearest;
+    TexFiltering magFilter = TexFiltering::Nearest;
 };
 
 class Texture;
 
 namespace detail {
     struct Texture2dArrayBuilder {
-        Texture2dArrayBuilder(int width, int height, int layerCount, PixelFormat format, TextureOptions options = {});
+        Texture2dArrayBuilder(TextureDescription format, int layerCount, TextureOptions options = {});
 
         void setLayer(int layer, const Image &image);
 
         [[nodiscard]] Texture build();
 
-        int width, height, layerCount;
-        PixelFormat format;
+        TextureDescription description;
+        int layerCount;
         uint handle = 0;
     };
 }
@@ -61,9 +74,10 @@ class TextureHandle;
 class Texture {
 public:
     template<typename It>
-    static inline Texture texture2dArray(int width, int height, PixelFormat format, It begin, It end,
+    static inline Texture texture2dArray(TextureDescription description, It begin, It end,
                                          TextureOptions options = {}) {
-        detail::Texture2dArrayBuilder builder(width, height, static_cast<int>(std::distance(begin, end)), format);
+        detail::Texture2dArrayBuilder builder(description, static_cast<int>(std::distance(begin, end)),
+                                              options);
 
         for (int i = 0; begin != end; ++begin, ++i)
             builder.setLayer(i, *begin);

@@ -10,8 +10,9 @@
 #include "BlocksRenderer.h"
 
 BlocksRenderer::BlocksRenderer()
-        : shader(Context::global().getAssets().getShader("@shader/chunk")),
-          texture(createArrayTexture()) {}
+        : shader(&Context::global().getAssets().getShader("@shader/chunk")),
+          texture(Context::global().getBlockRegistry().getTextureManager().createArrayTexture(
+                  TextureDescription(16, 16, 4))) {}
 
 void BlocksRenderer::reset(glm::ivec3 newActiveRegionMin, glm::ivec3 newActiveRegionSize) {
     activeRegionSize = newActiveRegionSize, activeRegionMin = newActiveRegionMin;
@@ -29,7 +30,7 @@ void BlocksRenderer::update(glm::ivec3 chunkPos, const ChunkMeshData &meshData) 
 
 void
 BlocksRenderer::draw(glm::dvec3 cameraPosition, const glm::mat4 &viewProjection, const ViewFrustrum &frustrum) const {
-    shader.bind();
+    shader->bind();
 
     for (int i = activeRegionMin.x; i < activeRegionMin.x + activeRegionSize.x; ++i) {
         for (int j = activeRegionMin.y; j < activeRegionMin.y + activeRegionSize.y; ++j) {
@@ -40,20 +41,10 @@ BlocksRenderer::draw(glm::dvec3 cameraPosition, const glm::mat4 &viewProjection,
                 const BoundingBox chunkBB(position - cameraPosition, glm::dvec3(CHUNK_SIDE_SCALE));
 
                 if (chunkBB.isOnFrustrum(frustrum)) {
-                    shader.setMat4("mvp", viewProjection * glm::translate(glm::mat4(1.f), relPosition));
+                    shader->setMat4("mvp", viewProjection * glm::translate(glm::mat4(1.f), relPosition));
                     getMesh(glm::ivec3(i, j, k)).draw();
                 }
             }
         }
     }
-}
-
-Texture BlocksRenderer::createArrayTexture() {
-    const auto &image = Context::global().getAssets().getImage("@img/grass_top");
-    const auto &image1 = Context::global().getAssets().getImage("@img/box");
-
-    std::array<std::reference_wrapper<const Image>, 2> images = {{std::cref(image), std::cref(image1)}};
-
-    return Texture::texture2dArray(image.getWidth(), image.getHeight(), image.getFormat(), images.begin(),
-                                   images.end());
 }

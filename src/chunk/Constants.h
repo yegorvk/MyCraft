@@ -7,8 +7,10 @@
 
 #include <cstdint>
 
+#include "glm/glm.hpp"
+
 constexpr int CHUNK_SIDE_BLOCK_COUNT = 16;
-constexpr double BLOCK_SIDE_SCALE = 0.1;
+constexpr double BLOCK_SIDE_SCALE = 0.5;
 constexpr float BLOCK_SIDE_SCALE_F = static_cast<float>(BLOCK_SIDE_SCALE);
 
 constexpr double CHUNK_SIDE_SCALE = BLOCK_SIDE_SCALE * CHUNK_SIDE_BLOCK_COUNT;

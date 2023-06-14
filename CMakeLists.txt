@@ -1,11 +1,11 @@
 cmake_minimum_required(VERSION 3.24)
 project(ShitCraft VERSION 0.0.1 LANGUAGES C CXX)
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 
 set(BUILD_SHARED_LIBS OFF)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -static -static-libgcc -static-libstdc++")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -static -static-libgcc -static-libstdc++")
 
 if (${CMAKE_BUILD_TYPE} STREQUAL Debug)
     set(DEBUG ON)
@@ -49,6 +49,8 @@ add_library(glad STATIC ${GLAD_SRC_DIR}/src/glad.c)
 target_include_directories(glad PUBLIC ${GLAD_SRC_DIR}/include)
 
 # Build project
+
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
 
 set(EXECUTABLE_TARGET_NAME ShitCraft)
 
@@ -105,8 +107,8 @@ set(SRC
         src/renderer/ChunkMesh.h
         src/scene/WorldScene.cpp
         src/scene/WorldScene.h
-        src/block/BlockCache.cpp
-        src/block/BlockCache.h
+        src/block/BlockRegistry.cpp
+        src/block/BlockRegistry.h
         src/block/Block.h
         src/block/Block.cpp
         src/renderer/ViewFrustrum.h
@@ -128,7 +130,7 @@ set(SRC
         src/chunk/Utils.h
         src/MathUtils.h
         src/ArrayUtils.h
-        src/external/PerlinNoise.hpp)
+        src/external/PerlinNoise.hpp src/asset/Asset.cpp src/Color.h src/renderer/TextureManager.cpp src/renderer/TextureManager.h src/renderer/TextureLookup.h)
 
 set(LIBS SDL2::SDL2main SDL2::SDL2-static glad glm::glm spdlog::spdlog nlohmann_json nlohmann_json_schema_validator)
 

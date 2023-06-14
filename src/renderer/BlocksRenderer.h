@@ -5,6 +5,7 @@
 #ifndef SHITCRAFT_BLOCKSRENDERER_H
 #define SHITCRAFT_BLOCKSRENDERER_H
 
+#include "TextureManager.h"
 #include "ChunkMesh.h"
 #include "world/World.h"
 #include "chunk/ChunkMeshData.h"
@@ -14,7 +15,7 @@
 
 class BlocksRenderer {
 public:
-    explicit BlocksRenderer();
+    BlocksRenderer();
 
     void draw(glm::dvec3 cameraPosition, const glm::mat4 &viewProjection, const ViewFrustrum &frustrum) const;
 
@@ -27,8 +28,6 @@ public:
     void update(glm::ivec3 chunkPos, const ChunkMeshData &meshData);
 
 private:
-    static Texture createArrayTexture();
-
     [[nodiscard]] inline ChunkMesh &getMesh(glm::ivec3 position) {
         return chunkMeshes[flatten(positiveMod(position, activeRegionSize), activeRegionSize)];
     }
@@ -37,7 +36,7 @@ private:
         return chunkMeshes[flatten(positiveMod(position, activeRegionSize), activeRegionSize)];
     }
 
-    const Shader &shader;
+    const Shader *shader = nullptr;
 
     glm::ivec3 activeRegionMin{}, activeRegionSize{};
 

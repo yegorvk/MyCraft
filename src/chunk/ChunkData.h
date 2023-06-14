@@ -5,7 +5,7 @@
 #ifndef SHITCRAFT_CHUNKDATA_H
 #define SHITCRAFT_CHUNKDATA_H
 
-#include "block/BlockCache.h"
+#include "block/BlockRegistry.h"
 
 #include "ChunkMeshData.h"
 #include "Utils.h"
@@ -18,7 +18,7 @@ public:
         blocks[getBlockIndexInChunk(position)] = id;
     }
 
-    void updateMesh(const BlockCache &blockCache);
+    void updateMesh(const BlockRegistry &blockCache);
 
     [[nodiscard]] inline const ChunkMeshData &getMeshData() const {
         return meshData;
