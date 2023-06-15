@@ -93,10 +93,10 @@ void World::shiftLoadedRegion(glm::ivec3 delta) {
     activeRegionMin.z += delta.z;
     min.z += delta.z, max.z += delta.z;
 
-    if (delta.y > 0)
-        scheduleLoadChunks({min.x, max.y + 1, min.z}, {max.x, max.y + delta.y, max.z});
-    else if (delta.y < 0)
-        scheduleLoadChunks({min.x, min.y + delta.y, min.z}, {max.x, min.y - 1, max.z});
-
-    activeRegionMin.y += delta.y;
+//    if (delta.y > 0)
+//        scheduleLoadChunks({min.x, max.y + 1, min.z}, {max.x, max.y + delta.y, max.z});
+//    else if (delta.y < 0)
+//        scheduleLoadChunks({min.x, min.y + delta.y, min.z}, {max.x, min.y - 1, max.z});
+//
+//    activeRegionMin.y += delta.y;
 }
