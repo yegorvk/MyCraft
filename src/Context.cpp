@@ -4,6 +4,7 @@
 
 #include "Context.h"
 #include "asset/Parser.h"
+#include "asset/CmrcFileReader.h"
 
 Context *GLOBAL_CONTEXT = nullptr;
 
@@ -20,7 +21,13 @@ void Context::destroyGlobal() {
     GLOBAL_CONTEXT = nullptr;
 }
 
-Context::Context() : assetManager(asset::Manager::createDefault(std::make_unique<asset::LocalFileReader>())) {
+#ifdef USE_CMRC
+#define FILE_READER asset::CmrcFileReader
+#else
+#define FILE_READER asset::LocalFileReader
+#endif
+
+Context::Context() : assetManager(asset::Manager::createDefault(std::make_unique<FILE_READER>())) {
     blockRegistry.registerBlock(1, "@block/grass_block", assetManager);
     blockRegistry.registerBlock(2, "@block/dirt", assetManager);
 }

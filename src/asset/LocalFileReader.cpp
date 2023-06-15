@@ -2,6 +2,8 @@
 // Created by egorv on 4/23/2023.
 //
 
+#ifndef USE_CMRC
+
 #include "LocalFileReader.h"
 #include "IoUtils.h"
 
@@ -29,3 +31,5 @@ namespace asset {
     }
 
 } // asset
+
+#endif

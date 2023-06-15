@@ -33,6 +33,7 @@ private:
 
     // Callbacks
 
+#ifdef DEBUG
     static void STDCALL processGlDebugMessage(
             GLuint source,
             GLuint type,
@@ -41,6 +42,7 @@ private:
             GLsizei length,
             const GLchar *message,
             const void *userParam);
+#endif
 
     // Helpers
 

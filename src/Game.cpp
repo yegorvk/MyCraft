@@ -176,6 +176,7 @@ void Game::die(const char *msg) {
     exit(EXIT_FAILURE);
 }
 
+#ifdef DEBUG
 void STDCALL Game::processGlDebugMessage(GLuint source, GLuint type, GLuint id, GLuint severity, GLsizei,
                                  const GLchar *message, const void *) {
     spdlog::level::level_enum logLevel;
@@ -246,3 +247,5 @@ void STDCALL Game::processGlDebugMessage(GLuint source, GLuint type, GLuint id, 
 
     spdlog::log(logLevel, "OpenGL debug message (id: {}, source {}, type: {}): {}", id, sourceStr, typeStr, message);
 }
+
+#endif DEBUG

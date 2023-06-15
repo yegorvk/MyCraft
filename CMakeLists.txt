@@ -130,15 +130,27 @@ set(SRC
         src/chunk/Utils.h
         src/MathUtils.h
         src/ArrayUtils.h
-        src/external/PerlinNoise.hpp src/asset/Asset.cpp src/Color.h src/renderer/TextureManager.cpp src/renderer/TextureManager.h src/renderer/TextureLookup.h)
+        src/external/PerlinNoise.hpp
+        src/asset/Asset.cpp
+        src/Color.h
+        src/renderer/TextureManager.cpp
+        src/renderer/TextureManager.h
+        src/renderer/TextureLookup.h
+        src/asset/CmrcFileReader.h
+        src/asset/CmrcFileReader.cpp)
 
 set(LIBS SDL2::SDL2main SDL2::SDL2-static glad glm::glm spdlog::spdlog nlohmann_json nlohmann_json_schema_validator)
 
 if (DEBUG)
-    set(ASSETS_DIR ${PROJECT_SOURCE_DIR}/assets/)
+    add_compile_definitions(DEBUG ASSETS_DIR="${PROJECT_SOURCE_DIR}/assets/")
 else ()
-    set(ASSETS_PREFIX assets/)
-    cmrc_add_resource_library(assets assets)
+    add_compile_definitions(USE_CMRC ASSETS_PREFIX="assets/")
+
+    file(GLOB_RECURSE ASSETS ${PROJECT_SOURCE_DIR}/assets/*.*)
+    string(REPLACE ${PROJECT_SOURCE_DIR}/ "" ASSETS "${ASSETS}")
+
+    cmrc_add_resource_library(assets ${ASSETS})
+
     set(LIBS assets ${LIBS})
 endif ()
 

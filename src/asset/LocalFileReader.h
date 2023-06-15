@@ -2,7 +2,7 @@
 // Created by egorv on 4/23/2023.
 //
 
-#ifndef SHITCRAFT_LOCALFILEREADER_H
+#if !defined(SHITCRAFT_LOCALFILEREADER_H) && !defined(USE_CMRC)
 #define SHITCRAFT_LOCALFILEREADER_H
 
 #include <filesystem>
