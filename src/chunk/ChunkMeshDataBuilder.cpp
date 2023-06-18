@@ -13,7 +13,7 @@ constexpr float brightnessCoefficient[6] = {
         .7f
 };
 
-ChunkMeshDataBuilder::ChunkMeshDataBuilder(const BlockId *blocks, const BlockRegistry &blockCache)
+ChunkMeshDataBuilder::ChunkMeshDataBuilder(const ChunkBlocks &blocks, const BlockRegistry &blockCache)
         : blocks(blocks), blockCache(blockCache) {}
 
 ChunkMeshData ChunkMeshDataBuilder::build() {

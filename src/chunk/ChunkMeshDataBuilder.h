@@ -12,12 +12,12 @@
 #include "block/BlockRegistry.h"
 
 #include "Constants.h"
-#include "Utils.h"
 #include "ChunkMeshData.h"
+#include "ChunkBlocks.h"
 
 class ChunkMeshDataBuilder {
 public:
-    ChunkMeshDataBuilder(const BlockId *blocks, const BlockRegistry &blockCache);
+    ChunkMeshDataBuilder(const ChunkBlocks &blocks, const BlockRegistry &blockCache);
 
     ChunkMeshData build();
 private:
@@ -28,15 +28,15 @@ private:
     void build2dMesh(int originBlockOffset, int face);
 
     [[nodiscard]] inline BlockFace getFace(glm::ivec3 blockCoords, int face) {
-        const auto block = getChunkBlock(blocks, blockCoords);
+        const auto block = blocks.getLocalUnchecked(blockCoords);
         return ((block == 0) ? BlockFace() : blockCache.getBlock(block).getFace(face));
     }
 
     [[nodiscard]] inline bool hasTranslucentNeighbour(glm::ivec3 coords, int face) {
-        return getAdjacentChunkBlock(blocks, coords, face) == 0;
+        return blocks.getAdjacentTo(coords, face) == 0;
     }
 
-    const BlockId *blocks;
+    const ChunkBlocks &blocks;
     const BlockRegistry &blockCache;
 
     ChunkMeshData meshData;

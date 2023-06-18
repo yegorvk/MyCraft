@@ -61,6 +61,10 @@ namespace Face {
     constexpr int Front = 4;
     constexpr int Back = 5;
 
+    constexpr int opposite(int face) {
+        return (face / 2) + (face & 1);
+    }
+
     constexpr int fromAxis(int axis, bool positiveOrientated) {
         return 2 * axis + !positiveOrientated;
     }
@@ -111,6 +115,23 @@ namespace Face {
         }
     }
 
+    constexpr glm::ivec3 getBorderFaceOrigin(int face) {
+        switch (toEnum(face)) {
+            case FaceEnum::Right:
+                return {1, 0, 1};
+            case FaceEnum::Left:
+                return {0, 0, 0};
+            case FaceEnum::Top:
+                return {0, 1, 1};
+            case FaceEnum::Bottom:
+                return {0, 0, 0};
+            case FaceEnum::Front:
+                return {0, 0, 1};
+            case FaceEnum::Back:
+                return {1, 0, 0};
+        }
+    }
+
     constexpr glm::ivec3 getRightDirection(int face) {
         switch (toEnum(face)) {
             case FaceEnum::Right:
@@ -123,6 +144,19 @@ namespace Face {
                 return {1, 0, 0};
             case FaceEnum::Back:
                 return {-1, 0, 0};
+        }
+    }
+
+    constexpr int getRightAxis(int face) {
+        switch (toEnum(face)) {
+            case FaceEnum::Right:
+            case FaceEnum::Left:
+                return Axis::Z;
+            case FaceEnum::Top:
+            case FaceEnum::Bottom:
+            case FaceEnum::Front:
+            case FaceEnum::Back:
+                return Axis::X;
         }
     }
 
@@ -139,6 +173,22 @@ namespace Face {
                 return {0, 0, 1};
         }
     }
+
+    constexpr int getTopAxis(int face) {
+        switch (toEnum(face)) {
+            case FaceEnum::Right:
+            case FaceEnum::Left:
+            case FaceEnum::Front:
+            case FaceEnum::Back:
+                return Axis::Y;
+            case FaceEnum::Top:
+            case FaceEnum::Bottom:
+                return Axis::Z;
+        }
+    }
 }
+
+using Axis::AxisEnum;
+using Face::FaceEnum;
 
 #endif //SHITCRAFT_CONSTANTS_H

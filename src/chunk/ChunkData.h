@@ -8,24 +8,35 @@
 #include "block/BlockRegistry.h"
 
 #include "ChunkMeshData.h"
-#include "Utils.h"
+#include "ChunkBlocks.h"
+#include "ChunkMeshDataBuilder.h"
 
 class ChunkData {
 public:
-    ChunkData();
+    ChunkData() = default;
 
-    inline void setBlock(glm::ivec3 position, BlockId id) {
-        blocks[getBlockIndexInChunk(position)] = id;
+    [[nodiscard]] inline BlockId getBlock(glm::ivec3 relPosition) const {
+        return blocks.getLocalUnchecked(relPosition);
     }
 
-    void updateMesh(const BlockRegistry &blockCache);
+    inline void setBlock(glm::ivec3 relPosition, BlockId block) {
+        blocks.setLocalUnchecked(relPosition, block);
+    }
+
+    inline void updateNeighborData(int thisChunkFace, const ChunkData &neighbor) {
+        blocks.updateNeighborData(thisChunkFace, neighbor.blocks);
+    }
+
+    inline void updateMesh(const BlockRegistry &blockRegistry) {
+        meshData = ChunkMeshDataBuilder(blocks, blockRegistry).build();
+    }
 
     [[nodiscard]] inline const ChunkMeshData &getMeshData() const {
         return meshData;
     }
 
 private:
-    std::vector<BlockId> blocks;
+    ChunkBlocks blocks;
     ChunkMeshData meshData;
 };
 

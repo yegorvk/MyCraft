@@ -120,14 +120,11 @@ set(SRC
         src/world/World.h
         src/world/WorldGenerator.cpp
         src/world/WorldGenerator.h
-        src/chunk/ChunkMeshData.cpp
         src/chunk/ChunkMeshData.h
-        src/chunk/ChunkData.cpp
         src/chunk/ChunkData.h
         src/chunk/ChunkMeshDataBuilder.cpp
         src/chunk/ChunkMeshDataBuilder.h
         src/chunk/Constants.h
-        src/chunk/Utils.h
         src/MathUtils.h
         src/ArrayUtils.h
         src/external/PerlinNoise.hpp
@@ -137,7 +134,7 @@ set(SRC
         src/renderer/TextureManager.h
         src/renderer/TextureLookup.h
         src/asset/CmrcFileReader.h
-        src/asset/CmrcFileReader.cpp)
+        src/asset/CmrcFileReader.cpp src/chunk/ChunkBlocks.h src/chunk/ChunkBlocks.cpp)
 
 set(LIBS SDL2::SDL2main SDL2::SDL2-static glad glm::glm spdlog::spdlog nlohmann_json nlohmann_json_schema_validator)
 
