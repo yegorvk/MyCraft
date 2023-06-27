@@ -5,11 +5,11 @@
 #include "renderer/BlocksRenderer.h"
 #include "camera/CameraControls.h"
 #include "WorldScene.h"
-#include "Context.h"
+#include "GameContext.h"
 
 constexpr double P_FOV_RAD = glm::pi<double>() / 3.0;
-constexpr double P_NEAR = 0.001;
-constexpr double P_FAR = 200.0;
+constexpr double P_NEAR = 0.01;
+constexpr double P_FAR = 2'000.0;
 
 constexpr float P_FOV_RAD_F = static_cast<float>(P_FOV_RAD);
 constexpr float P_NEAR_F = static_cast<float>(P_NEAR);
@@ -21,7 +21,7 @@ WorldScene::WorldScene() {
     scheduleForUpdates(cameraControls);
     addEventConsumer(cameraControls);
 
-    world.setActiveRegion(glm::ivec3(0, -5, 0), glm::ivec3(24, 10, 24));
+    world.setActiveRegion(glm::ivec3(0, 0, 0), glm::ivec3(24, 10, 24));
     renderer.reset(world.getActiveRegionMin(), world.getActiveRegionSize());
 
     camera.moveAbsolute(
@@ -45,14 +45,12 @@ void WorldScene::onUpdate(uint64_t deltaMs) {
 
     renderer.setActiveRegionMin(world.getActiveRegionMin());
 
-    constexpr int MAX_MESH_UPDATES_PER_TICK = 20;
-
-    for (int i = 0; i < MAX_MESH_UPDATES_PER_TICK; ++i) {
+    while (true) {
         auto meshUpdateReq = world.dequeueMeshUpdateRequest();
 
         if (meshUpdateReq.has_value()) {
             auto req = meshUpdateReq.value();
-            renderer.update(req.position, req.chunk->getMeshData());
+            renderer.update(req.position, req.chunk ? &req.chunk->getMeshData() : nullptr);
         } else
             break;
     }

@@ -25,7 +25,7 @@ public:
         activeRegionMin = min;
     }
 
-    void update(glm::ivec3 chunkPos, const ChunkMeshData &meshData);
+    void update(glm::ivec3 chunkPos, const ChunkMeshData *meshData);
 
 private:
     [[nodiscard]] inline ChunkMesh &getMesh(glm::ivec3 position) {

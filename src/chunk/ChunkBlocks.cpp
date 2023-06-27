@@ -41,7 +41,7 @@ ChunkBlocks::ChunkBlocks() {
 }
 
 BlockId ChunkBlocks::getAdjacentTo(glm::ivec3 position, int face) const {
-    const auto normal = Face::getNormalAxisDirection(face);
+    const auto normal = Face::getNormalDirection(face);
     const auto adjPosition = position + normal;
 
     if (isWithinChunk(adjPosition))
@@ -51,20 +51,28 @@ BlockId ChunkBlocks::getAdjacentTo(glm::ivec3 position, int face) const {
     }
 }
 
-void ChunkBlocks::updateNeighborData(int thisChunkFace, const ChunkBlocks &neighbor) {
-    const auto origin = Face::getBorderFaceOrigin(thisChunkFace);
+void ChunkBlocks::updateNeighborData(int thisChunkFace, const ChunkBlocks *neighbor) {
     const int normalAxis = Face::getNormalAxis(thisChunkFace);
+    const bool positiveOrientated = Face::isPositiveOrientated(thisChunkFace);
 
-    glm::ivec3 size(CHUNK_SIDE_BLOCK_COUNT);
-    size[Face::getNormalAxis(thisChunkFace)] = 1;
+    glm::ivec3 min(0);
 
-    for (int x = origin.x; x < size.x; ++x) {
-        for (int y = origin.y; y < size.y; ++y) {
-            for (int z = origin.z; z < size.z; ++z) {
+    if (positiveOrientated)
+        min[normalAxis] = CHUNK_SIDE_BLOCK_COUNT - 1;
+
+    glm::ivec3 max(CHUNK_SIDE_BLOCK_COUNT - 1);
+
+    if (!positiveOrientated)
+        max[normalAxis] = 0;
+
+    for (int x = min.x; x <= max.x; ++x) {
+        for (int y = min.y; y <= max.y; ++y) {
+            for (int z = min.z; z <= max.z; ++z) {
                 const glm::ivec3 pos(x, y, z);
                 const auto mirroredPos = mirrorPosition(pos, normalAxis);
 
-                adjFaces[thisChunkFace][getProjIndex(pos, thisChunkFace)] = neighbor.getLocalUnchecked(mirroredPos);
+                adjFaces[thisChunkFace][getProjIndex(pos, thisChunkFace)] =
+                        neighbor ? neighbor->getLocalUnchecked(mirroredPos) : 0;
             }
         }
     }

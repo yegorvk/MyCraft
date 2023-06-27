@@ -23,11 +23,12 @@ FetchContent_Declare(GLM URL https://github.com/g-truc/glm/archive/refs/tags/0.9
 FetchContent_Declare(spdlog URL https://github.com/gabime/spdlog/archive/refs/tags/v1.11.0.tar.gz)
 FetchContent_Declare(nlohmann_json URL https://github.com/nlohmann/json/archive/refs/tags/v3.11.2.tar.gz)
 FetchContent_Declare(nlohmann_json_schema_validator URL https://github.com/pboettch/json-schema-validator/archive/refs/tags/2.2.0.zip)
+FetchContent_Declare(readerwriterqueue GIT_REPOSITORY https://github.com/cameron314/readerwriterqueue GIT_TAG master)
 
 set(SDL2_DISABLE_INSTALL ON CACHE BOOL "" FORCE)
 set(JSON_VALIDATOR_INSTALL OFF CACHE BOOL "" FORCE)
 
-FetchContent_MakeAvailable(SDL2 GLM spdlog cmrc nlohmann_json nlohmann_json_schema_validator)
+FetchContent_MakeAvailable(SDL2 GLM spdlog cmrc nlohmann_json nlohmann_json_schema_validator readerwriterqueue)
 
 if (NOT EXISTS ${CMAKE_BINARY_DIR}/stb/stb_image.h)
     file(DOWNLOAD https://raw.githubusercontent.com/nothings/stb/master/stb_image.h ${CMAKE_BINARY_DIR}/stb/stb_image.h)
@@ -82,8 +83,8 @@ set(SRC
         src/renderer/Texture.cpp
         src/IoUtils.cpp
         src/IoUtils.h
-        src/Context.h
-        src/Context.cpp
+        src/GameContext.h
+        src/GameContext.cpp
         src/renderer/Vertex.h
         src/arch.h
         src/asset/Provider.h
@@ -115,7 +116,6 @@ set(SRC
         src/camera/Camera.cpp
         src/renderer/ViewFrustrum.cpp
         src/renderer/ViewFrustrum.cpp
-        src/TypedContainer.h
         src/world/World.cpp
         src/world/World.h
         src/world/WorldGenerator.cpp
@@ -134,9 +134,9 @@ set(SRC
         src/renderer/TextureManager.h
         src/renderer/TextureLookup.h
         src/asset/CmrcFileReader.h
-        src/asset/CmrcFileReader.cpp src/chunk/ChunkBlocks.h src/chunk/ChunkBlocks.cpp)
+        src/asset/CmrcFileReader.cpp src/chunk/ChunkBlocks.h src/chunk/ChunkBlocks.cpp src/external/BS_thread_pool.hpp src/core/Executor.h src/core/Executor.cpp src/DeferredTaskQueue.h)
 
-set(LIBS SDL2::SDL2main SDL2::SDL2-static glad glm::glm spdlog::spdlog nlohmann_json nlohmann_json_schema_validator)
+set(LIBS SDL2::SDL2main SDL2::SDL2-static glad glm::glm spdlog::spdlog nlohmann_json nlohmann_json_schema_validator readerwriterqueue)
 
 if (DEBUG)
     add_compile_definitions(DEBUG ASSETS_DIR="${PROJECT_SOURCE_DIR}/assets/")

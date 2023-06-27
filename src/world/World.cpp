@@ -2,12 +2,11 @@
 // Created by egorv on 5/7/2023.
 //
 
-#include "World.h"
-#include "chunk/Constants.h"
 #include "spdlog/spdlog.h"
-#include "Context.h"
+#include "World.h"
+#include "GameContext.h"
 
-constexpr int MAX_CHUNK_LOADS_PER_TICK = 20;
+constexpr int MAX_OPERATIONS_PER_TICK = 5;
 
 void World::setActiveRegion(glm::ivec3 min, glm::ivec3 size) {
     activeRegionMin = min, activeRegionSize = size;
@@ -15,14 +14,7 @@ void World::setActiveRegion(glm::ivec3 min, glm::ivec3 size) {
     chunks.clear();
     chunks.resize(activeRegionSize.x * activeRegionSize.y * activeRegionSize.z);
 
-    for (int x = min.x; x < min.x + size.x; ++x) {
-        for (int y = min.y; y < min.y + size.y; ++y) {
-            for (int z = min.z; z < min.z + size.z; ++z) {
-                const glm::ivec3 position(x, y, z);
-                loadChunk(ChunkUpdateRequest{position, &getChunkData(position)});
-            }
-        }
-    }
+    scheduleLoadChunks(min, min + size - 1);
 }
 
 void World::processPlayerPositionChange(glm::vec3 newPlayerPosition) {
@@ -33,45 +25,81 @@ void World::processPlayerPositionChange(glm::vec3 newPlayerPosition) {
 }
 
 void World::dispatchChunkLoads() {
-    for (int i = 0; i < MAX_CHUNK_LOADS_PER_TICK && !loadChunkRequests.empty(); ++i) {
-        const auto req = loadChunkRequests.front();
-        loadChunkRequests.pop();
-
+    for (int i = 0;
+         i < MAX_OPERATIONS_PER_TICK && !loadChunkRequests.empty() && !loadChunkRequests.front().empty(); ++i) {
+        const auto req = loadChunkRequests.front().front();
+        loadChunkRequests.front().pop();
         loadChunk(req);
+    }
+
+    if (loadChunkRequests.empty() || loadChunkRequests.front().empty()) {
+        for (int i = 0; i < MAX_OPERATIONS_PER_TICK && !updateChunkRequests.empty() &&
+                        !updateChunkRequests.front().empty(); ++i) {
+            const auto req = updateChunkRequests.front().front();
+            updateChunkRequests.front().pop();
+            updateChunk(req);
+        }
+
+        if (!updateChunkRequests.empty() && updateChunkRequests.front().empty()) {
+            loadChunkRequests.pop();
+            updateChunkRequests.pop();
+        }
     }
 }
 
-std::optional<ChunkMeshUpdateRequest> World::dequeueMeshUpdateRequest() {
-    if (!chunkMeshUpdateRequests.empty()) {
-        const auto req = chunkMeshUpdateRequests.front();
-        chunkMeshUpdateRequests.pop();
-
-        return req;
-    } else
+std::optional<UpdateChunkMeshRequest> World::dequeueMeshUpdateRequest() {
+    if (meshUpdateRequests.empty())
         return std::nullopt;
-}
-
-void World::scheduleLoadChunk(glm::ivec3 position) {
-    auto &chunk = getChunkData(position);
-    const auto req = ChunkUpdateRequest{position, &chunk};
-
-    loadChunkRequests.push(req);
+    else {
+        auto req = meshUpdateRequests.front();
+        meshUpdateRequests.pop();
+        return req;
+    }
 }
 
 void World::scheduleLoadChunks(glm::ivec3 min, glm::ivec3 max) {
-    for (int x = min.x; x <= max.x; ++x)
-        for (int y = min.y; y <= max.y; ++y)
-            for (int z = min.z; z <= max.z; ++z)
-                scheduleLoadChunk(glm::ivec3(x, y, z));
+    loadChunkRequests.emplace();
+    updateChunkRequests.emplace();
+
+    for (int x = min.x; x <= max.x; ++x) {
+        for (int y = min.y; y <= max.y; ++y) {
+            for (int z = min.z; z <= max.z; ++z) {
+                glm::ivec3 pos(x, y, z);
+                auto &chunk = getChunkData(pos);
+
+                meshUpdateRequests.push(UpdateChunkMeshRequest{pos, nullptr});
+
+                loadChunkRequests.back().push(LoadChunkRequest{pos, &chunk});
+                updateChunkRequests.back().push(UpdateChunkRequest{pos, &chunk});
+
+                for (int i = 0; i < 6; ++i) {
+                    auto adjPos = pos + Face::getNormalDirection(i);
+
+                    if (!contains(adjPos, min, max) && contains(adjPos))
+                        updateChunkRequests.back().push(UpdateChunkRequest{adjPos, &getChunkData(adjPos)});
+                }
+            }
+        }
+    }
 }
 
-void World::loadChunk(const ChunkUpdateRequest &req) {
+void World::loadChunk(const LoadChunkRequest &req) {
     auto &chunk = getChunkData(req.position);
-
     chunk = generator.generate(req.position);
-    chunk.updateMesh(Context::global().getBlockRegistry());
+}
 
-    chunkMeshUpdateRequests.push(ChunkMeshUpdateRequest{req.position, &chunk});
+void World::updateChunk(const UpdateChunkRequest &req) {
+    for (int i = 0; i < 6; ++i) {
+        auto adjPos = req.position + Face::getNormalDirection(i);
+
+        if (contains(adjPos))
+            req.chunk->updateNeighborData(i, &getChunkData(adjPos));
+        else if (contains(req.position))
+            req.chunk->updateNeighborData(i, nullptr);
+    }
+
+    req.chunk->updateMesh(GameContext::global().getBlockRegistry());
+    meshUpdateRequests.push(UpdateChunkMeshRequest{req.position, req.chunk});
 }
 
 void World::shiftLoadedRegion(glm::ivec3 delta) {

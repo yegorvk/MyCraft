@@ -2,24 +2,26 @@
 // Created by egorv on 4/13/2023.
 //
 
-#ifndef SHITCRAFT_CONTEXT_H
-#define SHITCRAFT_CONTEXT_H
+#ifndef SHITCRAFT_GAMECONTEXT_H
+#define SHITCRAFT_GAMECONTEXT_H
 
 #include <memory>
+
+#include "BS_thread_pool.hpp"
 
 #include "asset/Manager.h"
 #include "asset/LocalFileReader.h"
 #include "block/BlockRegistry.h"
 
-class Context {
+class GameContext {
 public:
-    static Context &global();
+    static GameContext &global();
 
-    static void setGlobal(Context *context);
+    static void setGlobal(GameContext *context);
 
     static void destroyGlobal();
 
-    Context();
+    GameContext();
 
     inline asset::Provider &getAssets() {
         return assetManager;
@@ -34,4 +36,4 @@ private:
     BlockRegistry blockRegistry;
 };
 
-#endif //SHITCRAFT_CONTEXT_H
+#endif //SHITCRAFT_GAMECONTEXT_H

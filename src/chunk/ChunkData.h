@@ -23,8 +23,8 @@ public:
         blocks.setLocalUnchecked(relPosition, block);
     }
 
-    inline void updateNeighborData(int thisChunkFace, const ChunkData &neighbor) {
-        blocks.updateNeighborData(thisChunkFace, neighbor.blocks);
+    inline void updateNeighborData(int thisChunkFace, const ChunkData *neighbor) {
+        blocks.updateNeighborData(thisChunkFace, neighbor ? &neighbor->blocks : nullptr);
     }
 
     inline void updateMesh(const BlockRegistry &blockRegistry) {

@@ -18,6 +18,12 @@
             "type": "image",
             "path": "dirt.png",
             "channelCount": 4
+        },
+        {
+            "name": "stone",
+            "type": "image",
+            "path": "stone.png",
+            "channelCount": 4
         }
     ]
 }

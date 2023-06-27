@@ -50,6 +50,31 @@
                     "texture": "@image/dirt"
                 }
             }
+        },
+        {
+            "name": "stone",
+            "type": "block",
+            "translucent": false,
+            "faces": {
+                "front": {
+                    "texture": "@image/stone"
+                },
+                "back": {
+                    "texture": "@image/stone"
+                },
+                "right": {
+                    "texture": "@image/stone"
+                },
+                "left": {
+                    "texture": "@image/stone"
+                },
+                "top": {
+                    "texture": "@image/stone"
+                },
+                "bottom": {
+                    "texture": "@image/stone"
+                }
+            }
         }
     ]
 }

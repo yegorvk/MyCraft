@@ -78,7 +78,7 @@ namespace Face {
         return face / 2;
     }
 
-    constexpr glm::ivec3 getNormalAxisDirection(int face) {
+    constexpr glm::ivec3 getNormalDirection(int face) {
         return Axis::getDirection(getNormalAxis(face), isPositiveOrientated(face));
     }
 

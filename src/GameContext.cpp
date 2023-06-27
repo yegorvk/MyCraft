@@ -2,21 +2,21 @@
 // Created by egorv on 4/14/2023.
 //
 
-#include "Context.h"
+#include "GameContext.h"
 #include "asset/Parser.h"
 #include "asset/CmrcFileReader.h"
 
-Context *GLOBAL_CONTEXT = nullptr;
+GameContext *GLOBAL_CONTEXT = nullptr;
 
-Context &Context::global() {
+GameContext &GameContext::global() {
     return *GLOBAL_CONTEXT;
 }
 
-void Context::setGlobal(Context *context) {
+void GameContext::setGlobal(GameContext *context) {
     GLOBAL_CONTEXT = context;
 }
 
-void Context::destroyGlobal() {
+void GameContext::destroyGlobal() {
     delete GLOBAL_CONTEXT;
     GLOBAL_CONTEXT = nullptr;
 }
@@ -27,7 +27,8 @@ void Context::destroyGlobal() {
 #define FILE_READER asset::LocalFileReader
 #endif
 
-Context::Context() : assetManager(asset::Manager::createDefault(std::make_unique<FILE_READER>())) {
+GameContext::GameContext() : assetManager(asset::Manager::createDefault(std::make_unique<FILE_READER>())) {
     blockRegistry.registerBlock(1, "@block/grass_block", assetManager);
     blockRegistry.registerBlock(2, "@block/dirt", assetManager);
+    blockRegistry.registerBlock(3, "@block/stone", assetManager);
 }

@@ -26,7 +26,7 @@ public:
 
     void setTilesTexture(TextureHandle tilesTexture);
 
-    void update(const ChunkMeshData &meshData);
+    void update(const ChunkMeshData *meshData);
 
     void draw() const;
 

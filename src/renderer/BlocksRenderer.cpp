@@ -5,13 +5,13 @@
 #include "spdlog/spdlog.h"
 
 #include "ViewFrustrum.h"
-#include "Context.h"
+#include "GameContext.h"
 #include "chunk/Constants.h"
 #include "BlocksRenderer.h"
 
 BlocksRenderer::BlocksRenderer()
-        : shader(&Context::global().getAssets().getShader("@shader/chunk")),
-          texture(Context::global().getBlockRegistry().getTextureManager().createArrayTexture(
+        : shader(&GameContext::global().getAssets().getShader("@shader/solid")),
+          texture(GameContext::global().getBlockRegistry().getTextureManager().createArrayTexture(
                   TextureDescription(16, 16, 4))) {}
 
 void BlocksRenderer::reset(glm::ivec3 newActiveRegionMin, glm::ivec3 newActiveRegionSize) {
@@ -21,7 +21,7 @@ void BlocksRenderer::reset(glm::ivec3 newActiveRegionMin, glm::ivec3 newActiveRe
     chunkMeshes.resize(newActiveRegionSize.x * newActiveRegionSize.y * newActiveRegionSize.z);
 }
 
-void BlocksRenderer::update(glm::ivec3 chunkPos, const ChunkMeshData &meshData) {
+void BlocksRenderer::update(glm::ivec3 chunkPos, const ChunkMeshData *meshData) {
     auto &mesh = getMesh(chunkPos);
 
     mesh.update(meshData);

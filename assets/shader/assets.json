@@ -18,18 +18,18 @@
             }
         },
         {
-            "name": "chunk",
+            "name": "solid",
             "type": "shader",
             "stages": {
                 "vertex": {
                     "name": "chunk_vert",
                     "type": "text",
-                    "path": "chunk.vert"
+                    "path": "solid.vert"
                 },
                 "fragment": {
                     "name": "chunk_frag",
                     "type": "text",
-                    "path": "chunk.frag"
+                    "path": "solid.frag"
                 }
             }
         }

@@ -59,15 +59,20 @@ void ChunkMesh::setTilesTexture(TextureHandle tilesTexture) {
     texture = tilesTexture;
 }
 
-void ChunkMesh::update(const ChunkMeshData &meshData) {
-    vertexCount = meshData.getVertexCount();
+void ChunkMesh::update(const ChunkMeshData *meshData) {
+    if (meshData == nullptr) {
+        vertexCount = 0;
+        return;
+    }
+
+    vertexCount = meshData->getVertexCount();
     auto bufSize = static_cast<int>(sizeof(Vertex) * vertexCount);
 
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
     glBufferData(GL_ARRAY_BUFFER, bufSize, nullptr, GL_DYNAMIC_DRAW);
 
     for (int face = 0, bufOffset = 0; face < 6; ++face) {
-        const auto &vertices = meshData.getVertices(face);
+        const auto &vertices = meshData->getVertices(face);
         auto size = static_cast<int>(sizeof(Vertex) * vertices.size());
 
         glBufferSubData(GL_ARRAY_BUFFER, bufOffset, size, vertices.data());
@@ -77,7 +82,7 @@ void ChunkMesh::update(const ChunkMeshData &meshData) {
 }
 
 void ChunkMesh::draw() const {
-    if (texture.isValid()) {
+    if (texture.isValid() && vertexCount != 0) {
         texture.bind();
         glBindVertexArray(vao);
 

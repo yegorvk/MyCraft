@@ -6,7 +6,7 @@
 #include "spdlog/spdlog.h"
 #include "config.h"
 #include "SDL.h"
-#include "Context.h"
+#include "GameContext.h"
 #include "arch.h"
 #include "scene/WorldScene.h"
 
@@ -23,7 +23,7 @@ Game::Game(const char *winTitle, int winWidth, int winHeight, bool fullscreen) {
 Game::~Game() {
     rootNode.reset();
 
-    Context::destroyGlobal();
+    GameContext::destroyGlobal();
 
     if (glContext) {
         SDL_GL_DeleteContext(glContext);
@@ -145,7 +145,7 @@ void Game::createGlContext() {
 }
 
 void Game::onWindowGlContextReady() {
-    Context::setGlobal(new Context());
+    GameContext::setGlobal(new GameContext());
 
     int winWidth, winHeight;
     SDL_GetWindowSize(window, &winWidth, &winHeight);

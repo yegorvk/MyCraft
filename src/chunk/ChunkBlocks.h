@@ -24,7 +24,7 @@ public:
 
     [[nodiscard]] BlockId getAdjacentTo(glm::ivec3 position, int face) const;
 
-    void updateNeighborData(int thisChunkFace, const ChunkBlocks &neighbor);
+    void updateNeighborData(int thisChunkFace, const ChunkBlocks *neighbor);
 
 private:
     static constexpr int getIndexFromPosition(glm::ivec3 position) {
