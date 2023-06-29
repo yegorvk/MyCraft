@@ -2,7 +2,7 @@
 // Created by egorv on 4/26/2023.
 //
 
-#include "renderer/BlocksRenderer.h"
+#include "renderer/SolidRenderer.h"
 #include "camera/CameraControls.h"
 #include "WorldScene.h"
 #include "GameContext.h"
@@ -22,7 +22,7 @@ WorldScene::WorldScene() {
     addEventConsumer(cameraControls);
 
     world.setActiveRegion(glm::ivec3(0, 0, 0), glm::ivec3(24, 10, 24));
-    renderer.reset(world.getActiveRegionMin(), world.getActiveRegionSize());
+    blocksRenderer.reset(world.getActiveRegionMin(), world.getActiveRegionSize());
 
     camera.moveAbsolute(
             glm::dvec3(2 * world.getActiveRegionMin() + world.getActiveRegionSize() - 1) / 2.0 * CHUNK_SIDE_SCALE);
@@ -36,21 +36,22 @@ void WorldScene::onPreDraw() const {
     Perspective perspective{winAspectRatio, P_FOV_RAD, P_NEAR, P_FAR};
     ViewFrustrum frustrum(perspective, glm::vec3(0), camera.getFront(), camera.getRight());
 
-    renderer.draw(camera.getPosition(), viewProjection, frustrum);
+    blocksRenderer.draw(camera.getPosition(), viewProjection, frustrum);
+    hudRenderer.draw(static_cast<float>(winAspectRatio));
 }
 
 void WorldScene::onUpdate(uint64_t deltaMs) {
     world.processPlayerPositionChange(camera.getPosition());
     world.dispatchChunkLoads();
 
-    renderer.setActiveRegionMin(world.getActiveRegionMin());
+    blocksRenderer.setActiveRegionMin(world.getActiveRegionMin());
 
     while (true) {
         auto meshUpdateReq = world.dequeueMeshUpdateRequest();
 
         if (meshUpdateReq.has_value()) {
             auto req = meshUpdateReq.value();
-            renderer.update(req.position, req.chunk ? &req.chunk->getMeshData() : nullptr);
+            blocksRenderer.update(req.position, req.chunk ? &req.chunk->getMeshData() : nullptr);
         } else
             break;
     }

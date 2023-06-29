@@ -24,6 +24,12 @@
             "type": "image",
             "path": "stone.png",
             "channelCount": 4
+        },
+        {
+            "name": "cursor",
+            "type": "image",
+            "path": "cursor.png",
+            "channelCount": 4
         }
     ]
 }

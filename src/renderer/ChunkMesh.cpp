@@ -6,7 +6,7 @@
 
 #include "glad/glad.h"
 
-#include "Vertex.h"
+#include "ChunkVertex.h"
 #include "ChunkMesh.h"
 
 ChunkMesh::ChunkMesh(ChunkMesh &&other) noexcept {

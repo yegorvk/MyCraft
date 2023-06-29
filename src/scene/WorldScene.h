@@ -8,7 +8,8 @@
 #include "core/Node.h"
 #include "world/World.h"
 #include "camera/Camera.h"
-#include "renderer/BlocksRenderer.h"
+#include "renderer/SolidRenderer.h"
+#include "renderer/HUDRenderer.h"
 #include "block/BlockRegistry.h"
 
 class WorldScene : public Node {
@@ -31,7 +32,9 @@ private:
 
     World world;
 
-    BlocksRenderer renderer;
+    SolidRenderer blocksRenderer;
+    HUDRenderer hudRenderer;
+
     BlockRegistry blockReg;
 };
 

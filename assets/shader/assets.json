@@ -32,6 +32,22 @@
                     "path": "solid.frag"
                 }
             }
+        },
+        {
+            "name": "cursor",
+            "type": "shader",
+            "stages": {
+                "vertex": {
+                    "name": "cursor_vert",
+                    "type": "text",
+                    "path": "cursor.vert"
+                },
+                "fragment": {
+                    "name": "cursor_frag",
+                    "type": "text",
+                    "path": "cursor.frag"
+                }
+            }
         }
     ]
 }

@@ -8,7 +8,7 @@
 #include <array>
 #include <vector>
 
-#include "renderer/Vertex.h"
+#include "renderer/ChunkVertex.h"
 #include "block/BlockRegistry.h"
 #include "Constants.h"
 

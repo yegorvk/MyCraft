@@ -2,8 +2,8 @@
 // Created by egorv on 4/14/2023.
 //
 
-#ifndef SHITCRAFT_VERTEX_H
-#define SHITCRAFT_VERTEX_H
+#ifndef SHITCRAFT_CHUNKVERTEX_H
+#define SHITCRAFT_CHUNKVERTEX_H
 
 #include "glm/glm.hpp"
 
@@ -20,4 +20,4 @@ struct Vertex {
     int textureId{};
 };
 
-#endif //SHITCRAFT_VERTEX_H
+#endif //SHITCRAFT_CHUNKVERTEX_H

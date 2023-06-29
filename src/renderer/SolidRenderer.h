@@ -2,8 +2,8 @@
 // Created by egorv on 4/26/2023.
 //
 
-#ifndef SHITCRAFT_BLOCKSRENDERER_H
-#define SHITCRAFT_BLOCKSRENDERER_H
+#ifndef SHITCRAFT_SOLIDRENDERER_H
+#define SHITCRAFT_SOLIDRENDERER_H
 
 #include "TextureManager.h"
 #include "ChunkMesh.h"
@@ -13,9 +13,9 @@
 #include "MathUtils.h"
 #include "ArrayUtils.h"
 
-class BlocksRenderer {
+class SolidRenderer {
 public:
-    BlocksRenderer();
+    SolidRenderer();
 
     void draw(glm::dvec3 cameraPosition, const glm::mat4 &viewProjection, const ViewFrustrum &frustrum) const;
 
@@ -46,4 +46,4 @@ private:
 };
 
 
-#endif //SHITCRAFT_BLOCKSRENDERER_H
+#endif //SHITCRAFT_SOLIDRENDERER_H

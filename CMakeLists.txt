@@ -85,7 +85,7 @@ set(SRC
         src/IoUtils.h
         src/GameContext.h
         src/GameContext.cpp
-        src/renderer/Vertex.h
+        src/renderer/ChunkVertex.h
         src/arch.h
         src/asset/Provider.h
         src/asset/Manager.cpp
@@ -102,8 +102,8 @@ set(SRC
         src/asset/Image.cpp
         src/asset/Image.h
         src/PixelFormat.h
-        src/renderer/BlocksRenderer.cpp
-        src/renderer/BlocksRenderer.h
+        src/renderer/SolidRenderer.cpp
+        src/renderer/SolidRenderer.h
         src/renderer/ChunkMesh.cpp
         src/renderer/ChunkMesh.h
         src/scene/WorldScene.cpp
@@ -134,7 +134,13 @@ set(SRC
         src/renderer/TextureManager.h
         src/renderer/TextureLookup.h
         src/asset/CmrcFileReader.h
-        src/asset/CmrcFileReader.cpp src/chunk/ChunkBlocks.h src/chunk/ChunkBlocks.cpp src/external/BS_thread_pool.hpp src/core/Executor.h src/core/Executor.cpp src/DeferredTaskQueue.h)
+        src/asset/CmrcFileReader.cpp
+        src/chunk/ChunkBlocks.h
+        src/chunk/ChunkBlocks.cpp
+        src/external/BS_thread_pool.hpp
+        src/core/Executor.h
+        src/core/Executor.cpp
+        src/DeferredTaskQueue.h src/renderer/HUDRenderer.cpp src/renderer/HUDRenderer.h src/gl/GlResource.h)
 
 set(LIBS SDL2::SDL2main SDL2::SDL2-static glad glm::glm spdlog::spdlog nlohmann_json nlohmann_json_schema_validator readerwriterqueue)
 

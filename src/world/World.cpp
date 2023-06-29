@@ -6,7 +6,7 @@
 #include "World.h"
 #include "GameContext.h"
 
-constexpr int MAX_OPERATIONS_PER_TICK = 5;
+constexpr int MAX_OPERATIONS_PER_TICK = 10;
 
 void World::setActiveRegion(glm::ivec3 min, glm::ivec3 size) {
     activeRegionMin = min, activeRegionSize = size;
