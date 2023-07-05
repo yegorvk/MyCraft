@@ -5,7 +5,7 @@
 #ifndef SHITCRAFT_CHUNKDATA_H
 #define SHITCRAFT_CHUNKDATA_H
 
-#include "block/BlockRegistry.h"
+#include "registry/BlockRegistry.h"
 
 #include "ChunkMeshData.h"
 #include "ChunkBlocks.h"

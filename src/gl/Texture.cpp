@@ -6,6 +6,7 @@
 
 #include "spdlog/spdlog.h"
 #include "glm/glm.hpp"
+#include "glad/glad.h"
 
 #include "Texture.h"
 
@@ -93,6 +94,10 @@ static void applyTextureOptions(GLenum target, TextureOptions options) {
 
     glTexParameteri(target, GL_TEXTURE_MIN_FILTER, static_cast<int>(options.minFilter));
     glTexParameteri(target, GL_TEXTURE_MAG_FILTER, static_cast<int>(options.magFilter));
+
+    //glTexParameteri(target, GL_TEXTURE_MAX_LEVEL, 3);
+
+    //glTexParameterf(target, GL_TEXTURE_MAX_ANISOTROPY_EXT, options.maxAnisotropy);
 }
 
 detail::Texture2dArrayBuilder::Texture2dArrayBuilder(TextureDescription format, int layerCount, TextureOptions options)
@@ -110,10 +115,10 @@ void detail::Texture2dArrayBuilder::setLayer(int layer, const Image &image) {
     if (layer < 0 || layer >= layerCount)
         throw std::invalid_argument("Layer index must be non-negative and less than" + std::to_string(layerCount));
     if (image.getChannelCount() != description.channelCount) {
-        spdlog::error("Could not set array texture layer pixels: incompatible pixel formats");
-        throw std::invalid_argument("could not set layer pixels because of incompatible texture formats");
+        spdlog::error("Could not set array registry layer pixels: incompatible pixel formats");
+        throw std::invalid_argument("could not set layer pixels because of incompatible registry formats");
     } else if (image.getWidth() != description.width || image.getHeight() != description.height) {
-        spdlog::warn("Dimensions of provided array layer image differ from ones of the texture");
+        spdlog::warn("Dimensions of provided array layer image differ from ones of the registry");
         setLayer(layer, image.resize(description.width, description.height));
     } else {
         glBindTexture(GL_TEXTURE_2D_ARRAY, handle);

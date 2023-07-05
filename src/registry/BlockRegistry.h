@@ -9,25 +9,25 @@
 #include <span>
 
 #include "asset/Asset.h"
-#include "renderer/TextureManager.h"
-#include "Block.h"
+#include "TextureManager.h"
+#include "block/Block.h"
 #include "arch.h"
 
-constexpr std::size_t MAX_BLOCK_ID = 1000;
+using block_id_type = uint16_t;
 
-class BlockCacheBuilder;
+constexpr block_id_type MAX_BLOCK_ID = 1000;
 
 class BlockRegistry {
 public:
     BlockRegistry();
 
-    inline void registerBlock(uint16_t id, const std::string& ref, const asset::Provider &provider) {
+    inline void registerBlock(block_id_type id, const std::string& ref, const asset::Provider &provider) {
         registerBlock(id, provider.getBlock(ref), provider);
     }
 
-    void registerBlock(uint16_t id, const asset::BlockAsset &blockAsset, const asset::Provider &provider);
+    void registerBlock(block_id_type id, const asset::BlockAsset &blockAsset, const asset::Provider &provider);
 
-    [[nodiscard]] inline ALWAYS_INLINE const Block &getBlock(uint16_t id) const {
+    [[nodiscard]] inline const Block &getBlock(block_id_type id) const {
         return blocks[id - 1];
     }
 

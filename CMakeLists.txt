@@ -57,13 +57,15 @@ set(EXECUTABLE_TARGET_NAME ShitCraft)
 
 set(SRC
         ${CMAKE_BINARY_DIR}/src/config.h
+        src/external/BS_thread_pool.hpp
         src/external/stb.cpp
+        src/external/PerlinNoise.hpp
         src/main.cpp
         src/Game.cpp
         src/Game.h
         src/config.h.in
-        src/renderer/Shader.cpp
-        src/renderer/Shader.h
+        src/gl/Shader.cpp
+        src/gl/Shader.h
         src/types.h
         src/core/Drawable.h
         src/core/EventConsumer.h
@@ -74,24 +76,22 @@ set(SRC
         src/core/Node.h
         src/core/NodeHost.cpp
         src/core/Node.cpp
-        src/camera/Camera.h
         src/camera/CameraControls.h
         src/camera/CameraControls.cpp
         src/core/UpdateDelegate.h
         src/core/INode.h
-        src/renderer/Texture.h
-        src/renderer/Texture.cpp
-        src/IoUtils.cpp
-        src/IoUtils.h
+        src/gl/Texture.h
+        src/gl/Texture.cpp
+        src/utils/IoUtils.cpp
+        src/utils/IoUtils.h
         src/GameContext.h
         src/GameContext.cpp
-        src/renderer/ChunkVertex.h
         src/arch.h
         src/asset/Provider.h
         src/asset/Manager.cpp
         src/asset/Manager.h
         src/asset/Asset.h
-        src/renderer/ShaderType.h
+        src/gl/ShaderType.h
         src/asset/Cache.h
         src/asset/FileReader.h
         src/asset/Index.h
@@ -101,21 +101,20 @@ set(SRC
         src/asset/LocalFileReader.h
         src/asset/Image.cpp
         src/asset/Image.h
-        src/PixelFormat.h
-        src/renderer/SolidRenderer.cpp
-        src/renderer/SolidRenderer.h
-        src/renderer/ChunkMesh.cpp
-        src/renderer/ChunkMesh.h
+        src/renderer/WorldRenderer.cpp
+        src/renderer/WorldRenderer.h
+        src/chunk/ChunkMesh.cpp
+        src/chunk/ChunkMesh.h
         src/scene/WorldScene.cpp
         src/scene/WorldScene.h
-        src/block/BlockRegistry.cpp
-        src/block/BlockRegistry.h
+        src/registry/BlockRegistry.cpp
+        src/registry/BlockRegistry.h
         src/block/Block.h
         src/block/Block.cpp
         src/renderer/ViewFrustrum.h
-        src/camera/Camera.cpp
         src/renderer/ViewFrustrum.cpp
-        src/renderer/ViewFrustrum.cpp
+        src/camera/FreeCamera.h
+        src/camera/FreeCamera.cpp
         src/world/World.cpp
         src/world/World.h
         src/world/WorldGenerator.cpp
@@ -125,22 +124,21 @@ set(SRC
         src/chunk/ChunkMeshDataBuilder.cpp
         src/chunk/ChunkMeshDataBuilder.h
         src/chunk/Constants.h
-        src/MathUtils.h
-        src/ArrayUtils.h
-        src/external/PerlinNoise.hpp
+        src/utils/MathUtils.h
+        src/utils/ArrayUtils.h
         src/asset/Asset.cpp
-        src/Color.h
-        src/renderer/TextureManager.cpp
-        src/renderer/TextureManager.h
-        src/renderer/TextureLookup.h
+        src/registry/TextureManager.cpp
+        src/registry/TextureManager.h
+        src/registry/TextureLookup.h
         src/asset/CmrcFileReader.h
         src/asset/CmrcFileReader.cpp
         src/chunk/ChunkBlocks.h
         src/chunk/ChunkBlocks.cpp
-        src/external/BS_thread_pool.hpp
         src/core/Executor.h
         src/core/Executor.cpp
-        src/DeferredTaskQueue.h src/renderer/HUDRenderer.cpp src/renderer/HUDRenderer.h src/gl/GlResource.h)
+        src/renderer/HUDRenderer.cpp
+        src/renderer/HUDRenderer.h
+        src/gl/GlResource.h)
 
 set(LIBS SDL2::SDL2main SDL2::SDL2-static glad glm::glm spdlog::spdlog nlohmann_json nlohmann_json_schema_validator readerwriterqueue)
 

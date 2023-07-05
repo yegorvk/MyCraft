@@ -6,8 +6,8 @@
 #define SHITCRAFT_HUDRENDERER_H
 
 #include "types.h"
-#include "Shader.h"
-#include "Texture.h"
+#include "gl/Shader.h"
+#include "gl/Texture.h"
 #include "gl/GlResource.h"
 
 class HUDRenderer {

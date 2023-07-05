@@ -5,7 +5,7 @@
 #ifndef USE_CMRC
 
 #include "LocalFileReader.h"
-#include "IoUtils.h"
+#include "utils/IoUtils.h"
 
 namespace asset {
 

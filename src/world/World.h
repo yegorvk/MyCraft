@@ -7,12 +7,11 @@
 
 #include <queue>
 #include <optional>
-#include "DeferredTaskQueue.h"
 #include "readerwriterqueue.h"
-#include "block/BlockRegistry.h"
+#include "registry/BlockRegistry.h"
 #include "WorldGenerator.h"
-#include "ArrayUtils.h"
-#include "MathUtils.h"
+#include "utils/ArrayUtils.h"
+#include "utils/MathUtils.h"
 
 struct LoadChunkRequest {
     glm::ivec3 position;

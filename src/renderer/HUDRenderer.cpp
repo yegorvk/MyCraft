@@ -6,12 +6,12 @@
 #include "GameContext.h"
 #include "gl/GlResource.h"
 
-struct Vertex {
+struct PackedChunkVertex {
     glm::vec2 position;
     glm::vec2 texCoords;
 };
 
-constexpr Vertex CURSOR_VERTICES[] = {
+constexpr PackedChunkVertex CURSOR_VERTICES[] = {
         {glm::vec2(-0.5f, -0.5f), glm::vec2(0, 0)},
         {glm::vec2(0.5f, -0.5f),  glm::vec2(1, 0)},
         {glm::vec2(-0.5f, 0.5f),  glm::vec2(0, 1)},
@@ -32,12 +32,12 @@ HUDRenderer::HUDRenderer()
     cursorVAO.bind();
 
     glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex),
-                          reinterpret_cast<void *>(offsetof(Vertex, position)));
+    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(PackedChunkVertex),
+                          reinterpret_cast<void *>(offsetof(PackedChunkVertex, position)));
 
     glEnableVertexAttribArray(1);
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex),
-                          reinterpret_cast<void *>(offsetof(Vertex, texCoords)));
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(PackedChunkVertex),
+                          reinterpret_cast<void *>(offsetof(PackedChunkVertex, texCoords)));
 
     GlVertexArray::unbind();
 }
@@ -60,6 +60,8 @@ void HUDRenderer::draw(float viewportAspectRatio) const {
     cursorVBO.bind();
     cursorVAO.bind();
 
-    glDrawArrays(GL_TRIANGLES, 0, sizeof(CURSOR_VERTICES) / sizeof(Vertex));
+    glDrawArrays(GL_TRIANGLES, 0, sizeof(CURSOR_VERTICES) / sizeof(PackedChunkVertex));
     GlVertexArray::unbind();
+
+    glUseProgram(0);
 }

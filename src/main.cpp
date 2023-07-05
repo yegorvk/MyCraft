@@ -13,11 +13,7 @@ int main(int argv, char **args) {
     spdlog::set_level(spdlog::level::info);
 #endif
 
-    Executor::global().submit([]() {
-        Game("ShitCraft " VERSION_STR, WINDOW_WIDTH, WINDOW_HEIGHT, false).run();
-    });
-
-    Executor::global().waitForTasks();
+    Game("ShitCraft " VERSION_STR, WINDOW_WIDTH, WINDOW_HEIGHT, false).run();
 
     return 0;
 }

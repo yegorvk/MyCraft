@@ -11,7 +11,7 @@
 
 #include "asset/Manager.h"
 #include "asset/LocalFileReader.h"
-#include "block/BlockRegistry.h"
+#include "registry/BlockRegistry.h"
 
 class GameContext {
 public:

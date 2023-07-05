@@ -4,7 +4,7 @@
 
 #include <sstream>
 
-#include "renderer/Shader.h"
+#include "gl/Shader.h"
 
 #include "Manager.h"
 #include "Parser.h"

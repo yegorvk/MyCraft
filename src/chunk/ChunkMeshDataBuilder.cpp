@@ -2,7 +2,10 @@
 // Created by egorv on 5/17/2023.
 //
 
+#include <iostream>
+
 #include "ChunkMeshDataBuilder.h"
+#include "ChunkVertex.h"
 
 constexpr float brightnessCoefficient[6] = {
         .8f,
@@ -33,16 +36,8 @@ ChunkMeshData ChunkMeshDataBuilder::build() {
 void ChunkMeshDataBuilder::build2dMesh(int originBlockOffset, int face) {
     const auto normalAxis = Axis::getPositiveDirection(Face::getNormalAxis(face));
 
-    const auto originBlock = Face::getOriginNormalized(face) * (CHUNK_SIDE_BLOCK_COUNT - 1) +
+    const glm::ivec3 originBlock = Face::getOriginNormalized(face) * (CHUNK_SIDE_BLOCK_COUNT - 1) +
                              normalAxis * originBlockOffset;
-
-    auto originBlockWorld = glm::vec3(Face::getOriginNormalized(face) * CHUNK_SIDE_BLOCK_COUNT);
-    originBlockWorld += normalAxis * originBlockOffset;
-
-    if (isForwardOriented(face))
-        originBlockWorld += glm::vec3(normalAxis);
-
-    originBlockWorld *= BLOCK_SIDE_SCALE_F;
 
     const auto right = Face::getRightDirection(face);
     const auto top = Face::getTopDirection(face);
@@ -51,7 +46,7 @@ void ChunkMeshDataBuilder::build2dMesh(int originBlockOffset, int face) {
 
     for (int y = 0; y < CHUNK_SIDE_BLOCK_COUNT; ++y) {
         for (int x = 0; x < CHUNK_SIDE_BLOCK_COUNT; ++x) {
-            const auto curBlock = originBlock + right * x + top * y;
+            const glm::ivec3 curBlock = originBlock + right * x + top * y;
             const auto blockFace = getFace(curBlock, face);
 
             if (visited[y * CHUNK_SIDE_BLOCK_COUNT + x] || !hasTranslucentNeighbour(curBlock, face) ||
@@ -90,36 +85,45 @@ void ChunkMeshDataBuilder::build2dMesh(int originBlockOffset, int face) {
                     ++ty;
             }
 
-            glm::vec3 curBlockWorld = originBlockWorld;
+            const int minU = 0, minV = 0;
 
-            curBlockWorld += glm::vec3(right * x) * BLOCK_SIDE_SCALE_F;
-            curBlockWorld += glm::vec3(top * y) * BLOCK_SIDE_SCALE_F;
+            const int maxU = rx - x + 1;
+            const int maxV = ty - y + 1;
 
-            auto rightWorld = glm::vec3(right) * BLOCK_SIDE_SCALE_F;
-            auto topWorld = glm::vec3(top) * BLOCK_SIDE_SCALE_F;
-
-            constexpr float TEXTURE_PADDING = 0.f;
-
-            float minU = TEXTURE_PADDING, minV = TEXTURE_PADDING;
-
-            auto maxU = static_cast<float>(rx - x + 1) - TEXTURE_PADDING;
-            auto maxV = static_cast<float>(ty - y + 1) - TEXTURE_PADDING;
-
-            glm::vec3 quadVertexCoords[4] = {
-                    curBlockWorld,
-                    curBlockWorld + rightWorld * maxU,
-                    curBlockWorld + rightWorld * maxU + topWorld * maxV,
-                    curBlockWorld + topWorld * maxV
+            const glm::ivec3 quadVertexCoords[4] = {
+                    curBlock,
+                    curBlock + right * (rx - x),
+                    curBlock + right * (rx - x) + top * (ty - y),
+                    curBlock + top * (ty - y)
             };
 
-            glm::vec3 color(1.f);
-            color *= brightnessCoefficient[face];
+            constexpr int AO[6] {
+                2,
+                1,
+                3,
+                2,
+                2,
+                1
+            };
 
-            Vertex quadVertices[4] = {
-                    Vertex(quadVertexCoords[0], glm::vec2(minU, minV), color, blockFace.textureId),
-                    Vertex(quadVertexCoords[1], glm::vec2(maxU, minV), color, blockFace.textureId),
-                    Vertex(quadVertexCoords[2], glm::vec2(maxU, maxV), color, blockFace.textureId),
-                    Vertex(quadVertexCoords[3], glm::vec2(minU, maxV), color, blockFace.textureId)
+            const int ao = AO[face];
+
+            glm::bvec3 startOffsets = Face::getOriginNormalized(face);
+
+            if (Face::isPositiveOrientated(face))
+                startOffsets[Face::getNormalAxis(face)] = true;
+
+            glm::bvec3 rightOffsetMask(false);
+            rightOffsetMask[Face::getRightAxis(face)] = true;
+
+            glm::bvec3 topOffsetMask(false);
+            topOffsetMask[Face::getTopAxis(face)] = true;
+
+            PackedChunkVertex quadVertices[4] = {
+                    {quadVertexCoords[0], startOffsets, glm::uvec2(minU, minV), face, blockFace.textureId, ao},
+                    {quadVertexCoords[1], startOffsets ^ rightOffsetMask, glm::uvec2(maxU, minV), face, blockFace.textureId, ao},
+                    {quadVertexCoords[2], startOffsets ^ rightOffsetMask ^ topOffsetMask, glm::uvec2(maxU, maxV), face, blockFace.textureId, ao},
+                    {quadVertexCoords[3], startOffsets ^ topOffsetMask, glm::uvec2(minU, maxV), face, blockFace.textureId, ao}
             };
 
             meshData.vertices[face].push_back(quadVertices[0]);
@@ -137,4 +141,30 @@ void ChunkMeshDataBuilder::build2dMesh(int originBlockOffset, int face) {
             }
         }
     }
+}
+
+int ChunkMeshDataBuilder::getVertexAO(glm::ivec3 block, int face, int vertex) {
+    auto off_1 = Face::getRightDirection(face);
+    auto off_2 = Face::getTopDirection(face);
+
+    if (vertex == 0 || vertex == 3)
+        off_1 = -off_1;
+
+    if (vertex == 0 || vertex == 1)
+        off_2 = -off_2;
+
+    bool side1 = blocks.getLocalChecked(block + off_1 + glm::ivec3(0, 1, 0)) != 0;
+    bool side2 = blocks.getLocalChecked(block + off_2 + glm::ivec3(0, 1, 0)) != 0;
+    bool corner = blocks.getLocalChecked(block + off_1 + off_2 + glm::ivec3(0, 1, 0)) != 0;
+
+    return getVertexAO(side1, side2, corner);
+}
+
+bool ChunkMeshDataBuilder::hasEqualAO(glm::ivec3 block, int face, int ao) {
+    for (int i = 0; i < 4; ++i) {
+        if (getVertexAO(block, face, i) != ao)
+            return false;
+    }
+
+    return true;
 }

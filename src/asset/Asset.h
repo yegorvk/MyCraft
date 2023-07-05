@@ -12,8 +12,8 @@
 
 #include "glm/glm.hpp"
 
-#include "Color.h"
-#include "renderer/ShaderType.h"
+#include "gl/ShaderType.h"
+#include "types.h"
 #include "Image.h"
 
 namespace asset {

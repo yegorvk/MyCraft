@@ -23,10 +23,9 @@ ChunkData WorldGenerator::generate(glm::ivec3 position) {
 
     for (int x = 0; x < CHUNK_SIDE_BLOCK_COUNT; ++x)
         for (int z = 0; z < CHUNK_SIDE_BLOCK_COUNT; ++z) {
-            glm::dvec3 worldPosition =
-                    BLOCK_SIDE_SCALE * glm::dvec3(position * CHUNK_SIDE_BLOCK_COUNT + glm::ivec3(x, 0, z));
+            glm::dvec3 worldPosition = glm::dvec3(position * CHUNK_SIDE_BLOCK_COUNT + glm::ivec3(x, 0, z));
 
-            const double noiseValue = perlin.noise2D(worldPosition.x / 20.0, worldPosition.z / 20.0);
+            const double noiseValue = perlin.noise2D(worldPosition.x / 40.0, worldPosition.z / 40.0);
 
             double height =
                     glm::clamp((noiseValue + 1.0) / 2.0 * 4.5 + 0.4, 0.0, 5.0) *

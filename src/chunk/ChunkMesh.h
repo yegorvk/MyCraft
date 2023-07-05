@@ -10,9 +10,9 @@
 
 #include "types.h"
 #include "chunk/ChunkData.h"
-#include "block/BlockRegistry.h"
-#include "Shader.h"
-#include "Texture.h"
+#include "registry/BlockRegistry.h"
+#include "gl/Shader.h"
+#include "gl/Texture.h"
 
 class ChunkMesh {
 public:

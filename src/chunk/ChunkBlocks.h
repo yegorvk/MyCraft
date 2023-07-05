@@ -18,6 +18,8 @@ public:
         return blocks[getIndexFromPosition(position)];
     }
 
+    [[nodiscard]] BlockId getLocalChecked(glm::ivec3 position) const;
+
     inline void setLocalUnchecked(glm::ivec3 position, BlockId block) {
         blocks[getIndexFromPosition(position)] = block;
     }

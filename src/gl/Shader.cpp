@@ -16,7 +16,7 @@ Shader Shader::compile(const char *vertShaderSrc, const char *fragShaderSrc) {
     return builder.link();
 }
 
-static const char *shaderTypeStr[SHADER_STAGE_COUNT] = {"Vertex", "Fragment"};
+static const char *shaderTypeStr[SHADER_STAGE_COUNT] = {"PackedChunkVertex", "Fragment"};
 constexpr int glShaderType[SHADER_STAGE_COUNT] = {GL_VERTEX_SHADER, GL_FRAGMENT_SHADER};
 
 ShaderBuilder::~ShaderBuilder() {

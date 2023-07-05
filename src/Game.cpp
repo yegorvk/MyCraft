@@ -45,7 +45,7 @@ void Game::run() {
     SDL_Event event;
 
     int winWidth, winHeight;
-    SDL_GetWindowSize(window, &winWidth, &winHeight);
+    SDL_GL_GetDrawableSize(window, &winWidth, &winHeight);
 
     SDL_Event resizeEvent;
 
@@ -61,16 +61,16 @@ void Game::run() {
     SDL_SetRelativeMouseMode(SDL_TRUE);
 
     while (!quit) {
-        auto curFrameTime = SDL_GetTicks();
+        auto curFrameTime = SDL_GetTicks64();
         auto delta = curFrameTime - lastFrameTimestamp;
         lastFrameTimestamp = curFrameTime;
 
         SDL_GL_SwapWindow(window);
-        SDL_GetWindowSize(window, &winWidth, &winHeight);
+        SDL_GL_GetDrawableSize(window, &winWidth, &winHeight);
 
         while (SDL_PollEvent(&event)) {
             if (event.type == SDL_WINDOWEVENT && event.window.event == SDL_WINDOWEVENT_SIZE_CHANGED)
-                glViewport(0, 0, event.window.data1, event.window.data2);
+                SDL_GL_GetDrawableSize(window, &winWidth, &winHeight);
 
             if (rootNode)
                 rootNode->handleEvent(event);
@@ -81,6 +81,7 @@ void Game::run() {
 
         rootNode->update(delta);
 
+        glViewport(0, 0, winWidth, winHeight);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         if (rootNode)
@@ -103,12 +104,19 @@ void Game::setGlContextSettings() {
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
 
+    SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 8);
+    SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 8);
+    SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 8);
+    SDL_GL_SetAttribute(SDL_GL_ALPHA_SIZE, 8);
+
     SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
 
     SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 1);
     SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, 16);
 
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+
+    SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1");
 
 #ifdef DEBUG
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, SDL_GL_CONTEXT_DEBUG_FLAG);
@@ -148,12 +156,12 @@ void Game::onWindowGlContextReady() {
     GameContext::setGlobal(new GameContext());
 
     int winWidth, winHeight;
-    SDL_GetWindowSize(window, &winWidth, &winHeight);
+    SDL_GL_GetDrawableSize(window, &winWidth, &winHeight);
     glViewport(0, 0, winWidth, winHeight);
 
 #ifdef DEBUG
     glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS_ARB);
-    glDebugMessageControlARB(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, GL_TRUE);
+    glDebugMessageControlARB(GL_DONT_CARE, GL_DONT_CARE, GL_DEBUG_SEVERITY_LOW_ARB, 0, nullptr, GL_TRUE);
     glDebugMessageCallbackARB(Game::processGlDebugMessage, nullptr);
 #endif
 
@@ -177,8 +185,9 @@ void Game::die(const char *msg) {
 }
 
 #ifdef DEBUG
+
 void STDCALL Game::processGlDebugMessage(GLuint source, GLuint type, GLuint id, GLuint severity, GLsizei,
-                                 const GLchar *message, const void *) {
+                                         const GLchar *message, const void *) {
     spdlog::level::level_enum logLevel;
 
     switch (severity) {
@@ -194,6 +203,9 @@ void STDCALL Game::processGlDebugMessage(GLuint source, GLuint type, GLuint id, 
         default:
             logLevel = spdlog::level::debug;
     }
+
+    if (logLevel <= spdlog::level::debug)
+        return;
 
     const char *sourceStr;
 

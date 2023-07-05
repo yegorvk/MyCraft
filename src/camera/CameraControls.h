@@ -7,7 +7,7 @@
 
 #include <functional>
 
-#include "Camera.h"
+#include "FreeCamera.h"
 #include "../core/EventConsumer.h"
 #include "../core/UpdateDelegate.h"
 
@@ -39,7 +39,7 @@ struct PressedControlKeys {
 
 class CameraControls : public EventConsumer, public UpdateDelegate {
 public:
-    inline explicit CameraControls(Camera &camera,
+    inline explicit CameraControls(FreeCamera &camera,
                                    float speed = DEFAULT_CAMERA_SPEED,
                                    float sensitivity = DEFAULT_CAMERA_SENSITIVITY,
                                    CameraControlBindings bindings = CameraControlBindings())
@@ -52,7 +52,7 @@ public:
     void update(uint64_t deltaMs) final;
 
 private:
-    Camera &camera;
+    FreeCamera &camera;
     CameraControlBindings bindings;
     float sensitivity, speed;
 

@@ -8,7 +8,7 @@
 #include <string>
 
 #include "Image.h"
-#include "renderer/Shader.h"
+#include "gl/Shader.h"
 
 #include "Asset.h"
 

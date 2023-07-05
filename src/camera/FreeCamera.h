@@ -2,18 +2,18 @@
 // Created by egorv on 4/9/2023.
 //
 
-#ifndef SHITCRAFT_CAMERA_H
-#define SHITCRAFT_CAMERA_H
+#ifndef SHITCRAFT_FREECAMERA_H
+#define SHITCRAFT_FREECAMERA_H
 
 #include "glm/glm.hpp"
 #include "glm/gtx/quaternion.hpp"
 
 #include "spdlog/spdlog.h"
 
-class Camera {
+class FreeCamera {
 public:
-    explicit Camera(glm::vec3 position = glm::vec3(0.f), glm::vec3 front = glm::vec3(0.f, 0.f, -1.f),
-                    glm::vec3 up = glm::vec3(0.f, 1.f, 0.f));
+    explicit FreeCamera(glm::vec3 position = glm::vec3(0.f), glm::vec3 front = glm::vec3(0.f, 0.f, -1.f),
+                        glm::vec3 up = glm::vec3(0.f, 1.f, 0.f));
 
     void moveAbsolute(glm::vec3 delta);
 
@@ -46,4 +46,4 @@ private:
     glm::mat4 viewMatrix = glm::mat4(1.f);
 };
 
-#endif //SHITCRAFT_CAMERA_H
+#endif //SHITCRAFT_FREECAMERA_H

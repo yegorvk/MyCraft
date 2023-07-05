@@ -4,13 +4,15 @@
 
 #include <stdexcept>
 
+#include "asset/Provider.h"
 #include "BlockRegistry.h"
 
 BlockRegistry::BlockRegistry() {
     blocks.resize(MAX_BLOCK_ID + 1);
 }
 
-void BlockRegistry::registerBlock(uint16_t id, const asset::BlockAsset &blockAsset, const asset::Provider &provider) {
+void BlockRegistry::registerBlock(block_id_type id, const asset::BlockAsset &blockAsset,
+                                  const asset::Provider &provider) {
     texManager.registerBlock(blockAsset, provider);
 
     if (id > MAX_BLOCK_ID)
@@ -22,9 +24,7 @@ void BlockRegistry::registerBlock(uint16_t id, const asset::BlockAsset &blockAss
 
     for (int i = 0; i < 6; ++i) {
         const auto &faceAsset = blockAsset.getFace(i);
-
         const auto textureId = texManager.getId(faceAsset.getTextureRef());
-
         block.setFace(i, BlockFace(textureId));
     }
 

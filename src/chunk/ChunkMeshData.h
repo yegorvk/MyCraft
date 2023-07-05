@@ -8,8 +8,8 @@
 #include <array>
 #include <vector>
 
-#include "renderer/ChunkVertex.h"
-#include "block/BlockRegistry.h"
+#include "ChunkVertex.h"
+#include "registry/BlockRegistry.h"
 #include "Constants.h"
 
 class ChunkMeshDataBuilder;
@@ -22,7 +22,7 @@ public:
         return vertexCount;
     }
 
-    [[nodiscard]] inline const std::vector<Vertex> &getVertices(int face) const {
+    [[nodiscard]] inline const std::vector<PackedChunkVertex> &getVertices(int face) const {
         return vertices[face];
     }
 
@@ -30,7 +30,7 @@ private:
     friend class ChunkMeshDataBuilder;
 
     int vertexCount = 0;
-    std::array<std::vector<Vertex>, 6> vertices;
+    std::array<std::vector<PackedChunkVertex>, 6> vertices;
 };
 
 #endif //SHITCRAFT_CHUNKMESHDATA_H

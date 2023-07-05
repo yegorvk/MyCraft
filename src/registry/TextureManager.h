@@ -8,7 +8,7 @@
 #include <cstdint>
 #include <set>
 
-#include "Texture.h"
+#include "gl/Texture.h"
 #include "asset/Image.h"
 #include "asset/Asset.h"
 #include "asset/Manager.h"

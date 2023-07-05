@@ -6,7 +6,7 @@
 #include "stb_image.h"
 #include "stb_image_resize.h"
 
-#include "MathUtils.h"
+#include "utils/MathUtils.h"
 #include "Image.h"
 
 Image Image::loadFromMemory(const unsigned char *data, std::size_t size, ImageDescription description) {
@@ -36,7 +36,7 @@ Image Image::fromColor(Color color, ImageDescription description) {
 
     if (description.channelCount != 4)
         throw std::invalid_argument("Unsupported number of color channel (" + std::to_string(description.channelCount) +
-                                    ") for one-color texture (use 4 color channels)");
+                                    ") for one-color registry (use 4 color channels)");
 
     description = base.override(description);
 

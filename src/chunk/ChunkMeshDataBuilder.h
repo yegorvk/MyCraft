@@ -8,8 +8,8 @@
 #include <array>
 #include <vector>
 
-#include "renderer/ChunkVertex.h"
-#include "block/BlockRegistry.h"
+#include "chunk/ChunkVertex.h"
+#include "registry/BlockRegistry.h"
 
 #include "Constants.h"
 #include "ChunkMeshData.h"
@@ -34,6 +34,14 @@ private:
 
     [[nodiscard]] inline bool hasTranslucentNeighbour(glm::ivec3 coords, int face) {
         return blocks.getAdjacentTo(coords, face) == 0;
+    }
+
+    [[nodiscard]] int getVertexAO(glm::ivec3 block, int face, int vertex);
+
+    [[nodiscard]] bool hasEqualAO(glm::ivec3 block, int face, int ao);
+
+    [[nodiscard]] static constexpr int getVertexAO(bool side1, bool side2, bool corner) {
+        return (side1 && side2) ? 0 : (3 - (side1 + side2 + corner));
     }
 
     const ChunkBlocks &blocks;

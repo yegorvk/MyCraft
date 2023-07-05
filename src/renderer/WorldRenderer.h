@@ -2,22 +2,23 @@
 // Created by egorv on 4/26/2023.
 //
 
-#ifndef SHITCRAFT_SOLIDRENDERER_H
-#define SHITCRAFT_SOLIDRENDERER_H
+#ifndef SHITCRAFT_WORLDRENDERER_H
+#define SHITCRAFT_WORLDRENDERER_H
 
-#include "TextureManager.h"
-#include "ChunkMesh.h"
+#include "registry/TextureManager.h"
+#include "chunk/ChunkMesh.h"
 #include "world/World.h"
+#include "gl/Shader.h"
 #include "chunk/ChunkMeshData.h"
 #include "ViewFrustrum.h"
-#include "MathUtils.h"
-#include "ArrayUtils.h"
+#include "utils/MathUtils.h"
+#include "utils/ArrayUtils.h"
 
-class SolidRenderer {
+class WorldRenderer {
 public:
-    SolidRenderer();
+    WorldRenderer();
 
-    void draw(glm::dvec3 cameraPosition, const glm::mat4 &viewProjection, const ViewFrustrum &frustrum) const;
+    void draw(glm::dvec3 cameraPosition, const glm::mat4 &viewProjection, const ViewFrustrum &frustrum, glm::vec2 viewportSize) const;
 
     void reset(glm::ivec3 newActiveRegionMin, glm::ivec3 newActiveRegionSize);
 
@@ -46,4 +47,4 @@ private:
 };
 
 
-#endif //SHITCRAFT_SOLIDRENDERER_H
+#endif //SHITCRAFT_WORLDRENDERER_H

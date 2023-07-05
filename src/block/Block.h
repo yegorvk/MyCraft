@@ -9,7 +9,7 @@
 #include <cstdint>
 #include <glm/glm.hpp>
 
-#include "renderer/TextureLookup.h"
+#include "registry/TextureLookup.h"
 #include "types.h"
 
 constexpr int face(int axis, bool forwardOrientated) {

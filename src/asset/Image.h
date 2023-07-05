@@ -9,8 +9,7 @@
 
 #include "glm/glm.hpp"
 
-#include "Color.h"
-#include "PixelFormat.h"
+#include "types.h"
 
 struct ImageDescription {
     constexpr ImageDescription() = default;

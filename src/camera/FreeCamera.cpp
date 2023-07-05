@@ -2,28 +2,28 @@
 // Created by egorv on 5/5/2023.
 //
 
-#include "Camera.h"
+#include "FreeCamera.h"
 
-Camera::Camera(glm::vec3 position, glm::vec3 front, glm::vec3 up)
+FreeCamera::FreeCamera(glm::vec3 position, glm::vec3 front, glm::vec3 up)
         : position(position), front(glm::normalize(front)), up(glm::normalize(up)), camFront(front), camUp(up),
           camRight(glm::normalize(glm::cross(front, up))) {};
 
-void Camera::moveAbsolute(glm::vec3 delta) {
+void FreeCamera::moveAbsolute(glm::vec3 delta) {
     position += delta;
     update();
 }
 
-void Camera::moveRelative(glm::vec3 delta) {
+void FreeCamera::moveRelative(glm::vec3 delta) {
     position += delta.x * camRight + delta.y * camUp + delta.z * camFront;
-    update();
+    //update();
 }
 
-void Camera::rotate(glm::vec3 angles) {
+void FreeCamera::rotate(glm::vec3 angles) {
     qRot *= glm::quat(angles);
     update();
 }
 
-void Camera::update() {
+void FreeCamera::update() {
     camFront = glm::rotate(qRot, front);
     camUp = glm::rotate(qRot, up);
     camRight = glm::normalize(glm::cross(camFront, camUp));

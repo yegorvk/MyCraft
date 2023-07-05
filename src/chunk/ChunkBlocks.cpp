@@ -51,6 +51,13 @@ BlockId ChunkBlocks::getAdjacentTo(glm::ivec3 position, int face) const {
     }
 }
 
+BlockId ChunkBlocks::getLocalChecked(glm::ivec3 position) const {
+    if (isWithinChunk(position))
+        return getLocalUnchecked(position);
+    else
+        return 0;
+}
+
 void ChunkBlocks::updateNeighborData(int thisChunkFace, const ChunkBlocks *neighbor) {
     const int normalAxis = Face::getNormalAxis(thisChunkFace);
     const bool positiveOrientated = Face::isPositiveOrientated(thisChunkFace);

@@ -7,10 +7,10 @@
 
 #include "core/Node.h"
 #include "world/World.h"
-#include "camera/Camera.h"
-#include "renderer/SolidRenderer.h"
+#include "camera/FreeCamera.h"
+#include "renderer/WorldRenderer.h"
 #include "renderer/HUDRenderer.h"
-#include "block/BlockRegistry.h"
+#include "registry/BlockRegistry.h"
 
 class WorldScene : public Node {
 public:
@@ -25,14 +25,16 @@ public:
     ~WorldScene() override = default;
 
 private:
-    Camera camera;
+    FreeCamera camera;
+
+    glm::vec2 viewportSize{};
 
     double winAspectRatio = 1.0;
     glm::mat4 projMat{1.f};
 
     World world;
 
-    SolidRenderer blocksRenderer;
+    WorldRenderer blocksRenderer;
     HUDRenderer hudRenderer;
 
     BlockRegistry blockReg;

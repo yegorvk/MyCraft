@@ -9,6 +9,8 @@
 #include <cstddef>
 #include <algorithm>
 
+#include "glad/glad.h"
+
 #include "types.h"
 #include "asset/Image.h"
 
@@ -49,8 +51,9 @@ enum class TextureType : GLenum {
 
 struct TextureOptions {
     TexWrapping wrapping = TexWrapping::Repeat;
-    TexFiltering minFilter = TexFiltering::NearestMipmapNearest;
-    TexFiltering magFilter = TexFiltering::Nearest;
+    TexFiltering minFilter = TexFiltering::LinearMipmapNearest;
+    TexFiltering magFilter = TexFiltering::Linear;
+    float maxAnisotropy = 4.f;
 };
 
 class Texture;

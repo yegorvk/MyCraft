@@ -40,6 +40,14 @@ public:
         glUniform1f(getLoc(name), value);
     }
 
+    inline void setInt(const char *name, int value) const {
+        glUniform1i(getLoc(name), value);
+    }
+
+    inline void setUint(const char *name, unsigned int value) const {
+        glUniform1ui(getLoc(name), value);
+    }
+
     inline void setVec2(const char *name, const glm::vec2 &value) const {
         glUniform2fv(getLoc(name), 1, glm::value_ptr(value));
     }
@@ -50,6 +58,14 @@ public:
 
     inline void setVec4(const char *name, glm::vec4 value) const {
         glUniform4fv(getLoc(name), 1, glm::value_ptr(value));
+    }
+
+    inline void setUVec2(const char *name, glm::uvec2 value) const {
+        glUniform2ui(getLoc(name), value.x, value.y);
+    }
+
+    inline void setIVec3(const char *name, glm::ivec3 value) const {
+        glUniform3iv(getLoc(name), 1, glm::value_ptr(value));
     }
 
     inline void setMat2(const char *name, glm::mat4 value) const {
