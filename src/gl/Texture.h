@@ -11,30 +11,18 @@
 
 #include "glad/glad.h"
 
-#include "types.h"
 #include "asset/Image.h"
+#include "GlTypes.h"
+#include "GlResource.h"
 
-struct TextureDescription {
-    constexpr explicit TextureDescription(int width = 0, int height = 0, int channelCount = 0)
-            : width(width), height(height), channelCount(channelCount) {}
-
-    int width = 0, height = 0, channelCount = 0;
-
-    [[nodiscard]] constexpr TextureDescription override(const TextureDescription &other) const {
-        return TextureDescription(other.width > 0 ? other.width : width,
-                                  other.height > 0 ? other.height : height,
-                                  other.channelCount > 0 ? other.channelCount : channelCount);
-    }
-};
-
-enum class TexWrapping : GLenum {
+enum class TexWrapMode : gl_enum_type {
     Repeat = GL_REPEAT,
     MirroredRepeat = GL_MIRRORED_REPEAT,
     ClampToEdge = GL_CLAMP_TO_EDGE,
     ClampToBorder = GL_CLAMP_TO_BORDER
 };
 
-enum class TexFiltering : GLenum {
+enum class TexFilter : gl_enum_type {
     Nearest = GL_NEAREST,
     Linear = GL_LINEAR,
     NearestMipmapNearest = GL_NEAREST_MIPMAP_NEAREST,
@@ -43,42 +31,89 @@ enum class TexFiltering : GLenum {
     LinearMipmapLinear = GL_LINEAR_MIPMAP_LINEAR
 };
 
-enum class TextureType : GLenum {
+enum class TexType : gl_enum_type {
     Invalid = 0,
     Tex2d = GL_TEXTURE_2D,
     Tex2dArray = GL_TEXTURE_2D_ARRAY
 };
 
-struct TextureOptions {
-    TexWrapping wrapping = TexWrapping::Repeat;
-    TexFiltering minFilter = TexFiltering::LinearMipmapNearest;
-    TexFiltering magFilter = TexFiltering::Linear;
-    float maxAnisotropy = 4.f;
+constexpr float NO_ANISOTROPY = 0.f;
+
+struct TexSamplerOptions {
+    constexpr TexSamplerOptions() = default;
+
+    constexpr TexSamplerOptions(TexWrapMode wrapMode, TexFilter minFilter, TexFilter magFilter,
+                                float maxAnisotropy = NO_ANISOTROPY, float loadBias = 0.f)
+            : wrapMode(wrapMode), minFilter(minFilter), magFilter(magFilter), maxAnisotropy(maxAnisotropy), lodBias(loadBias) {}
+
+    static constexpr TexSamplerOptions nearestClamp() {
+        return {TexWrapMode::ClampToEdge, TexFilter::Nearest, TexFilter::Nearest};
+    }
+
+    static constexpr TexSamplerOptions nearestRepeat() {
+        return {TexWrapMode::Repeat, TexFilter::Nearest, TexFilter::Nearest};
+    }
+
+    static constexpr TexSamplerOptions nearestMipmapNearestRepeat() {
+        return {TexWrapMode::Repeat, TexFilter::NearestMipmapNearest, TexFilter::Nearest};
+    }
+
+    static constexpr TexSamplerOptions linearMipmapLinearRepeat() {
+        return {TexWrapMode::Repeat, TexFilter::LinearMipmapLinear, TexFilter::Linear};
+    }
+
+    static constexpr TexSamplerOptions linearMipmapNearestRepeat() {
+        return {TexWrapMode::Repeat, TexFilter::LinearMipmapNearest, TexFilter::Linear};
+    }
+
+    TexWrapMode wrapMode = TexWrapMode::ClampToEdge;
+    TexFilter minFilter = TexFilter::Nearest;
+    TexFilter magFilter = TexFilter::Nearest;
+    float lodBias = 0.f;
+    float maxAnisotropy = NO_ANISOTROPY;
 };
 
-class Texture;
+template<TexType Type>
+using Texture = GlTexture<static_cast<gl_enum_type>(Type)>;
+
+template<TexType Type>
+using TextureRef = Texture<Type>::ref_type;
+
+using Texture2d = Texture<TexType::Tex2d>;
+using Texture2dArray = Texture<TexType::Tex2dArray>;
+
+struct Tex2dDesc {
+    constexpr explicit Tex2dDesc(int width = 0, int height = 0, int channelCount = 0)
+            : width(width), height(height), channelCount(channelCount) {}
+
+    int width = 0, height = 0, channelCount = 0;
+
+    [[nodiscard]] constexpr Tex2dDesc override(const Tex2dDesc &other) const {
+        return Tex2dDesc(other.width > 0 ? other.width : width,
+                         other.height > 0 ? other.height : height,
+                         other.channelCount > 0 ? other.channelCount : channelCount);
+    }
+};
 
 namespace detail {
     struct Texture2dArrayBuilder {
-        Texture2dArrayBuilder(TextureDescription format, int layerCount, TextureOptions options = {});
+        Texture2dArrayBuilder(Tex2dDesc format, int layerCount, TexSamplerOptions options = {});
 
         void setLayer(int layer, const Image &image);
 
-        [[nodiscard]] Texture build();
+        [[nodiscard]] Texture2dArray build();
 
-        TextureDescription description;
+        Tex2dDesc description;
         int layerCount;
-        uint handle = 0;
+
+        Texture2dArray tex;
     };
 }
 
-class TextureHandle;
-
-class Texture {
-public:
+namespace TextureFactory {
     template<typename It>
-    static inline Texture texture2dArray(TextureDescription description, It begin, It end,
-                                         TextureOptions options = {}) {
+    inline Texture2dArray texture2dArray(Tex2dDesc description, It begin, It end,
+                                         TexSamplerOptions options = {}) {
         detail::Texture2dArrayBuilder builder(description, static_cast<int>(std::distance(begin, end)),
                                               options);
 
@@ -88,60 +123,7 @@ public:
         return builder.build();
     }
 
-    static Texture texture2d(const Image &image, TextureOptions options = {});
-
-    Texture() = default;
-
-    Texture(uint handle, TextureType type);
-
-    Texture(const Texture &other) = delete;
-
-    Texture(Texture &&other) noexcept;
-
-    inline Texture &operator=(const Texture &other) = delete;
-
-    Texture &operator=(Texture &&other) noexcept;
-
-    ~Texture();
-
-    void bind() const;
-
-    [[nodiscard]] inline TextureType getType() const {
-        return type;
-    }
-
-    [[nodiscard]] inline uint getRawHandle() const {
-        return handle;
-    }
-
-private:
-    TextureType type = TextureType::Invalid;
-    uint handle = 0;
-};
-
-class TextureHandle {
-public:
-    TextureHandle() = default;
-
-    explicit TextureHandle(const Texture &texture);
-
-    void bind() const;
-
-    [[nodiscard]] inline TextureType getType() const {
-        return type;
-    }
-
-    [[nodiscard]] inline uint getRawHandle() const {
-        return handle;
-    }
-
-    [[nodiscard]] inline bool isValid() const {
-        return handle != 0;
-    }
-
-private:
-    TextureType type = TextureType::Invalid;
-    uint handle = 0;
-};
+    Texture2d texture2d(const Image &image, TexSamplerOptions options = {});
+}
 
 #endif //SHITCRAFT_TEXTURE_H

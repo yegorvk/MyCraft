@@ -103,8 +103,8 @@ set(SRC
         src/asset/Image.h
         src/renderer/WorldRenderer.cpp
         src/renderer/WorldRenderer.h
-        src/chunk/ChunkMesh.cpp
-        src/chunk/ChunkMesh.h
+        src/mesh/ChunkMesh.cpp
+        src/mesh/ChunkMesh.h
         src/scene/WorldScene.cpp
         src/scene/WorldScene.h
         src/registry/BlockRegistry.cpp
@@ -138,7 +138,14 @@ set(SRC
         src/core/Executor.cpp
         src/renderer/HUDRenderer.cpp
         src/renderer/HUDRenderer.h
-        src/gl/GlResource.h)
+        src/gl/GlResource.h
+        src/renderer/CompositeRenderer.cpp
+        src/renderer/CompositeRenderer.h
+        src/gl/GlTypes.h
+        src/mesh/RectMesh.cpp
+        src/mesh/RectMesh.h
+        src/mesh/SimpleVertex.h
+        src/utils/Utils.h)
 
 set(LIBS SDL2::SDL2main SDL2::SDL2-static glad glm::glm spdlog::spdlog nlohmann_json nlohmann_json_schema_validator readerwriterqueue)
 

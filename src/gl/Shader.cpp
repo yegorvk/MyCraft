@@ -20,7 +20,7 @@ static const char *shaderTypeStr[SHADER_STAGE_COUNT] = {"PackedChunkVertex", "Fr
 constexpr int glShaderType[SHADER_STAGE_COUNT] = {GL_VERTEX_SHADER, GL_FRAGMENT_SHADER};
 
 ShaderBuilder::~ShaderBuilder() {
-    for (uint stage : stages) {
+    for (auto stage : stages) {
         if (stage != 0)
             glDeleteShader(stage);
     }
@@ -34,7 +34,7 @@ bool ShaderBuilder::setStage(ShaderType type, const char *src) {
         stages[stage] = 0;
     }
 
-    uint shader = glCreateShader(glShaderType[stage]);
+    auto shader = glCreateShader(glShaderType[stage]);
 
     if (shader == 0)
         return false;
@@ -54,12 +54,12 @@ bool ShaderBuilder::setStage(ShaderType type, const char *src) {
 }
 
 Shader ShaderBuilder::link() {
-    uint program = glCreateProgram();
+    auto program = glCreateProgram();
 
     if (program == 0)
         return Shader(0);
 
-    for (uint stage : stages) {
+    for (auto stage : stages) {
         if (stage != 0)
             glAttachShader(program, stage);
     }

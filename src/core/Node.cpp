@@ -5,7 +5,7 @@
 #include "Node.h"
 #include <algorithm>
 
-void Node::draw() const {
+void Node::draw() {
     onPreDraw();
 
     for (const auto& drawable : drawables)
@@ -33,9 +33,9 @@ void Node::update(uint64_t deltaMs) {
         delegate.child->update(deltaMs);
 }
 
-void Node::onPreDraw() const {}
+void Node::onPreDraw()  {}
 
-void Node::onPostDraw() const {}
+void Node::onPostDraw() {}
 
 bool Node::onHandleEvent(const SDL_Event &event) {
     return false;

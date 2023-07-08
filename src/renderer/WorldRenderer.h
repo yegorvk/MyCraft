@@ -6,7 +6,7 @@
 #define SHITCRAFT_WORLDRENDERER_H
 
 #include "registry/TextureManager.h"
-#include "chunk/ChunkMesh.h"
+#include "mesh/ChunkMesh.h"
 #include "world/World.h"
 #include "gl/Shader.h"
 #include "chunk/ChunkMeshData.h"
@@ -43,7 +43,7 @@ private:
 
     std::vector<ChunkMesh> chunkMeshes;
 
-    Texture texture;
+    Texture2dArray texture;
 };
 
 

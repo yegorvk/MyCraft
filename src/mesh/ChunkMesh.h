@@ -13,26 +13,19 @@
 #include "registry/BlockRegistry.h"
 #include "gl/Shader.h"
 #include "gl/Texture.h"
+#include "gl/GlResource.h"
 
 class ChunkMesh {
 public:
     ChunkMesh();
-
-    ChunkMesh(ChunkMesh &&other) noexcept;
-
-    ChunkMesh(const ChunkMesh &other) = delete;
-
-    ~ChunkMesh();
-
-    void setTilesTexture(TextureHandle tilesTexture);
 
     void update(const ChunkMeshData *meshData);
 
     void draw() const;
 
 private:
-    uint vbo = 0, vao = 0;
-    TextureHandle texture;
+    GlVertexArray VAO;
+    GlVertexBuffer VBO;
 
     int vertexCount = 0;
 };

@@ -30,11 +30,16 @@ WorldScene::WorldScene() {
     world.setPlayerPosition(camera.getPosition());
 }
 
-void WorldScene::onPreDraw() const {
+void WorldScene::onPreDraw() {
     const auto viewProjection = projMat * camera.getViewMatrix();
 
     Perspective perspective{winAspectRatio, P_FOV_RAD, P_NEAR, P_FAR};
     ViewFrustrum frustrum(perspective, glm::vec3(0), camera.getFront(), camera.getRight());
+
+//    RenderState state{frustrum, camera.getViewMatrix(), projMat, camera.getPosition()};
+//    renderer.draw(state);
+
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     blocksRenderer.draw(camera.getPosition(), viewProjection, frustrum,  viewportSize);
     hudRenderer.draw(static_cast<float>(winAspectRatio));
@@ -63,6 +68,7 @@ bool WorldScene::onHandleEvent(const SDL_Event &event) {
         winAspectRatio = winWidth / winHeight;
 
         viewportSize = glm::vec2(winWidth, winHeight);
+        renderer = CompositeRenderer(viewportSize);
 
         //projMat = glm::infinitePerspective(P_FOV_RAD_F, static_cast<float>(winAspectRatio), P_NEAR_F);
         projMat = glm::perspective(P_FOV_RAD_F, static_cast<float>(winAspectRatio), P_NEAR_F, P_FAR_F);

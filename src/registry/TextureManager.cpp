@@ -24,13 +24,13 @@ TextureId TextureManager::addImage(const std::string &key, const Image &image) {
     return id;
 }
 
-Texture TextureManager::createArrayTexture(TextureDescription description, TextureOptions options) const {
+Texture2dArray TextureManager::createArrayTexture(Tex2dDesc description, TexSamplerOptions options) const {
     if (images.empty())
         return {};
 
     const auto &firstImage = **images.begin();
 
-    description = TextureDescription(firstImage.getWidth(), firstImage.getHeight(), firstImage.getChannelCount())
+    description = Tex2dDesc(firstImage.getWidth(), firstImage.getHeight(), firstImage.getChannelCount())
             .override(description);
 
     std::vector<std::reference_wrapper<const Image>> imageList;
@@ -39,5 +39,5 @@ Texture TextureManager::createArrayTexture(TextureDescription description, Textu
     for (const auto &image: images)
         imageList.emplace_back(*image);
 
-    return Texture::texture2dArray(description, imageList.begin(), imageList.end(), options);
+    return TextureFactory::texture2dArray(description, imageList.begin(), imageList.end(), options);
 }

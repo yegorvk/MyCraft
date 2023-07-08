@@ -20,7 +20,7 @@ public:
         currentNode = std::make_unique<T>(node);
     }
 
-    void draw() const override;
+    void draw() override;
 
     bool handleEvent(const SDL_Event &event) override;
 

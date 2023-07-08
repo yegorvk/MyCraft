@@ -12,7 +12,7 @@
 WorldRenderer::WorldRenderer()
         : shader(&GameContext::global().getAssets().getShader("@shader/solid")),
           texture(GameContext::global().getBlockRegistry().getTextureManager().createArrayTexture(
-                  TextureDescription(16, 16, 4))) {}
+                  Tex2dDesc(16, 16, 4), TexSamplerOptions::linearMipmapNearestRepeat())) {}
 
 void WorldRenderer::reset(glm::ivec3 newActiveRegionMin, glm::ivec3 newActiveRegionSize) {
     activeRegionSize = newActiveRegionSize, activeRegionMin = newActiveRegionMin;
@@ -23,13 +23,13 @@ void WorldRenderer::reset(glm::ivec3 newActiveRegionMin, glm::ivec3 newActiveReg
 
 void WorldRenderer::update(glm::ivec3 chunkPos, const ChunkMeshData *meshData) {
     auto &mesh = getMesh(chunkPos);
-
     mesh.update(meshData);
-    mesh.setTilesTexture(TextureHandle(texture));
 }
 
 void
-WorldRenderer::draw(glm::dvec3 cameraPosition, const glm::mat4 &viewProjection, const ViewFrustrum &frustrum, glm::vec2) const {
+WorldRenderer::draw(glm::dvec3 cameraPosition, const glm::mat4 &viewProjection, const ViewFrustrum &frustrum,
+                    glm::vec2) const {
+    texture.bind();
     shader->bind();
 
     for (int i = activeRegionMin.x; i < activeRegionMin.x + activeRegionSize.x; ++i) {

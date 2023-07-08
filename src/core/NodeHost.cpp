@@ -4,7 +4,7 @@
 
 #include "NodeHost.h"
 
-void NodeHost::draw() const {
+void NodeHost::draw() {
     if (currentNode)
         currentNode->draw();
 }

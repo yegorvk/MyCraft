@@ -27,9 +27,6 @@ ChunkMeshData ChunkMeshDataBuilder::build() {
         }
     }
 
-    for (std::size_t i = 0; i < 6; ++i)
-        meshData.vertexCount += static_cast<int>(meshData.vertices[i].size());
-
     return std::move(meshData);
 }
 
@@ -39,8 +36,23 @@ void ChunkMeshDataBuilder::build2dMesh(int originBlockOffset, int face) {
     const glm::ivec3 originBlock = Face::getOriginNormalized(face) * (CHUNK_SIDE_BLOCK_COUNT - 1) +
                              normalAxis * originBlockOffset;
 
+    const auto normal = Face::getNormalDirection(face);
     const auto right = Face::getRightDirection(face);
     const auto top = Face::getTopDirection(face);
+
+    const auto rightAxis = Face::getRightAxis(face);
+    const auto topAxis = Face::getTopAxis(face);
+
+    glm::ivec3 originVertexCoordsOffset{};
+
+    if (face % 2 == 0)
+        originVertexCoordsOffset += normal;
+
+    if (right[rightAxis] < 0)
+        originVertexCoordsOffset -= right;
+
+    if (top[topAxis] < 0)
+        originVertexCoordsOffset -= top;
 
     std::vector<bool> visited(CHUNK_SIDE_BLOCK_COUNT * CHUNK_SIDE_BLOCK_COUNT, false);
 
@@ -90,11 +102,13 @@ void ChunkMeshDataBuilder::build2dMesh(int originBlockOffset, int face) {
             const int maxU = rx - x + 1;
             const int maxV = ty - y + 1;
 
+            auto originVertexCoords = curBlock + originVertexCoordsOffset;
+
             const glm::ivec3 quadVertexCoords[4] = {
-                    curBlock,
-                    curBlock + right * (rx - x),
-                    curBlock + right * (rx - x) + top * (ty - y),
-                    curBlock + top * (ty - y)
+                    originVertexCoords,
+                    originVertexCoords + right * maxU,
+                    originVertexCoords + right * maxU + top * maxV,
+                    originVertexCoords + top * maxV
             };
 
             constexpr int AO[6] {
@@ -108,30 +122,19 @@ void ChunkMeshDataBuilder::build2dMesh(int originBlockOffset, int face) {
 
             const int ao = AO[face];
 
-            glm::bvec3 startOffsets = Face::getOriginNormalized(face);
-
-            if (Face::isPositiveOrientated(face))
-                startOffsets[Face::getNormalAxis(face)] = true;
-
-            glm::bvec3 rightOffsetMask(false);
-            rightOffsetMask[Face::getRightAxis(face)] = true;
-
-            glm::bvec3 topOffsetMask(false);
-            topOffsetMask[Face::getTopAxis(face)] = true;
-
             PackedChunkVertex quadVertices[4] = {
-                    {quadVertexCoords[0], startOffsets, glm::uvec2(minU, minV), face, blockFace.textureId, ao},
-                    {quadVertexCoords[1], startOffsets ^ rightOffsetMask, glm::uvec2(maxU, minV), face, blockFace.textureId, ao},
-                    {quadVertexCoords[2], startOffsets ^ rightOffsetMask ^ topOffsetMask, glm::uvec2(maxU, maxV), face, blockFace.textureId, ao},
-                    {quadVertexCoords[3], startOffsets ^ topOffsetMask, glm::uvec2(minU, maxV), face, blockFace.textureId, ao}
+                    {quadVertexCoords[0], glm::uvec2(minU, minV), face, blockFace.textureId, ao},
+                    {quadVertexCoords[1], glm::uvec2(maxU, minV), face, blockFace.textureId, ao},
+                    {quadVertexCoords[2], glm::uvec2(maxU, maxV), face, blockFace.textureId, ao},
+                    {quadVertexCoords[3], glm::uvec2(minU, maxV), face, blockFace.textureId, ao}
             };
 
-            meshData.vertices[face].push_back(quadVertices[0]);
-            meshData.vertices[face].push_back(quadVertices[1]);
-            meshData.vertices[face].push_back(quadVertices[2]);
-            meshData.vertices[face].push_back(quadVertices[0]);
-            meshData.vertices[face].push_back(quadVertices[2]);
-            meshData.vertices[face].push_back(quadVertices[3]);
+            meshData.vertices.push_back(quadVertices[0]);
+            meshData.vertices.push_back(quadVertices[1]);
+            meshData.vertices.push_back(quadVertices[2]);
+            meshData.vertices.push_back(quadVertices[0]);
+            meshData.vertices.push_back(quadVertices[2]);
+            meshData.vertices.push_back(quadVertices[3]);
 
             for (int i = y; i <= ty; ++i) {
                 for (int j = x; j <= rx; ++j) {
@@ -139,6 +142,8 @@ void ChunkMeshDataBuilder::build2dMesh(int originBlockOffset, int face) {
                     visited[pos] = true;
                 }
             }
+
+            x = rx;
         }
     }
 }

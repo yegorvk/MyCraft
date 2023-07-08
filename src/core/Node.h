@@ -29,15 +29,15 @@ public:
 
     ~Node() override = default;
 
-    void draw() const final;
+    void draw() final;
 
     bool handleEvent(const SDL_Event &event) final;
 
     void update(uint64_t deltaMs) final;
 
-    virtual void onPreDraw() const;
+    virtual void onPreDraw();
 
-    virtual void onPostDraw() const;
+    virtual void onPostDraw();
 
     virtual bool onHandleEvent(const SDL_Event &event);
 

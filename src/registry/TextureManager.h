@@ -25,7 +25,7 @@ public:
 
     TextureId addImage(const std::string &key, const Image &image);
 
-    [[nodiscard]] Texture createArrayTexture(TextureDescription description, TextureOptions options = {}) const;
+    [[nodiscard]] Texture2dArray createArrayTexture(Tex2dDesc description, TexSamplerOptions options = {}) const;
 
 private:
     std::vector<const Image *> images;

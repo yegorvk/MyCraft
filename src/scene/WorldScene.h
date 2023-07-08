@@ -11,12 +11,13 @@
 #include "renderer/WorldRenderer.h"
 #include "renderer/HUDRenderer.h"
 #include "registry/BlockRegistry.h"
+#include "renderer/CompositeRenderer.h"
 
 class WorldScene : public Node {
 public:
     WorldScene();
 
-    void onPreDraw() const override;
+    void onPreDraw() override;
 
     void onUpdate(uint64_t deltaMs) override;
 
@@ -36,6 +37,8 @@ private:
 
     WorldRenderer blocksRenderer;
     HUDRenderer hudRenderer;
+
+    CompositeRenderer renderer;
 
     BlockRegistry blockReg;
 };

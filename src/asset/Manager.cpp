@@ -65,8 +65,10 @@ namespace asset {
         for (int i = 0; i < SHADER_STAGE_COUNT; ++i) {
             auto type = static_cast<ShaderType>(i);
 
-            if (asset.contains(type))
-                builder.setStage(type, getText(asset.getSourceAssetRef(type)).c_str());
+            if (asset.contains(type)) {
+                if(!builder.setStage(type, getText(asset.getSourceAssetRef(type)).c_str()))
+                    return Shader(0);
+            }
         }
 
         return builder.link();

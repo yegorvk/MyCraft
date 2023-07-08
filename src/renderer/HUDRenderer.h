@@ -9,6 +9,7 @@
 #include "gl/Shader.h"
 #include "gl/Texture.h"
 #include "gl/GlResource.h"
+#include "mesh/RectMesh.h"
 
 class HUDRenderer {
 public:
@@ -17,9 +18,8 @@ public:
     void draw(float viewportAspectRatio) const;
 
 private:
-    GlVertexBuffer cursorVBO;
-    GlVertexArray  cursorVAO;
-    Texture cursorTexture;
+    RectMesh mesh;
+    Texture2d cursorTexture;
     const Shader *cursorShader = nullptr;
 };
 

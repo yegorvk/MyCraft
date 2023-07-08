@@ -10,7 +10,7 @@
 
 #include "Texture.h"
 
-static void applyTextureOptions(GLenum target, TextureOptions options);
+static void applyTextureOptions(GLenum target, TexSamplerOptions options);
 
 constexpr int getTextureFormat(int channelCount) {
     switch (channelCount) {
@@ -42,11 +42,9 @@ constexpr int getTextureInternalFormat(int channelCount) {
     }
 }
 
-Texture Texture::texture2d(const Image &image, TextureOptions options) {
-    uint handle = 0;
-    glGenTextures(1, &handle);
-
-    glBindTexture(GL_TEXTURE_2D, handle);
+Texture2d TextureFactory::texture2d(const Image &image, TexSamplerOptions options) {
+    auto texture = Texture2d::create();
+    texture.bind();
 
     applyTextureOptions(GL_TEXTURE_2D, options);
 
@@ -62,48 +60,27 @@ Texture Texture::texture2d(const Image &image, TextureOptions options) {
 
     glGenerateMipmap(GL_TEXTURE_2D);
 
-    return {handle, TextureType::Tex2d};
+    return texture;
 }
 
-Texture::Texture(uint handle, TextureType type) : type(type), handle(handle) {}
-
-Texture::Texture(Texture &&other) noexcept {
-    *this = std::move(other);
-}
-
-Texture::~Texture() {
-    if (handle != 0)
-        glDeleteTextures(1, &handle);
-}
-
-Texture &Texture::operator=(Texture &&other) noexcept {
-    type = other.type;
-    handle = other.handle;
-    other.handle = 0;
-    return *this;
-}
-
-void Texture::bind() const {
-    glBindTexture(static_cast<GLenum>(type), handle);
-}
-
-static void applyTextureOptions(GLenum target, TextureOptions options) {
-    glTexParameteri(target, GL_TEXTURE_WRAP_S, static_cast<int>(options.wrapping));
-    glTexParameteri(target, GL_TEXTURE_WRAP_T, static_cast<int>(options.wrapping));
+static void applyTextureOptions(GLenum target, TexSamplerOptions options) {
+    glTexParameteri(target, GL_TEXTURE_WRAP_S, static_cast<int>(options.wrapMode));
+    glTexParameteri(target, GL_TEXTURE_WRAP_T, static_cast<int>(options.wrapMode));
     glTexParameteri(target, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 
     glTexParameteri(target, GL_TEXTURE_MIN_FILTER, static_cast<int>(options.minFilter));
     glTexParameteri(target, GL_TEXTURE_MAG_FILTER, static_cast<int>(options.magFilter));
 
-    //glTexParameteri(target, GL_TEXTURE_MAX_LEVEL, 3);
+    glTexParameterf(target, GL_TEXTURE_LOD_BIAS, options.lodBias);
 
-    //glTexParameterf(target, GL_TEXTURE_MAX_ANISOTROPY_EXT, options.maxAnisotropy);
+    if (options.maxAnisotropy != NO_ANISOTROPY)
+        glTexParameterf(target, GL_TEXTURE_MAX_ANISOTROPY_EXT, options.maxAnisotropy);
 }
 
-detail::Texture2dArrayBuilder::Texture2dArrayBuilder(TextureDescription format, int layerCount, TextureOptions options)
+detail::Texture2dArrayBuilder::Texture2dArrayBuilder(Tex2dDesc format, int layerCount, TexSamplerOptions options)
         : description(format), layerCount(layerCount) {
-    glGenTextures(1, &handle);
-    glBindTexture(GL_TEXTURE_2D_ARRAY, handle);
+    tex = Texture2dArray::create();
+    tex.bind();
 
     applyTextureOptions(GL_TEXTURE_2D_ARRAY, options);
 
@@ -121,28 +98,19 @@ void detail::Texture2dArrayBuilder::setLayer(int layer, const Image &image) {
         spdlog::warn("Dimensions of provided array layer image differ from ones of the registry");
         setLayer(layer, image.resize(description.width, description.height));
     } else {
-        glBindTexture(GL_TEXTURE_2D_ARRAY, handle);
+        tex.bind();
 
         auto format = getTextureFormat(description.channelCount);
 
-        glTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, 0, layer, description.width, description.height, 1, format, GL_UNSIGNED_BYTE,
+        glTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, 0, layer, description.width, description.height, 1, format,
+                        GL_UNSIGNED_BYTE,
                         image.getPixels());
     }
 }
 
-Texture detail::Texture2dArrayBuilder::build() {
-    glBindTexture(GL_TEXTURE_2D_ARRAY, handle);
+Texture2dArray detail::Texture2dArrayBuilder::build() {
+    tex.bind();
     glGenerateMipmap(GL_TEXTURE_2D_ARRAY);
 
-    auto texture = Texture(handle, TextureType::Tex2dArray);
-    handle = 0;
-
-    return texture;
-}
-
-TextureHandle::TextureHandle(const Texture &texture)
-        : type(texture.getType()), handle(texture.getRawHandle()) {};
-
-void TextureHandle::bind() const {
-    glBindTexture(static_cast<GLenum>(type), handle);
+    return std::move(tex);
 }

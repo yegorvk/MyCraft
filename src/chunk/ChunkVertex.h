@@ -8,41 +8,32 @@
 #include "glm/glm.hpp"
 #include "types.h"
 
-constexpr uint32_t VERT0_ID_MASK = 0xFFF00000;
-constexpr uint32_t VERT0_OFFSETS_MASK = 0xF0000;
-constexpr uint32_t VERT0_X_MASK = 0xF000;
-constexpr uint32_t VERT0_Y_MASK = 0xF00;
-constexpr uint32_t VERT0_Z_MASK = 0xF0;
-constexpr uint32_t VERT0_AO_MASK = 0xF;
+constexpr uint32_t MASK_ID = 0xFFF;
+constexpr uint32_t MASK_X = 0x1F;
+constexpr uint32_t MASK_Y = 0x1F;
+constexpr uint32_t MASK_Z = 0x1F;
+constexpr uint32_t MASK_AO = 0x3;
 
-constexpr uint32_t VERT0_ID_SHIFT = 20;
-constexpr uint32_t VERT0_OFFSETS_SHIFT = 16;
-constexpr uint32_t VERT0_X_SHIFT = 12;
-constexpr uint32_t VERT0_Y_SHIFT = 8;
-constexpr uint32_t VERT0_Z_SHIFT = 4;
-constexpr uint32_t VERT0_AO_SHIFT = 0;
+constexpr uint32_t SHIFT_ID = 17;
+constexpr uint32_t SHIFT_X = 12;
+constexpr uint32_t SHIFT_Y = 7;
+constexpr uint32_t SHIFT_Z = 2;
+constexpr uint32_t SHIFT_AO = 0;
 
-constexpr uint32_t VERT1_U_MASK = 0x3E0;
-constexpr uint32_t VERT1_V_MASK = 0x1F;
+constexpr uint32_t MASK_U = 0x1F;
+constexpr uint32_t MASK_V = 0x1F;
 
-constexpr uint32_t VERT1_U_SHIFT = 5;
-constexpr uint32_t VERT1_V_SHIFT = 0;
+constexpr uint32_t SHIFT_U = 5;
+constexpr uint32_t SHIFT_V = 0;
 
 struct PackedChunkVertex {
     constexpr PackedChunkVertex() = default;
 
-    constexpr PackedChunkVertex(glm::uvec3 blockCoords, glm::bvec3 offs, glm::uvec2 texCoords, int face, int textureId, int ao) {
-        assert(blockCoords.x < 16 && blockCoords.y < 16 && blockCoords.z < 16);
-        assert(texCoords.x <= 16 && texCoords.y <= 16);
-        assert(ao < 4);
-        assert(textureId > 0);
+    constexpr PackedChunkVertex(glm::uvec3 position, glm::uvec2 texCoords, int face, int textureId, int ao) {
+        v.x = (textureId << SHIFT_ID) + (position.x << SHIFT_X) + (position.y << SHIFT_Y) +
+              (position.z << SHIFT_Z) + (ao << SHIFT_AO);
 
-        uint offMask = (offs.x << 2) + (offs.y << 1) + offs.z;
-
-        v.x = (textureId << VERT0_ID_SHIFT) + (offMask << VERT0_OFFSETS_SHIFT) + (blockCoords.x << VERT0_X_SHIFT) +
-              (blockCoords.y << VERT0_Y_SHIFT) + (blockCoords.z << VERT0_Z_SHIFT) + (ao << VERT0_AO_SHIFT);
-
-        v.y = (texCoords.s << VERT1_U_SHIFT) + (texCoords.t << VERT1_V_SHIFT);
+        v.y = (texCoords.s << SHIFT_U) + (texCoords.t << SHIFT_V);
     }
 
     glm::uvec2 v{};

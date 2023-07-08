@@ -9,7 +9,7 @@
 
 struct Drawable {
     virtual ~Drawable() = default;
-    virtual void draw() const = 0;
+    virtual void draw() = 0;
 };
 
 #endif //SHITCRAFT_DRAWABLE_H

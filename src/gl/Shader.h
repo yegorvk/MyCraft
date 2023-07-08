@@ -7,15 +7,16 @@
 
 #include "glm/glm.hpp"
 #include "glm/gtc/type_ptr.hpp"
+
 #include "glad/glad.h"
-#include "types.h"
+#include "GlTypes.h"
 #include "ShaderType.h"
 
 class Shader {
 public:
     static Shader compile(const char *vertShaderSrc, const char *fragShaderSrc);
 
-    inline explicit Shader(uint handle) : handle(handle) {};
+    inline explicit Shader(gl_id_type handle) : handle(handle) {};
 
     inline Shader(Shader &&other) noexcept {
         handle = other.handle, other.handle = 0;
@@ -90,7 +91,7 @@ private:
         return glGetUniformLocation(handle, name);
     }
 
-    uint handle = 0;
+    gl_id_type handle = 0;
 };
 
 class ShaderBuilder {
@@ -104,7 +105,7 @@ public:
     Shader link();
 
 private:
-    uint stages[SHADER_STAGE_COUNT]{};
+    gl_id_type stages[SHADER_STAGE_COUNT]{};
 };
 
 #endif //SHITCRAFT_SHADER_H
