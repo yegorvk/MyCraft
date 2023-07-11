@@ -21,12 +21,25 @@ public:
     [[nodiscard]] BlockId getLocalChecked(glm::ivec3 position) const;
 
     inline void setLocalUnchecked(glm::ivec3 position, BlockId block) {
+        if (getLocalUnchecked(position) != block) {
+            if (block == 0)
+                --setBlockCount;
+            else
+                ++setBlockCount;
+        }
+
+        assert(setBlockCount >= 0);
+
         blocks[getIndexFromPosition(position)] = block;
     }
 
     [[nodiscard]] BlockId getAdjacentTo(glm::ivec3 position, int face) const;
 
     void updateNeighborData(int thisChunkFace, const ChunkBlocks *neighbor);
+
+    [[nodiscard]] constexpr bool isEmpty() const {
+        return setBlockCount == 0;
+    }
 
 private:
     static constexpr int getIndexFromPosition(glm::ivec3 position) {
@@ -35,6 +48,7 @@ private:
                position.z;
     }
 
+    int setBlockCount = 0;
     std::vector<BlockId> blocks;
     std::array<std::vector<BlockId>, 6> adjFaces;
 };

@@ -101,8 +101,8 @@ set(SRC
         src/asset/LocalFileReader.h
         src/asset/Image.cpp
         src/asset/Image.h
-        src/renderer/WorldRenderer.cpp
-        src/renderer/WorldRenderer.h
+        src/renderer/ChunkRenderer.cpp
+        src/renderer/ChunkRenderer.h
         src/mesh/ChunkMesh.cpp
         src/mesh/ChunkMesh.h
         src/scene/WorldScene.cpp
@@ -145,7 +145,7 @@ set(SRC
         src/mesh/RectMesh.cpp
         src/mesh/RectMesh.h
         src/mesh/SimpleVertex.h
-        src/utils/Utils.h)
+        src/utils/Utils.h src/utils/MathUtils.cpp)
 
 set(LIBS SDL2::SDL2main SDL2::SDL2-static glad glm::glm spdlog::spdlog nlohmann_json nlohmann_json_schema_validator readerwriterqueue)
 

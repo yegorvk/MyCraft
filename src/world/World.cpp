@@ -3,10 +3,99 @@
 //
 
 #include "spdlog/spdlog.h"
+
 #include "World.h"
+#include "utils/MathUtils.h"
 #include "GameContext.h"
 
 constexpr int MAX_OPERATIONS_PER_TICK = 10;
+
+void World::setBlockAndQueueUpdate(glm::ivec3 position, BlockId block) {
+    auto [chunkPos, localBlockPos] = parseBlockPosition(position);
+
+    if (!contains(chunkPos, activeRegionMin, activeRegionMin + activeRegionSize - 1)) {
+        spdlog::warn("Setting block at position ({}; {}; {}) which is outside the loaded region", position.x,
+                     position.y, position.z);
+        return;
+    }
+
+    auto &chunk = getChunkData(chunkPos);
+
+    if (chunk.setBlock(localBlockPos, block)) {
+        chunk.updateMesh(GameContext::global().getBlockRegistry());
+
+        // Update neighboring chunks (if necessary)
+
+        // x
+
+        if (localBlockPos.x == 0)
+            updateChunkNeighbor(chunkPos, Face::Left);
+        else if (localBlockPos.x == CHUNK_SIDE_BLOCK_COUNT - 1)
+            updateChunkNeighbor(chunkPos, Face::Right);
+
+        // y
+
+        if (localBlockPos.y == 0)
+            updateChunkNeighbor(chunkPos, Face::Bottom);
+        else if (localBlockPos.y == CHUNK_SIDE_BLOCK_COUNT - 1)
+            updateChunkNeighbor(chunkPos, Face::Top);
+
+        // z
+
+        if (localBlockPos.z == 0)
+            updateChunkNeighbor(chunkPos, Face::Back);
+        else if (localBlockPos.z == CHUNK_SIDE_BLOCK_COUNT - 1)
+            updateChunkNeighbor(chunkPos, Face::Front);
+
+        meshUpdateRequests.emplace(UpdateChunkMeshRequest{chunkPos, &chunk});
+    }
+}
+
+void World::setTargetBlockAndQueueUpdate(glm::dvec3 camOrigin, glm::dvec3 camDirection, BlockId block) {
+    auto targetedBlock = computeTargetBlock(camOrigin, camDirection);
+
+    if (block != 0) {
+        auto targetedBlockPoint = rayIntersectAABB(camOrigin, camDirection, targetedBlock);
+        int targetedBlockFace = getFaceContainingPointAAB(targetedBlockPoint, targetedBlock, glm::dvec3(1.0));
+        targetedBlock += Face::getNormalDirection(targetedBlockFace);
+    }
+
+    setBlockAndQueueUpdate(targetedBlock, block);
+}
+
+glm::ivec3 World::computeTargetBlock(glm::dvec3 cameraOrigin, glm::dvec3 cameraDirection) const {
+    const auto originBlock = getBlockPosition(cameraOrigin);
+
+    // Fast voxel traversal algorithm
+
+    const glm::ivec3 step = glm::sign(cameraDirection);
+    const glm::dvec3 tDelta = glm::abs(glm::dvec3(1.0) / cameraDirection);
+
+    glm::dvec3 tMax;
+
+    tMax += glm::dvec3(glm::greaterThan(step, glm::ivec3(0))) * tDelta * (1.0 - glm::fract(cameraOrigin));
+    tMax += glm::dvec3(glm::lessThan(step, glm::ivec3(0))) * tDelta * glm::fract(cameraOrigin);
+
+    auto block = originBlock;
+
+    while (length2(block - originBlock) < 10'000) {
+        if (getBlock(block) != 0)
+            break;
+
+        if (tMax.x < tMax.y && tMax.x < tMax.z) {
+            tMax.x += tDelta.x;
+            block.x += step.x;
+        } else if (tMax.y < tMax.x && tMax.y < tMax.z) {
+            tMax.y += tDelta.y;
+            block.y += step.y;
+        } else {
+            tMax.z += tDelta.z;
+            block.z += step.z;
+        }
+    }
+
+    return block;
+}
 
 void World::setActiveRegion(glm::ivec3 min, glm::ivec3 size) {
     activeRegionMin = min, activeRegionSize = size;
@@ -19,7 +108,7 @@ void World::setActiveRegion(glm::ivec3 min, glm::ivec3 size) {
 
 void World::processPlayerPositionChange(glm::vec3 newPlayerPosition) {
     auto delta = getChunkPosition(newPlayerPosition) - playerChunk;
-    playerChunk += delta;
+    setPlayerPosition(newPlayerPosition);
 
     shiftLoadedRegion(delta);
 }
@@ -127,4 +216,18 @@ void World::shiftLoadedRegion(glm::ivec3 delta) {
 //        scheduleLoadChunks({min.x, min.y + delta.y, min.z}, {max.x, min.y - 1, max.z});
 //
 //    activeRegionMin.y += delta.y;
+}
+
+void World::updateChunkNeighbor(glm::ivec3 chunkPos, int face) {
+    const auto &chunk = getChunkData(chunkPos);
+    auto adjChunkPos = chunkPos + Face::getNormalDirection(face);
+
+    if (contains(adjChunkPos, activeRegionMin, activeRegionMin + activeRegionSize - 1)) {
+        auto &adjChunk = getChunkData(adjChunkPos);
+
+        adjChunk.updateNeighborData(Face::opposite(face), &chunk);
+        adjChunk.updateMesh(GameContext::global().getBlockRegistry());
+
+        meshUpdateRequests.emplace(UpdateChunkMeshRequest{adjChunkPos, &adjChunk});
+    }
 }

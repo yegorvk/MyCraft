@@ -63,6 +63,30 @@ Texture2d TextureFactory::texture2d(const Image &image, TexSamplerOptions option
     return texture;
 }
 
+Texture2d
+TextureFactory::texture2d(int width, int height, int format, int internalFormat, TexSamplerOptions options) {
+    auto tex = Texture2d::create();
+    tex.bind();
+
+    applyTextureOptions(GL_TEXTURE_2D, options);
+    glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, width, height, 0, format, GL_UNSIGNED_BYTE, nullptr);
+
+    if (options.usesMipmaps())
+        glGenerateMipmap(GL_TEXTURE_2D);
+
+    return tex;
+}
+
+Texture2dMultisample
+TextureFactory::texture2dMultisample(int samples, int width, int height, int internalFormat) {
+    auto tex = Texture2dMultisample::create();
+    tex.bind();
+
+    glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, samples, internalFormat, width, height, GL_TRUE);
+
+    return tex;
+}
+
 static void applyTextureOptions(GLenum target, TexSamplerOptions options) {
     glTexParameteri(target, GL_TEXTURE_WRAP_S, static_cast<int>(options.wrapMode));
     glTexParameteri(target, GL_TEXTURE_WRAP_T, static_cast<int>(options.wrapMode));

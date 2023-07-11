@@ -2,7 +2,7 @@
 // Created by egorv on 4/26/2023.
 //
 
-#include "renderer/WorldRenderer.h"
+#include "renderer/ChunkRenderer.h"
 #include "camera/CameraControls.h"
 #include "WorldScene.h"
 #include "GameContext.h"
@@ -22,41 +22,36 @@ WorldScene::WorldScene() {
     addEventConsumer(cameraControls);
 
     world.setActiveRegion(glm::ivec3(0, 0, 0), glm::ivec3(24, 10, 24));
-    blocksRenderer.reset(world.getActiveRegionMin(), world.getActiveRegionSize());
+    renderer.resetActiveChunks(world.getActiveRegionMin(), world.getActiveRegionSize());
 
     camera.moveAbsolute(
             glm::dvec3(2 * world.getActiveRegionMin() + world.getActiveRegionSize() - 1) / 2.0 * CHUNK_SIDE_SCALE);
 
-    world.setPlayerPosition(camera.getPosition());
+    world.setPlayerPosition(camera.getPosition() / BLOCK_SIDE_SCALE);
 }
 
 void WorldScene::onPreDraw() {
-    const auto viewProjection = projMat * camera.getViewMatrix();
-
     Perspective perspective{winAspectRatio, P_FOV_RAD, P_NEAR, P_FAR};
     ViewFrustrum frustrum(perspective, glm::vec3(0), camera.getFront(), camera.getRight());
 
-//    RenderState state{frustrum, camera.getViewMatrix(), projMat, camera.getPosition()};
-//    renderer.draw(state);
+    const auto view = camera.getViewMatrix();
 
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-    blocksRenderer.draw(camera.getPosition(), viewProjection, frustrum,  viewportSize);
-    hudRenderer.draw(static_cast<float>(winAspectRatio));
+    RenderState state{frustrum, view, projMat, camera.getPosition()};
+    renderer.draw(state);
 }
 
 void WorldScene::onUpdate(uint64_t deltaMs) {
-    world.processPlayerPositionChange(camera.getPosition());
+    world.processPlayerPositionChange(camera.getPosition() / BLOCK_SIDE_SCALE);
     world.dispatchChunkLoads();
 
-    blocksRenderer.setActiveRegionMin(world.getActiveRegionMin());
+    renderer.setActiveChunksMin(world.getActiveRegionMin());
 
     while (true) {
         auto meshUpdateReq = world.dequeueMeshUpdateRequest();
 
         if (meshUpdateReq.has_value()) {
             auto req = meshUpdateReq.value();
-            blocksRenderer.update(req.position, req.chunk ? &req.chunk->getMeshData() : nullptr);
+            renderer.updateChunk(req.position, req.chunk ? &req.chunk->getMeshData() : nullptr);
         } else
             break;
     }
@@ -68,10 +63,16 @@ bool WorldScene::onHandleEvent(const SDL_Event &event) {
         winAspectRatio = winWidth / winHeight;
 
         viewportSize = glm::vec2(winWidth, winHeight);
-        renderer = CompositeRenderer(viewportSize);
+        renderer.resize(viewportSize);
 
-        //projMat = glm::infinitePerspective(P_FOV_RAD_F, static_cast<float>(winAspectRatio), P_NEAR_F);
         projMat = glm::perspective(P_FOV_RAD_F, static_cast<float>(winAspectRatio), P_NEAR_F, P_FAR_F);
+    }
+
+    if (event.type == SDL_MOUSEBUTTONDOWN) {
+        if (event.button.button == SDL_BUTTON_LEFT)
+            world.setTargetBlockAndQueueUpdate(camera.getPosition() / BLOCK_SIDE_SCALE, camera.getFront(), 0);
+        else if (event.button.button == SDL_BUTTON_RIGHT)
+            world.setTargetBlockAndQueueUpdate(camera.getPosition() / BLOCK_SIDE_SCALE, camera.getFront(), 3);
     }
 
     return false;

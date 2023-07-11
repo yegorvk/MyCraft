@@ -34,7 +34,8 @@ enum class TexFilter : gl_enum_type {
 enum class TexType : gl_enum_type {
     Invalid = 0,
     Tex2d = GL_TEXTURE_2D,
-    Tex2dArray = GL_TEXTURE_2D_ARRAY
+    Tex2dArray = GL_TEXTURE_2D_ARRAY,
+    Tex2dMultisample = GL_TEXTURE_2D_MULTISAMPLE
 };
 
 constexpr float NO_ANISOTROPY = 0.f;
@@ -44,10 +45,14 @@ struct TexSamplerOptions {
 
     constexpr TexSamplerOptions(TexWrapMode wrapMode, TexFilter minFilter, TexFilter magFilter,
                                 float maxAnisotropy = NO_ANISOTROPY, float loadBias = 0.f)
-            : wrapMode(wrapMode), minFilter(minFilter), magFilter(magFilter), maxAnisotropy(maxAnisotropy), lodBias(loadBias) {}
+            : wrapMode(wrapMode), minFilter(minFilter), magFilter(magFilter), lodBias(loadBias), maxAnisotropy(maxAnisotropy) {}
 
     static constexpr TexSamplerOptions nearestClamp() {
         return {TexWrapMode::ClampToEdge, TexFilter::Nearest, TexFilter::Nearest};
+    }
+
+    static constexpr TexSamplerOptions linearClamp() {
+        return {TexWrapMode::ClampToEdge, TexFilter::Linear, TexFilter::Nearest};
     }
 
     static constexpr TexSamplerOptions nearestRepeat() {
@@ -66,6 +71,10 @@ struct TexSamplerOptions {
         return {TexWrapMode::Repeat, TexFilter::LinearMipmapNearest, TexFilter::Linear};
     }
 
+    [[nodiscard]] constexpr bool usesMipmaps() const {
+        return minFilter != TexFilter::Linear && minFilter != TexFilter::Nearest;
+    }
+
     TexWrapMode wrapMode = TexWrapMode::ClampToEdge;
     TexFilter minFilter = TexFilter::Nearest;
     TexFilter magFilter = TexFilter::Nearest;
@@ -80,6 +89,7 @@ template<TexType Type>
 using TextureRef = Texture<Type>::ref_type;
 
 using Texture2d = Texture<TexType::Tex2d>;
+using Texture2dMultisample = Texture<TexType::Tex2dMultisample>;
 using Texture2dArray = Texture<TexType::Tex2dArray>;
 
 struct Tex2dDesc {
@@ -124,6 +134,10 @@ namespace TextureFactory {
     }
 
     Texture2d texture2d(const Image &image, TexSamplerOptions options = {});
+
+    Texture2d texture2d(int width, int height, int format, int internalFormat, TexSamplerOptions options = {});
+
+    Texture2dMultisample texture2dMultisample(int samples, int width, int height, int internalFormat);
 }
 
 #endif //SHITCRAFT_TEXTURE_H

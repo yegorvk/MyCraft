@@ -19,8 +19,12 @@ public:
         return blocks.getLocalUnchecked(relPosition);
     }
 
-    inline void setBlock(glm::ivec3 relPosition, BlockId block) {
+    inline bool setBlock(glm::ivec3 relPosition, BlockId block) {
+        if (getBlock(relPosition) == block)
+            return false;
+
         blocks.setLocalUnchecked(relPosition, block);
+        return true;
     }
 
     inline void updateNeighborData(int thisChunkFace, const ChunkData *neighbor) {
@@ -33,6 +37,10 @@ public:
 
     [[nodiscard]] inline const ChunkMeshData &getMeshData() const {
         return meshData;
+    }
+
+    [[nodiscard]] constexpr bool isEmpty() const {
+        return blocks.isEmpty();
     }
 
 private:

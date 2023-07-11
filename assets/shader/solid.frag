@@ -6,7 +6,7 @@ in VS_OUT {
     vec3 color;
 } fsIn;
 
-out vec4 FragColor;
+layout (location = 0) out vec4 FragColor;
 
 uniform sampler2DArray arrayTexture;
 
@@ -31,8 +31,25 @@ vec4 texture2DArrayAA(sampler2DArray tex, vec2 uv, float id) {
     return textureLod(tex, vec3(uv_texspace / texsize, id), lod);
 }
 
+vec2 intersectAABB(vec3 rayOrigin, vec3 rayDir, vec3 boxMin, vec3 boxMax) {
+    vec3 tMin = (boxMin - rayOrigin) / rayDir;
+    vec3 tMax = (boxMax - rayOrigin) / rayDir;
+    vec3 t1 = min(tMin, tMax);
+    vec3 t2 = max(tMin, tMax);
+    float tNear = max(max(t1.x, t1.y), t1.z);
+    float tFar = min(min(t2.x, t2.y), t2.z);
+    return vec2(tNear, tFar);
+};
+
+bool intersectsAABB(vec3 rayOrigin, vec3 rayDir, vec3 boxMin, vec3 boxSize) {
+    vec2 intersection = intersectAABB(rayOrigin, rayDir, boxMin, boxMin + boxSize);
+    return intersection.x <= intersection.y;
+}
+
 void main() {
-    vec3 textureColor = texture2DArrayAA(arrayTexture, vec2(fsIn.texCoords), float(fsIn.textureId - 1u)).rgb;
+    vec2 uv = fsIn.texCoords;
+    vec3 textureColor = texture2DArrayAA(arrayTexture, vec2(uv), float(fsIn.textureId - 1u)).rgb;
+    //vec3 textureColor = texture(arrayTexture, vec3(fsIn.texCoords, float(fsIn.textureId - 1u))).rgb;
     vec3 color = textureColor * fsIn.color;
 
     FragColor = vec4(color, 1.0);

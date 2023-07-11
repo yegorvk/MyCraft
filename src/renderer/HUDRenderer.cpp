@@ -11,7 +11,7 @@ constexpr TexSamplerOptions TEX_OPTIONS = TexSamplerOptions::nearestClamp();
 HUDRenderer::HUDRenderer()
         : cursorTexture(
         TextureFactory::texture2d(GameContext::global().getAssets().getImage("@image/cursor"), TEX_OPTIONS)),
-          cursorShader(&GameContext::global().getAssets().getShader("@shader/cursor")) {}
+          cursorShader(&GameContext::global().getAssets().getShader("@shader/rect")) {}
 
 void HUDRenderer::draw(float viewportAspectRatio) const {
     cursorTexture.bind();
@@ -31,4 +31,5 @@ void HUDRenderer::draw(float viewportAspectRatio) const {
     mesh.draw();
 
     glUseProgram(0);
+    Texture2d::unbind();
 }

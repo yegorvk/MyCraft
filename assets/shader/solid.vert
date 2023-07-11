@@ -45,7 +45,6 @@ Vertex unpack(uvec2 packedVertex) {
 layout (location = 0) in uvec2 v;
 
 uniform mat4 mvp;
-
 uniform float blockScale;
 
 out VS_OUT {
@@ -63,6 +62,8 @@ void main() {
     vsOut.textureId = vertex.textureId;
     vsOut.color = AO_CURVE[vertex.ao];
 
-    vec4 position = mvp * vec4(blockScale * vec3(vertex.position), 1.0);
+    vec3 positionWorld = blockScale * vec3(vertex.position);
+
+    vec4 position = mvp * vec4(positionWorld, 1.0);
     gl_Position = position;
 }

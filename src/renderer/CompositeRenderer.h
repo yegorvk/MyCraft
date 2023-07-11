@@ -9,6 +9,8 @@
 
 #include "gl/GlResource.h"
 #include "ViewFrustrum.h"
+#include "ChunkRenderer.h"
+#include "HUDRenderer.h"
 
 struct RenderState {
     ViewFrustrum frustrum;
@@ -19,19 +21,28 @@ struct RenderState {
 
 class CompositeRenderer {
 public:
-    CompositeRenderer() = default;
+    CompositeRenderer();
 
-    explicit CompositeRenderer(glm::ivec2 viewportSize);
+    void resize(glm::ivec2 newViewportSize);
 
     void draw(const RenderState &state);
 
+    inline void resetActiveChunks(glm::ivec3 newActiveRegionMin, glm::ivec3 newActiveRegionSize) {
+        chunkRenderer.reset(newActiveRegionMin, newActiveRegionSize);
+    }
+
+    inline void setActiveChunksMin(glm::ivec3 min) {
+        chunkRenderer.setActiveRegionMin(min);
+    }
+
+    inline void updateChunk(glm::ivec3 chunkPos, const ChunkMeshData *meshData) {
+        chunkRenderer.update(chunkPos, meshData);
+    }
+
 private:
-    void createGBuffer();
+    ChunkRenderer chunkRenderer;
+    HUDRenderer hudRenderer;
 
-    void createOutputBuffer();
-
-    GlTexture<GL_TEXTURE_2D> gPosition, gNormal, gAlbedoSpec, oColorTex, oDepthStencilTex;
-    GlFramebuffer gBuffer, output;
     glm::ivec2 viewportSize{};
 };
 

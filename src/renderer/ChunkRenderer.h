@@ -2,8 +2,8 @@
 // Created by egorv on 4/26/2023.
 //
 
-#ifndef SHITCRAFT_WORLDRENDERER_H
-#define SHITCRAFT_WORLDRENDERER_H
+#ifndef SHITCRAFT_CHUNKRENDERER_H
+#define SHITCRAFT_CHUNKRENDERER_H
 
 #include "registry/TextureManager.h"
 #include "mesh/ChunkMesh.h"
@@ -14,11 +14,17 @@
 #include "utils/MathUtils.h"
 #include "utils/ArrayUtils.h"
 
-class WorldRenderer {
-public:
-    WorldRenderer();
+struct ChunkRenderState {
+    glm::dvec3 playerPosition;
+    glm::mat4 viewProjection;
+    ViewFrustrum frustrum;
+};
 
-    void draw(glm::dvec3 cameraPosition, const glm::mat4 &viewProjection, const ViewFrustrum &frustrum, glm::vec2 viewportSize) const;
+class ChunkRenderer {
+public:
+    ChunkRenderer();
+
+    void draw(const ChunkRenderState &state) const;
 
     void reset(glm::ivec3 newActiveRegionMin, glm::ivec3 newActiveRegionSize);
 
@@ -47,4 +53,4 @@ private:
 };
 
 
-#endif //SHITCRAFT_WORLDRENDERER_H
+#endif //SHITCRAFT_CHUNKRENDERER_H

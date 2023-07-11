@@ -8,7 +8,7 @@
 #include "core/Node.h"
 #include "world/World.h"
 #include "camera/FreeCamera.h"
-#include "renderer/WorldRenderer.h"
+#include "renderer/ChunkRenderer.h"
 #include "renderer/HUDRenderer.h"
 #include "registry/BlockRegistry.h"
 #include "renderer/CompositeRenderer.h"
@@ -34,9 +34,6 @@ private:
     glm::mat4 projMat{1.f};
 
     World world;
-
-    WorldRenderer blocksRenderer;
-    HUDRenderer hudRenderer;
 
     CompositeRenderer renderer;
 

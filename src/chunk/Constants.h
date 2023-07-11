@@ -62,7 +62,7 @@ namespace Face {
     constexpr int Back = 5;
 
     constexpr int opposite(int face) {
-        return (face / 2) + (face & 1);
+        return 2 * (face / 2) + !(face & 1);
     }
 
     constexpr int fromAxis(int axis, bool positiveOrientated) {

@@ -65,6 +65,9 @@ void Game::run() {
         auto delta = curFrameTime - lastFrameTimestamp;
         lastFrameTimestamp = curFrameTime;
 
+//        float fps = 1000.f / static_cast<float>(delta);
+//        spdlog::debug("Fps: {}", fps);
+
         SDL_GL_SwapWindow(window);
         SDL_GL_GetDrawableSize(window, &winWidth, &winHeight);
 
@@ -168,13 +171,10 @@ void Game::onWindowGlContextReady() {
 
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
-    //glEnable(GL_MULTISAMPLE);
+    glEnable(GL_MULTISAMPLE);
 
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glEnable(GL_BLEND);
-
-    glHint(GL_FRAGMENT_SHADER_DERIVATIVE_HINT, GL_NICEST);
-    glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
 
     rootNode = std::make_unique<WorldScene>();
 }

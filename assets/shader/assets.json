@@ -34,18 +34,18 @@
             }
         },
         {
-            "name": "cursor",
+            "name": "rect",
             "type": "shader",
             "stages": {
                 "vertex": {
-                    "name": "cursor_vert",
+                    "name": "rect_vert",
                     "type": "text",
-                    "path": "cursor.vert"
+                    "path": "rect.vert"
                 },
                 "fragment": {
-                    "name": "cursor_frag",
+                    "name": "rect_frag",
                     "type": "text",
-                    "path": "cursor.frag"
+                    "path": "rect.frag"
                 }
             }
         }
