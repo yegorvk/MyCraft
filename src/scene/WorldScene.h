@@ -27,16 +27,10 @@ public:
 
 private:
     FreeCamera camera;
-
     glm::vec2 viewportSize{};
-
     double winAspectRatio = 1.0;
-    glm::mat4 projMat{1.f};
-
     World world;
-
     CompositeRenderer renderer;
-
     BlockRegistry blockReg;
 };
 

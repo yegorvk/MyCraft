@@ -47,14 +47,8 @@ namespace asset {
     template<>
     Image Manager::resolve<Image>(const std::string &ref) const {
         const auto &asset = index.get<ImageAsset>(ref);
-
-        if (!asset.onePixelImage) {
-            auto bytes = reader->getBytes(asset.colorOrPath);
-
-            return Image::loadFromMemory(bytes.data(), bytes.size(), asset.description);
-        } else {
-            return Image::fromColor(parseColor(asset.colorOrPath), asset.description);
-        }
+        auto bytes = reader->getBytes(asset.path);
+        return Image::loadFromMemory(bytes.data(), bytes.size(), asset.flipOnLoad, asset.description);
     }
 
     template<>

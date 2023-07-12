@@ -9,8 +9,8 @@
 #include "utils/MathUtils.h"
 #include "Image.h"
 
-Image Image::loadFromMemory(const unsigned char *data, std::size_t size, ImageDescription description) {
-    stbi_set_flip_vertically_on_load(true);
+Image Image::loadFromMemory(const unsigned char *data, std::size_t size, bool flipOnLoad, ImageDescription description) {
+    stbi_set_flip_vertically_on_load(flipOnLoad);
 
     ImageDescription inMemoryImageDescription{};
 
@@ -29,25 +29,6 @@ Image Image::loadFromMemory(const unsigned char *data, std::size_t size, ImageDe
                                       description.channelCount), pixels).resize(description.width, description.height);
     else
         return {description, pixels};
-}
-
-Image Image::fromColor(Color color, ImageDescription description) {
-    constexpr ImageDescription base(1, 1, 4);
-
-    if (description.channelCount != 4)
-        throw std::invalid_argument("Unsupported number of color channel (" + std::to_string(description.channelCount) +
-                                    ") for one-color registry (use 4 color channels)");
-
-    description = base.override(description);
-
-    const uint32_t pixelColor = (color.r << 3) + (color.g << 2) + (color.b << 1) + color.a;
-    const int area = description.width * description.height;
-
-    auto *pixels = reinterpret_cast<uint32_t *>(malloc(area * sizeof(uint32_t)));
-
-    std::fill(pixels, pixels + area, pixelColor);
-
-    return {description, reinterpret_cast<uint8_t *>(pixels)};
 }
 
 Image::Image(Image &&other) noexcept: description(other.description) {

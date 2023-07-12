@@ -25,12 +25,12 @@ namespace asset {
     };
 
     struct ImageAsset {
-        inline ImageAsset(bool containsColor, std::string colorOrPath, ImageDescription description = {})
-            : onePixelImage(containsColor), colorOrPath(std::move(colorOrPath)), description(description) {}
+        inline ImageAsset(std::string path, bool flipOnLoad, ImageDescription description = {})
+            : path(std::move(path)), description(description), flipOnLoad(flipOnLoad) {}
 
-        bool onePixelImage;
-        std::string colorOrPath;
+        std::string path;
         ImageDescription description;
+        bool flipOnLoad;
     };
 
     struct ColorAsset {

@@ -8,7 +8,9 @@
 #include <utility>
 #include "glad/glad.h"
 
+#include "asset/Image.h"
 #include "GlTypes.h"
+#include "TextureDefinitions.h"
 
 template<gl_id_type BindTarget>
 struct GlTextureResource;
@@ -136,6 +138,18 @@ GL_RESOURCE_OPERATIONS_BOILERPLATE
     static inline void unbind() {
         glBindTexture(TextureBindTarget, 0);
     }
+
+    inline void setImage2d(const Image &image, int target = TextureBindTarget) {
+        glTexImage2D(target,
+                     0,
+                     getTextureInternalFormat(image.getChannelCount()),
+                     image.getWidth(),
+                     image.getHeight(),
+                     0,
+                     getTextureFormat(image.getChannelCount()),
+                     GL_UNSIGNED_BYTE,
+                     image.getPixels());
+    }
 };
 
 template<gl_enum_type BufferBindTarget>
@@ -201,7 +215,7 @@ public:
     GlResourceDelegate() = default;
 
     inline explicit GlResourceDelegate(gl_id_type id)
-    : GlResourceIdHolder(id), GlResourceOperations<ResourceType>(id) {}
+            : GlResourceIdHolder(id), GlResourceOperations<ResourceType>(id) {}
 
 protected:
     using Lifecycle = GlResourceLifecycle<ResourceType>;

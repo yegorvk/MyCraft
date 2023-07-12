@@ -14,6 +14,8 @@ HUDRenderer::HUDRenderer()
           cursorShader(&GameContext::global().getAssets().getShader("@shader/rect")) {}
 
 void HUDRenderer::draw(float viewportAspectRatio) const {
+    glDisable(GL_DEPTH_TEST);
+
     cursorTexture.bind();
     cursorShader->bind();
 
@@ -32,4 +34,6 @@ void HUDRenderer::draw(float viewportAspectRatio) const {
 
     glUseProgram(0);
     Texture2d::unbind();
+
+    glEnable(GL_DEPTH_TEST);
 }

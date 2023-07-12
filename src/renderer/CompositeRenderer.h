@@ -11,11 +11,12 @@
 #include "ViewFrustrum.h"
 #include "ChunkRenderer.h"
 #include "HUDRenderer.h"
+#include "SkyRenderer.h"
 
 struct RenderState {
+    Perspective perspective;
     ViewFrustrum frustrum;
     glm::mat4 viewMatrix;
-    glm::mat4 projectionMatrix;
     glm::dvec3 playerPosition;
 };
 
@@ -42,6 +43,7 @@ public:
 private:
     ChunkRenderer chunkRenderer;
     HUDRenderer hudRenderer;
+    SkyRenderer skyRenderer;
 
     glm::ivec2 viewportSize{};
 };

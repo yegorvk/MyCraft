@@ -9,6 +9,8 @@
 
 #include "glm/glm.hpp"
 
+#include "Perspective.h"
+
 struct FrustrumPlane {
     FrustrumPlane() = default;
 
@@ -20,10 +22,6 @@ struct FrustrumPlane {
     }
 
     glm::dvec3 point{}, normal{};
-};
-
-struct Perspective {
-    double aspectRatio, vFovRad, near, far;
 };
 
 struct ViewFrustrum {

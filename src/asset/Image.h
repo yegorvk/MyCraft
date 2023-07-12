@@ -29,9 +29,7 @@ struct ImageDescription {
 };
 
 struct Image {
-    static Image loadFromMemory(const unsigned char *data, std::size_t size, ImageDescription description = {});
-
-    static Image fromColor(Color color, ImageDescription description = {});
+    static Image loadFromMemory(const unsigned char *data, std::size_t size, bool flipOnLoad, ImageDescription description = {});
 
     Image(const Image &other) = delete;
 

@@ -30,6 +30,48 @@
             "type": "image",
             "path": "cursor.png",
             "channelCount": 4
+        },
+        {
+            "name": "skybox_right",
+            "type": "image",
+            "path": "sky_right.bmp",
+            "channelCount": 4,
+            "flip": false
+        },
+        {
+            "name": "skybox_left",
+            "type": "image",
+            "path": "sky_left.bmp",
+            "channelCount": 4,
+            "flip": false
+        },
+        {
+            "name": "skybox_top",
+            "type": "image",
+            "path": "sky_top.bmp",
+            "channelCount": 4,
+            "flip": false
+        },
+        {
+            "name": "skybox_bottom",
+            "type": "image",
+            "path": "sky_bottom.bmp",
+            "channelCount": 4,
+            "flip": false
+        },
+        {
+            "name": "skybox_front",
+            "type": "image",
+            "path": "sky_front.bmp",
+            "channelCount": 4,
+            "flip": false
+        },
+        {
+            "name": "skybox_back",
+            "type": "image",
+            "path": "sky_back.bmp",
+            "channelCount": 4,
+            "flip": false
         }
     ]
 }

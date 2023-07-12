@@ -144,8 +144,12 @@ set(SRC
         src/gl/GlTypes.h
         src/mesh/RectMesh.cpp
         src/mesh/RectMesh.h
-        src/mesh/SimpleVertex.h
-        src/utils/Utils.h src/utils/MathUtils.cpp)
+        src/utils/Utils.h
+        src/utils/MathUtils.cpp
+        src/mesh/SkyboxMesh.cpp
+        src/mesh/SkyboxMesh.h
+        src/mesh/SimpleMesh.cpp
+        src/mesh/SimpleMesh.h src/gl/TextureDefinitions.h src/renderer/SkyRenderer.cpp src/renderer/SkyRenderer.h src/renderer/Perspective.h)
 
 set(LIBS SDL2::SDL2main SDL2::SDL2-static glad glm::glm spdlog::spdlog nlohmann_json nlohmann_json_schema_validator readerwriterqueue)
 

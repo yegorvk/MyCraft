@@ -12,36 +12,6 @@
 
 static void applyTextureOptions(GLenum target, TexSamplerOptions options);
 
-constexpr int getTextureFormat(int channelCount) {
-    switch (channelCount) {
-        case 1:
-            return GL_RED;
-        case 2:
-            return GL_RG;
-        case 3:
-            return GL_RGB;
-        case 4:
-            return GL_RGBA;
-        default:
-            return 0;
-    }
-}
-
-constexpr int getTextureInternalFormat(int channelCount) {
-    switch (channelCount) {
-        case 1:
-            return GL_R8;
-        case 2:
-            return GL_RG8;
-        case 3:
-            return GL_RGB8;
-        case 4:
-            return GL_RGBA8;
-        default:
-            return 0;
-    }
-}
-
 Texture2d TextureFactory::texture2d(const Image &image, TexSamplerOptions options) {
     auto texture = Texture2d::create();
     texture.bind();
@@ -101,7 +71,7 @@ static void applyTextureOptions(GLenum target, TexSamplerOptions options) {
         glTexParameterf(target, GL_TEXTURE_MAX_ANISOTROPY_EXT, options.maxAnisotropy);
 }
 
-detail::Texture2dArrayBuilder::Texture2dArrayBuilder(Tex2dDesc format, int layerCount, TexSamplerOptions options)
+detail::ArrayTexture2dBuilder::ArrayTexture2dBuilder(Tex2dDesc format, int layerCount, TexSamplerOptions options)
         : description(format), layerCount(layerCount) {
     tex = Texture2dArray::create();
     tex.bind();
@@ -112,7 +82,7 @@ detail::Texture2dArrayBuilder::Texture2dArrayBuilder(Tex2dDesc format, int layer
                  GL_UNSIGNED_BYTE, nullptr);
 }
 
-void detail::Texture2dArrayBuilder::setLayer(int layer, const Image &image) {
+void detail::ArrayTexture2dBuilder::setLayer(int layer, const Image &image) {
     if (layer < 0 || layer >= layerCount)
         throw std::invalid_argument("Layer index must be non-negative and less than" + std::to_string(layerCount));
     if (image.getChannelCount() != description.channelCount) {
@@ -132,7 +102,30 @@ void detail::Texture2dArrayBuilder::setLayer(int layer, const Image &image) {
     }
 }
 
-Texture2dArray detail::Texture2dArrayBuilder::build() {
+CubeMapTextureBuilder::CubeMapTextureBuilder(TexSamplerOptions options) {
+    texture = TextureCubeMap::create();
+    texture.bind();
+    applyTextureOptions(GL_TEXTURE_CUBE_MAP, options);
+    TextureCubeMap::unbind();
+}
+
+CubeMapTextureBuilder &CubeMapTextureBuilder::setFaceImage(int face, const Image &image) {
+    if (face < 0 || face > 5)
+        throw std::invalid_argument("Invalid face value (must be from 0 to 5 inclusive)");
+
+    texture.bind();
+    texture.setImage2d(image, getCubeMapFace(face));
+    TextureCubeMap::unbind();
+
+    return *this;
+}
+
+TextureCubeMap CubeMapTextureBuilder::build() {
+    glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
+    return std::move(texture);
+}
+
+Texture2dArray detail::ArrayTexture2dBuilder::build() {
     tex.bind();
     glGenerateMipmap(GL_TEXTURE_2D_ARRAY);
 

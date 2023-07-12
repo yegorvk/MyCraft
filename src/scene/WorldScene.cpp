@@ -9,11 +9,7 @@
 
 constexpr double P_FOV_RAD = glm::pi<double>() / 3.0;
 constexpr double P_NEAR = 0.1;
-constexpr double P_FAR = 1000.0;
-
-constexpr float P_FOV_RAD_F = static_cast<float>(P_FOV_RAD);
-constexpr float P_NEAR_F = static_cast<float>(P_NEAR);
-constexpr float P_FAR_F = static_cast<float>(P_FAR);
+constexpr double P_FAR = 2000.0;
 
 WorldScene::WorldScene() {
     auto cameraControls = std::make_shared<CameraControls>(camera);
@@ -36,7 +32,7 @@ void WorldScene::onPreDraw() {
 
     const auto view = camera.getViewMatrix();
 
-    RenderState state{frustrum, view, projMat, camera.getPosition()};
+    RenderState state{perspective, frustrum, view, camera.getPosition()};
     renderer.draw(state);
 }
 
@@ -64,8 +60,6 @@ bool WorldScene::onHandleEvent(const SDL_Event &event) {
 
         viewportSize = glm::vec2(winWidth, winHeight);
         renderer.resize(viewportSize);
-
-        projMat = glm::perspective(P_FOV_RAD_F, static_cast<float>(winAspectRatio), P_NEAR_F, P_FAR_F);
     }
 
     if (event.type == SDL_MOUSEBUTTONDOWN) {

@@ -48,6 +48,22 @@
                     "path": "rect.frag"
                 }
             }
+        },
+        {
+            "name": "skybox",
+            "type": "shader",
+            "stages": {
+                "vertex": {
+                    "name": "skybox_vert",
+                    "type": "text",
+                    "path": "skybox.vert"
+                },
+                "fragment": {
+                    "name": "skybox_frag",
+                    "type": "text",
+                    "path": "skybox.frag"
+                }
+            }
         }
     ]
 }

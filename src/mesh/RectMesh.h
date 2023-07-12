@@ -8,17 +8,11 @@
 #include "glm/glm.hpp"
 
 #include "gl/GlResource.h"
+#include "SimpleMesh.h"
 
-class RectMesh {
+class RectMesh : public SimpleMesh {
 public:
-    explicit RectMesh(glm::vec2 size = {1.f, 1.f}, glm::vec3 bottomLeft = {-.5f, -.5f, 0.f});
-
-    void draw() const;
-
-private:
-    GlVertexBuffer VBO;
-    GlElementBuffer EBO;
-    GlVertexArray VAO;
+    RectMesh();
 };
 
 

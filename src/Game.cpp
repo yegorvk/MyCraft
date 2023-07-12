@@ -39,7 +39,7 @@ Game::~Game() {
 }
 
 void Game::run() {
-    glClearColor(0.f, 0.f, 0.f, 1.f);
+    glClearColor(0.f, 0.f, 0.f, 0.f);
 
     bool quit = false;
     SDL_Event event;

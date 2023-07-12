@@ -110,18 +110,13 @@ namespace asset {
         if (root.contains("channelCount"))
             description.channelCount = root["channelCount"].get<int>();
 
-        if (root.contains("path")) {
-            auto path = std::move(state.directory);
-            path.append(root["path"].get<std::string>());
+        auto path = std::move(state.directory);
+        path.append(root["path"].get<std::string>());
 
-            ImageAsset asset(false, path.generic_string(), description);
-            index.insert(std::move(state.parentName), std::move(asset));
-        } else {
-            auto color = root["color"].get<std::string>();
+        bool flipOnLoad = !root.contains("flip") || root["flip"].get<bool>();
 
-            ImageAsset asset(true, std::move(color), description);
-            index.insert(std::move(state.parentName), std::move(asset));
-        }
+        ImageAsset asset(path.generic_string(), flipOnLoad, description);
+        index.insert(std::move(state.parentName), std::move(asset));
     }
 
     void Parser::shader(detail::ParserState &&state, const json &root) {

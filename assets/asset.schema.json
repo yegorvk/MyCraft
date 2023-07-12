@@ -130,6 +130,9 @@
                         "height": {
                             "type": "integer",
                             "minimum": 0
+                        },
+                        "flip": {
+                            "type": "boolean"
                         }
                     },
                     "required": ["type", "path"],
