@@ -55,15 +55,18 @@ out VS_OUT {
 
 const vec3 AO_CURVE[4] = vec3[](vec3(0.6), vec3(0.75), vec3(0.9), vec3(1.0));
 
+const float PAD = 0.003;
+const vec2 TEX_PAD[6] = vec2[](vec2(PAD), vec2(-PAD, PAD), vec2(-PAD), vec2(PAD), vec2(-PAD), vec2(PAD, -PAD));
+
 void main() {
     Vertex vertex = unpack(v);
 
-    vsOut.texCoords = vec2(vertex.uv);
+    vsOut.texCoords = vec2(vertex.uv) + TEX_PAD[gl_VertexID % 6];
     vsOut.textureId = vertex.textureId;
     vsOut.color = AO_CURVE[vertex.ao];
 
     vec3 positionWorld = blockScale * vec3(vertex.position);
-
     vec4 position = mvp * vec4(positionWorld, 1.0);
+
     gl_Position = position;
 }
