@@ -1,7 +1,6 @@
 #include "Game.h"
 #include "config.h"
 #include "spdlog/spdlog.h"
-#include "core/Executor.h"
 
 constexpr int WINDOW_WIDTH = 960;
 constexpr int WINDOW_HEIGHT = 720;

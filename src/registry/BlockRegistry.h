@@ -6,7 +6,6 @@
 #define SHITCRAFT_BLOCKREGISTRY_H
 
 #include <vector>
-#include <span>
 
 #include "asset/Asset.h"
 #include "TextureManager.h"
