@@ -62,6 +62,9 @@
                   <Item>
                     <option name="path" value="assets/color.json" />
                   </Item>
+                  <Item>
+                    <option name="path" value="assets/assets.json" />
+                  </Item>
                 </list>
               </option>
             </SchemaInfo>

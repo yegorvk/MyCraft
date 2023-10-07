@@ -3,10 +3,10 @@
 #include "spdlog/spdlog.h"
 #include "core/Executor.h"
 
-constexpr int WINDOW_WIDTH = 640;
-constexpr int WINDOW_HEIGHT = 480;
+constexpr int WINDOW_WIDTH = 960;
+constexpr int WINDOW_HEIGHT = 720;
 
-int main(int argv, char **args) {
+int main(int, char **) {
 #ifdef DEBUG
     spdlog::set_level(spdlog::level::debug);
 #else

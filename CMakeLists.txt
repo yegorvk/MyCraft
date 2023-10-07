@@ -5,6 +5,14 @@ set(CMAKE_CXX_STANDARD 17)
 
 set(BUILD_SHARED_LIBS OFF)
 
+if (NOT DEFINED BUNDLE_RESOURCES)
+    if (${CMAKE_BUILD_TYPE} STREQUAL Release)
+        set(BUNDLE_RESOURCES ON)
+    else ()
+        set(BUNDLE_RESOURCES OFF)
+    endif ()
+endif ()
+
 # Resolve dependencies using FetchContent
 
 include(FetchContent)
@@ -20,7 +28,7 @@ FetchContent_Declare(readerwriterqueue GIT_REPOSITORY https://github.com/cameron
 set(SDL2_DISABLE_INSTALL ON CACHE BOOL "" FORCE)
 set(JSON_VALIDATOR_INSTALL OFF CACHE BOOL "" FORCE)
 
-FetchContent_MakeAvailable(SDL2 GLM spdlog cmrc nlohmann_json nlohmann_json_schema_validator readerwriterqueue)
+FetchContent_MakeAvailable(cmrc SDL2 GLM spdlog nlohmann_json nlohmann_json_schema_validator readerwriterqueue)
 
 if (NOT EXISTS ${CMAKE_BINARY_DIR}/stb/stb_image.h)
     file(DOWNLOAD https://raw.githubusercontent.com/nothings/stb/master/stb_image.h ${CMAKE_BINARY_DIR}/stb/stb_image.h)
@@ -140,16 +148,12 @@ set(SRC ${CMAKE_BINARY_DIR}/src/config.h
         src/renderer/SkyRenderer.h
         src/renderer/Perspective.h)
 
-if (NOT DEFINED BUNDLE_RESOURCES)
-    if (${CMAKE_BUILD_TYPE} STREQUAL Release)
-        set(BUNDLE_RESOURCES ON)
-    else ()
-        set(BUNDLE_RESOURCES OFF)
-    endif ()
-endif ()
+#add_compile_definitions()
 
-if (BUNDLE_RESOURCES)
-    add_compile_definitions(ASSETS_DIR= "${PROJECT_SOURCE_DIR}/assets/")
+add_compile_definitions($<$<CONFIG:Debug>:DEBUG>)
+
+if (NOT BUNDLE_RESOURCES)
+    add_compile_definitions(ASSETS_DIR="${PROJECT_SOURCE_DIR}/assets/")
 else ()
     add_compile_definitions(USE_CMRC ASSETS_PREFIX="assets/")
 
@@ -158,7 +162,7 @@ else ()
 
     cmrc_add_resource_library(assets ${ASSETS})
 
-    set(LIBS assets ${LIBS})
+    list(APPEND LIBS assets)
 endif ()
 
 configure_file(src/config.h.in ${CMAKE_BINARY_DIR}/src/config.h)
