@@ -1,17 +1,9 @@
-cmake_minimum_required(VERSION 3.24)
+cmake_minimum_required(VERSION 3.22.1)
 project(ShitCraft VERSION 0.0.1 LANGUAGES C CXX)
 
-set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD 17)
 
 set(BUILD_SHARED_LIBS OFF)
-
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -static -static-libgcc -static-libstdc++")
-
-if (${CMAKE_BUILD_TYPE} STREQUAL Debug)
-    set(DEBUG ON)
-else ()
-    set(DEBUG OFF)
-endif ()
 
 # Resolve dependencies using FetchContent
 
@@ -40,23 +32,16 @@ endif ()
 
 # Build glad
 
-if (DEBUG)
-    set(GLAD_SRC_DIR "src/external/glad_debug")
-else ()
-    set(GLAD_SRC_DIR "src/external/glad")
-endif ()
-
+set(GLAD_SRC_DIR ${PROJECT_SOURCE_DIR}/src/external/$<IF:$<CONFIG:Debug>,glad_debug,glad>)
 add_library(glad STATIC ${GLAD_SRC_DIR}/src/glad.c)
 target_include_directories(glad PUBLIC ${GLAD_SRC_DIR}/include)
 
 # Build project
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
+set(EXECUTABLE_TARGET_NAME ${PROJECT_NAME})
+set(LIBS SDL2::SDL2main SDL2::SDL2-static glad glm::glm spdlog::spdlog nlohmann_json nlohmann_json_schema_validator readerwriterqueue)
 
-set(EXECUTABLE_TARGET_NAME ShitCraft)
-
-set(SRC
-        ${CMAKE_BINARY_DIR}/src/config.h
+set(SRC ${CMAKE_BINARY_DIR}/src/config.h
         src/external/BS_thread_pool.hpp
         src/external/stb.cpp
         src/external/PerlinNoise.hpp
@@ -149,12 +134,22 @@ set(SRC
         src/mesh/SkyboxMesh.cpp
         src/mesh/SkyboxMesh.h
         src/mesh/SimpleMesh.cpp
-        src/mesh/SimpleMesh.h src/gl/TextureDefinitions.h src/renderer/SkyRenderer.cpp src/renderer/SkyRenderer.h src/renderer/Perspective.h)
+        src/mesh/SimpleMesh.h
+        src/gl/TextureDefinitions.h
+        src/renderer/SkyRenderer.cpp
+        src/renderer/SkyRenderer.h
+        src/renderer/Perspective.h)
 
-set(LIBS SDL2::SDL2main SDL2::SDL2-static glad glm::glm spdlog::spdlog nlohmann_json nlohmann_json_schema_validator readerwriterqueue)
+if (NOT DEFINED BUNDLE_RESOURCES)
+    if (${CMAKE_BUILD_TYPE} STREQUAL Release)
+        set(BUNDLE_RESOURCES ON)
+    else ()
+        set(BUNDLE_RESOURCES OFF)
+    endif ()
+endif ()
 
-if (DEBUG)
-    add_compile_definitions(DEBUG ASSETS_DIR="${PROJECT_SOURCE_DIR}/assets/")
+if (BUNDLE_RESOURCES)
+    add_compile_definitions(ASSETS_DIR= "${PROJECT_SOURCE_DIR}/assets/")
 else ()
     add_compile_definitions(USE_CMRC ASSETS_PREFIX="assets/")
 

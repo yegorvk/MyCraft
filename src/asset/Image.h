@@ -12,14 +12,14 @@
 #include "types.h"
 
 struct ImageDescription {
-    constexpr ImageDescription() = default;
+    ImageDescription() = default;
 
-    constexpr ImageDescription(int width, int height, int channelCount) :
+    ImageDescription(int width, int height, int channelCount) :
             width(width),
             height(height),
             channelCount(channelCount) {}
 
-    [[nodiscard]] constexpr ImageDescription override(const ImageDescription &other) const {
+    [[nodiscard]] ImageDescription override(const ImageDescription &other) const {
         return {other.width > 0 ? other.width : width,
                 other.height > 0 ? other.height : height,
                 other.channelCount > 0 ? other.channelCount : channelCount};

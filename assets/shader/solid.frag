@@ -52,5 +52,7 @@ void main() {
     //vec3 textureColor = texture(arrayTexture, vec3(fsIn.texCoords, float(fsIn.textureId - 1u))).rgb;
     vec3 color = textureColor * fsIn.color;
 
+    color = ((color - 0.5) * max(1.2, 0)) + 0.5;
+
     FragColor = vec4(color, 1.0);
 }

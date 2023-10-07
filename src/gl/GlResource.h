@@ -297,7 +297,7 @@ template<gl_enum_type GlTextureBindTarget>
 using GlTexture = GlResource<GlTextureResource<GlTextureBindTarget>>;
 
 template<gl_enum_type GlTextureBindTarget>
-using GlTextureRef = GlTexture<GlTextureBindTarget>::ref_type;
+using GlTextureRef = typename GlTexture<GlTextureBindTarget>::ref_type;
 
 using GlFramebuffer = GlResource<GlFramebufferResource>;
 using GlFramebufferRef = GlFramebuffer::ref_type;

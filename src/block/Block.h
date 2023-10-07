@@ -26,6 +26,10 @@ struct BlockFace {
 
     explicit BlockFace(uint16_t textureId);
 
+    [[nodiscard]] inline bool operator!=(const BlockFace &other) const {
+        return !(*this == other);
+    }
+
     [[nodiscard]] inline bool operator==(const BlockFace &other) const {
         return textureId == other.textureId;
     }
