@@ -18,7 +18,7 @@ endif ()
 include(FetchContent)
 
 FetchContent_Declare(cmrc URL https://github.com/vector-of-bool/cmrc/archive/refs/tags/2.0.1.tar.gz)
-FetchContent_Declare(SDL2 URL https://github.com/libsdl-org/SDL/archive/refs/tags/release-2.26.5.tar.gz)
+#FetchContent_Declare(SDL2 URL https://github.com/libsdl-org/SDL/archive/refs/tags/release-2.26.5.tar.gz)
 FetchContent_Declare(GLM URL https://github.com/g-truc/glm/archive/refs/tags/0.9.9.8.tar.gz)
 FetchContent_Declare(spdlog URL https://github.com/gabime/spdlog/archive/refs/tags/v1.11.0.tar.gz)
 FetchContent_Declare(nlohmann_json URL https://github.com/nlohmann/json/archive/refs/tags/v3.11.2.tar.gz)
@@ -28,7 +28,9 @@ FetchContent_Declare(readerwriterqueue GIT_REPOSITORY https://github.com/cameron
 set(SDL2_DISABLE_INSTALL ON CACHE BOOL "" FORCE)
 set(JSON_VALIDATOR_INSTALL OFF CACHE BOOL "" FORCE)
 
-FetchContent_MakeAvailable(cmrc SDL2 GLM spdlog nlohmann_json nlohmann_json_schema_validator readerwriterqueue)
+FetchContent_MakeAvailable(cmrc GLM spdlog nlohmann_json nlohmann_json_schema_validator readerwriterqueue)
+
+find_package(SDL2 REQUIRED)
 
 if (NOT EXISTS ${CMAKE_BINARY_DIR}/stb/stb_image.h)
     file(DOWNLOAD https://raw.githubusercontent.com/nothings/stb/master/stb_image.h ${CMAKE_BINARY_DIR}/stb/stb_image.h)
