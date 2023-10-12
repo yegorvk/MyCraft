@@ -17,7 +17,7 @@ WorldScene::WorldScene() {
     scheduleForUpdates(cameraControls);
     addEventConsumer(cameraControls);
 
-    world.setActiveRegion(glm::ivec3(0, 0, 0), glm::ivec3(24, 10, 24));
+    world.setActiveRegion(glm::ivec3(0, 0, 0), glm::ivec3(32, 10, 32));
     renderer.resetActiveChunks(world.getActiveRegionMin(), world.getActiveRegionSize());
 
     camera.moveAbsolute(
@@ -67,6 +67,15 @@ bool WorldScene::onHandleEvent(const SDL_Event &event) {
             world.setTargetBlockAndQueueUpdate(camera.getPosition() / BLOCK_SIDE_SCALE, camera.getFront(), 0);
         else if (event.button.button == SDL_BUTTON_RIGHT)
             world.setTargetBlockAndQueueUpdate(camera.getPosition() / BLOCK_SIDE_SCALE, camera.getFront(), 3);
+    }
+
+    if (event.type == SDL_KEYDOWN) {
+        if (event.key.keysym.sym == SDLK_PLUS || event.key.keysym.sym == SDLK_KP_PLUS) {
+            ++renderDistance;
+        } else if (event.key.keysym.sym == SDLK_MINUS || event.key.keysym.sym == SDLK_KP_MINUS) {
+            if (renderDistance > 1)
+                --renderDistance;
+        }
     }
 
     return false;

@@ -29,6 +29,7 @@ private:
     FreeCamera camera;
     glm::vec2 viewportSize{};
     double winAspectRatio = 1.0;
+    int renderDistance = 10;
     World world;
     CompositeRenderer renderer;
     BlockRegistry blockReg;

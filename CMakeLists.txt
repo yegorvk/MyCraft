@@ -34,8 +34,8 @@ if (NOT EXISTS ${CMAKE_BINARY_DIR}/stb/stb_image.h)
     file(DOWNLOAD https://raw.githubusercontent.com/nothings/stb/master/stb_image.h ${CMAKE_BINARY_DIR}/stb/stb_image.h)
 endif ()
 
-if (NOT EXISTS ${CMAKE_BINARY_DIR}/stb/stb_image_resize.h)
-    file(DOWNLOAD https://raw.githubusercontent.com/nothings/stb/master/stb_image_resize.h ${CMAKE_BINARY_DIR}/stb/stb_image_resize.h)
+if (NOT EXISTS ${CMAKE_BINARY_DIR}/stb/stb_image_resize2.h)
+    file(DOWNLOAD https://raw.githubusercontent.com/nothings/stb/master/stb_image_resize2.h ${CMAKE_BINARY_DIR}/stb/stb_image_resize2.h)
 endif ()
 
 # Build glad

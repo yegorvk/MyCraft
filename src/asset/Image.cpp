@@ -4,12 +4,13 @@
 
 #include "spdlog/spdlog.h"
 #include "stb_image.h"
-#include "stb_image_resize.h"
+#include "stb_image_resize2.h"
 
 #include "utils/MathUtils.h"
 #include "Image.h"
 
-Image Image::loadFromMemory(const unsigned char *data, std::size_t size, bool flipOnLoad, ImageDescription description) {
+Image
+Image::loadFromMemory(const unsigned char *data, std::size_t size, bool flipOnLoad, ImageDescription description) {
     stbi_set_flip_vertically_on_load(flipOnLoad);
 
     ImageDescription inMemoryImageDescription{};
@@ -46,7 +47,7 @@ Image Image::resize(int newWidth, int newHeight) const {
     auto newPixels = reinterpret_cast<unsigned char *>(malloc(
             sizeof(unsigned char) * newWidth * newHeight * description.channelCount));
 
-    stbir_resize_uint8(
+    stbir_resize_uint8_linear(
             pixels,
             description.width,
             description.height,
@@ -55,7 +56,7 @@ Image Image::resize(int newWidth, int newHeight) const {
             newWidth,
             newHeight,
             0,
-            description.channelCount);
+            static_cast<stbir_pixel_layout>(description.channelCount));
 
     return {ImageDescription(newWidth, newHeight, description.channelCount), newPixels};
 }
